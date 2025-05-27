@@ -1,0 +1,67 @@
+/* Text colors */
+.text-primary {
+  color: var(--color-primary) !important;
+}
+
+.text-dark {
+  color: var(--color-text-primary) !important;
+}
+
+.text-secondary {
+  color: var(--color-text-secondary) !important;
+}
+
+/* Background colors */
+.bg-primary {
+  background-color: var(--color-primary) !important;
+}
+
+.bg-light {
+  background-color: var(--color-background-primary) !important;
+}
+
+.bg-secondary {
+  background-color: var(--color-background-secondary) !important;
+}
+
+/* Border colors */
+.border-stroke {
+  border-color: var(--color-stroke) !important;
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: white !important;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #e03a1e !important;
+  border-color: #e03a1e !important;
+}
+
+.btn-outline-primary {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus {
+  background-color: var(--color-primary) !important;
+  color: white !important;
+}
+
+/* Card styles */
+.card-custom {
+  border-color: var(--color-stroke) !important;
+}
+
+.card-custom .card-header {
+  background-color: var(--color-background-secondary) !important;
+}
+
+/* Icon colors */
+.icon-dark {
+  color: var(--color-dark-icons) !important;
+}

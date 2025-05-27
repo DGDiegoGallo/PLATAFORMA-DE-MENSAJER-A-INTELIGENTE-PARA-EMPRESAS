@@ -1,0 +1,159 @@
+/* Global reset for text direction and orientation */
+* {
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  direction: ltr !important;
+  unicode-bidi: normal !important;
+}
+
+/* Specific styles for the login container */
+#root {
+  writing-mode: horizontal-tb !important;
+}
+
+/* Force horizontal text for all elements */
+html, body, div, h1, h2, h3, h4, h5, h6, p, span, a, button, input, label, form {
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  direction: ltr !important;
+  text-align: initial !important;
+  white-space: normal !important;
+}
+
+/* Ensure headings display properly */
+h2 {
+  display: block !important;
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  text-align: center !important;
+  white-space: normal !important;
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
+}
+
+/* Ensure paragraphs display properly */
+p {
+  display: block !important;
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  text-align: inherit !important;
+  white-space: normal !important;
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
+}
+
+/* Ensure form elements display properly */
+input, button, label {
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  direction: ltr !important;
+}
+
+/* Fix for vertical text in buttons */
+button {
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  text-align: center !important;
+  white-space: normal !important;
+}
+
+/* Fix for links */
+a {
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  white-space: normal !important;
+}
+
+/* Prevent any CSS transforms that might affect text orientation */
+* {
+  transform-origin: center !important;
+}
+
+/* Animaciones y estilos adicionales */
+
+/* Animación para el título */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Animación para los campos de formulario */
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Aplicar animaciones a elementos específicos */
+h2 {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+form {
+  animation: fadeIn 1s ease-in-out;
+}
+
+input {
+  animation: slideInUp 0.5s ease-out;
+}
+
+/* Estilos simplificados para el botón de inicio de sesión */
+button[type="submit"] {
+  animation: fadeIn 0.5s ease-out;
+  transition: all 0.2s ease !important;
+}
+
+button[type="submit"]:hover {
+  background-color: #e03a1e !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+button[type="submit"]:active {
+  transform: translateY(1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Estilos para los campos de formulario */
+input {
+  border: 1px solid #EBC2BB !important;
+  transition: all 0.3s ease !important;
+}
+
+input:focus {
+  border-color: #F44123 !important;
+  box-shadow: 0 0 0 0.2rem rgba(244, 65, 35, 0.25) !important;
+  outline: none !important;
+}
+
+/* Efecto hover para enlaces */
+a {
+  transition: all 0.3s ease !important;
+}
+
+a:hover {
+  color: #e03a1e !important;
+  text-decoration: underline !important;
+}
+
+/* Animación para el checkbox */
+input[type="checkbox"] {
+  transition: all 0.3s ease !important;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #F44123 !important;
+  border-color: #F44123 !important;
+}
+
+/* Animación para el botón de mostrar contraseña */
+button[type="button"]:hover {
+  background-color: #f8f0ef !important;
+  border-color: #F44123 !important;
+  color: #F44123 !important;
+}

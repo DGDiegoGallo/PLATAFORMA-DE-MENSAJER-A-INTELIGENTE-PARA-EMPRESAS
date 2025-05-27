@@ -1,0 +1,38 @@
+/* Import variables and utilities */
+@import './variables.css';
+@import './utilities.css';
+
+/* Add AG BODY font */
+@font-face {
+  font-family: 'AG BODY';
+  src: url('../assets/fonts/AG-BODY.woff2') format('woff2'),
+        url('../assets/fonts/AG-BODY.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Global styles */
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e03a1e;
+}

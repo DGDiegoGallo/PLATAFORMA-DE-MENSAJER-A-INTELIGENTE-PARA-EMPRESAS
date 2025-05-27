@@ -1,0 +1,89 @@
+/* Estilos para la tabla de agentes */
+.agents-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.agents-table thead {
+  background-color: #EBEBEB; /* Background secundario */
+}
+
+.agents-table th {
+  color: #000000; /* Primario Texto */
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #EBC2BB; /* Stroke (Naranja muy claro) */
+}
+
+.agents-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #EBC2BB; /* Stroke (Naranja muy claro) */
+  color: #767179; /* Secundario Texto */
+}
+
+.agents-table tr:hover {
+  background-color: rgba(244, 65, 35, 0.05); /* Principal (Naranja) con transparencia */
+}
+
+/* Estilos para los badges de roles */
+.role-badge {
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.role-badge.admin-role {
+  background-color: #F44123; /* Principal (Naranja) */
+  color: #FFFFFF; /* Blanco */
+}
+
+.role-badge.supervisor-role {
+  background-color: #EBC2BB; /* Stroke (Naranja muy claro) */
+  color: #F44123; /* Principal (Naranja) */
+}
+
+.role-badge.agent-role {
+  background-color: #EBEBEB; /* Background secundario */
+  color: #767179; /* Secundario Texto */
+}
+
+/* Estilos para los botones de acción */
+.action-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  border: 1px solid #EBC2BB; /* Stroke (Naranja muy claro) */
+  background-color: #FFFFFF; /* Background primario */
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  border-color: #F44123; /* Principal (Naranja) */
+}
+
+.view-btn {
+  color: #484847; /* Dark Icons */
+}
+
+.view-btn:hover {
+  color: #F44123; /* Principal (Naranja) */
+}
+
+.edit-btn {
+  color: #484847; /* Dark Icons */
+}
+
+.edit-btn:hover {
+  color: #F44123; /* Principal (Naranja) */
+}
+
+.delete-btn {
+  color: #F44123; /* Principal (Naranja) */
+}
+
+.delete-btn:hover {
+  color: #d63031; /* Rojo más oscuro para hover en eliminar */
+  border-color: #d63031;
+}

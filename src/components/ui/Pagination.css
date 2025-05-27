@@ -1,0 +1,38 @@
+/* Estilos personalizados para la paginación */
+.custom-pagination .page-item .page-link {
+  color: #767179; /* Secundario Texto */
+  background-color: #FFFFFF; /* Background primario */
+  border-color: #EBC2BB; /* Stroke (Naranja muy claro) */
+  transition: all 0.3s ease;
+}
+
+.custom-pagination .page-item.active .page-link {
+  color: #FFFFFF; /* Blanco */
+  background-color: #F44123; /* Principal (Naranja) */
+  border-color: #F44123; /* Principal (Naranja) */
+}
+
+.custom-pagination .page-item .page-link:hover {
+  color: #F44123; /* Principal (Naranja) */
+  background-color: #FFFFFF; /* Background primario */
+  border-color: #F44123; /* Principal (Naranja) */
+}
+
+.custom-pagination .page-item.disabled .page-link {
+  color: #EBEBEB; /* Background secundario */
+  background-color: #FFFFFF; /* Background primario */
+  border-color: #EBC2BB; /* Stroke (Naranja muy claro) */
+}
+
+/* Ajustes de espaciado y bordes */
+.custom-pagination .page-link {
+  padding: 0.5rem 0.75rem;
+  margin: 0 0.15rem;
+  border-radius: 0.25rem !important;
+}
+
+/* Efecto al hacer clic */
+.custom-pagination .page-link:focus {
+  box-shadow: 0 0 0 0.2rem rgba(244, 65, 35, 0.25);
+  outline: none;
+}

@@ -1,0 +1,79 @@
+/* Estilos para la página de agentes */
+
+/* Estilos para la tarjeta de agentes */
+.agents-card {
+  border-radius: 8px;
+  border: 1px solid #EBC2BB !important; /* Stroke (Naranja muy claro) */
+  overflow: hidden;
+}
+
+/* Estilos para el botón de agregar agente */
+.add-agent-btn {
+  background-color: #F44123 !important; /* Principal (Naranja) */
+  border-color: #F44123 !important; /* Principal (Naranja) */
+  transition: all 0.3s ease;
+}
+
+.add-agent-btn:hover, .add-agent-btn:focus {
+  background-color: #e03a1e !important; /* Naranja más oscuro */
+  border-color: #e03a1e !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(244, 65, 35, 0.25);
+}
+
+.add-agent-btn:active {
+  transform: translateY(0);
+}
+
+/* Estilos para el modal de agentes */
+.agent-modal .modal-header {
+  border-bottom: 1px solid #EBC2BB; /* Stroke (Naranja muy claro) */
+}
+
+.agent-modal .modal-footer {
+  border-top: 1px solid #EBC2BB; /* Stroke (Naranja muy claro) */
+}
+
+.agent-modal .modal-title {
+  color: #000000; /* Primario Texto */
+  font-weight: 500;
+}
+
+.agent-modal .form-label {
+  color: #767179; /* Secundario Texto */
+  font-weight: 500;
+}
+
+.agent-modal .form-control, .agent-modal .form-select {
+  border-color: #EBC2BB; /* Stroke (Naranja muy claro) */
+  border-radius: 4px;
+}
+
+.agent-modal .form-control:focus, .agent-modal .form-select:focus {
+  border-color: #F44123; /* Principal (Naranja) */
+  box-shadow: 0 0 0 0.2rem rgba(244, 65, 35, 0.25);
+}
+
+/* Estilos para el botón de guardar */
+.save-agent-btn {
+  background-color: #F44123 !important; /* Principal (Naranja) */
+  border-color: #F44123 !important; /* Principal (Naranja) */
+  transition: all 0.3s ease;
+}
+
+.save-agent-btn:hover, .save-agent-btn:focus {
+  background-color: #e03a1e !important; /* Naranja más oscuro */
+  border-color: #e03a1e !important;
+  box-shadow: 0 0 0 0.2rem rgba(244, 65, 35, 0.25);
+}
+
+/* Estilos para los checkboxes */
+.form-check-input:checked {
+  background-color: #F44123; /* Principal (Naranja) */
+  border-color: #F44123; /* Principal (Naranja) */
+}
+
+.form-check-input:focus {
+  border-color: #F44123; /* Principal (Naranja) */
+  box-shadow: 0 0 0 0.2rem rgba(244, 65, 35, 0.25);
+}
