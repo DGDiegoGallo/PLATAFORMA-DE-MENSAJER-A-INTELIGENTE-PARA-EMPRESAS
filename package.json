@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && npm run clean-js",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "clean-js": "find ./src -type f -name \"*.js\" -o -name \"*.d.ts\" -not -path \"*/node_modules/*\" -delete"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

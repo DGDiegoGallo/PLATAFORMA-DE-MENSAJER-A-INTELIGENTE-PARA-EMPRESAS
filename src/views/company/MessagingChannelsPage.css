@@ -1,0 +1,111 @@
+/* Estilos para la página de Canales de Mensajería */
+
+.messaging-card {
+  border-radius: 8px;
+  border: 1px solid var(--color-stroke) !important;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.filters-card {
+  background-color: var(--color-background-secondary);
+  border: 1px solid var(--color-stroke) !important;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filters-card .form-select,
+.filters-card .form-control {
+  border-color: var(--color-stroke);
+  margin-right: 0.5rem; /* Espacio entre filtros */
+}
+
+.filters-card .btn-primary {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  margin-right: 0.5rem;
+}
+
+.filters-card .btn-outline-secondary {
+  color: var(--color-text-secondary);
+  border-color: var(--color-text-secondary);
+}
+
+.filters-card .btn-outline-secondary:hover {
+  color: var(--color-background-primary);
+  background-color: var(--color-text-secondary);
+}
+
+.add-channel-btn {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  transition: all 0.3s ease;
+}
+
+.add-channel-btn:hover,
+.add-channel-btn:focus {
+  background-color: #e03a1e !important; /* Naranja más oscuro */
+  border-color: #e03a1e !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(244, 65, 35, 0.25);
+}
+
+/* Estilos para el modal */
+.channel-modal .modal-header,
+.channel-details-modal .modal-header {
+  background-color: var(--color-background-secondary);
+  border-bottom: 1px solid var(--color-stroke);
+}
+
+.channel-modal .modal-footer,
+.channel-details-modal .modal-footer {
+  background-color: var(--color-background-secondary);
+  border-top: 1px solid var(--color-stroke);
+}
+
+.channel-modal .modal-title,
+.channel-details-modal .modal-title {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.channel-modal .modal-body,
+.channel-details-modal .modal-body {
+  background-color: var(--color-background-primary);
+}
+
+.channel-modal .form-label,
+.channel-details-modal .form-label {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.channel-modal .form-control,
+.channel-modal .form-select,
+.channel-details-modal .form-control,
+.channel-details-modal .form-select {
+  border-color: var(--color-stroke);
+  border-radius: 4px;
+}
+
+.channel-modal .btn-primary,
+.channel-details-modal .btn-primary {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.channel-modal .btn-secondary,
+.channel-details-modal .btn-secondary {
+  background-color: var(--color-text-secondary) !important;
+  border-color: var(--color-text-secondary) !important;
+  color: var(--color-background-primary);
+}
+
+.channel-details-modal strong {
+  color: var(--color-text-primary);
+}
+
+.channel-details-modal .table th {
+    background-color: var(--color-background-secondary);
+}

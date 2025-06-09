@@ -1,0 +1,123 @@
+.agent-profile-card {
+  border: 1px solid #EBC2BB !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.agent-profile-header {
+  background-color: #FFFFFF !important;
+  border-bottom: 1px solid #EBC2BB !important;
+  padding: 1.25rem 1.5rem !important;
+}
+
+.agent-profile-body {
+  padding: 1.5rem !important;
+}
+
+.agent-profile-avatar {
+  width: 80px;
+  height: 80px;
+  background-color: #484847;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 1.5rem;
+}
+
+.agent-profile-avatar svg {
+  color: #FFFFFF;
+  font-size: 2rem;
+}
+
+.form-control {
+  border: 1px solid #EBC2BB !important;
+  border-radius: 4px !important;
+  padding: 0.5rem 0.75rem !important;
+  background-color: #F8F8F8 !important;
+  color: #000000 !important;
+}
+
+.form-control:focus {
+  border-color: #F44123 !important;
+  box-shadow: 0 0 0 0.2rem rgba(244, 65, 35, 0.25) !important;
+}
+
+.form-select {
+  border: 1px solid #EBC2BB !important;
+  border-radius: 4px !important;
+  padding: 0.5rem 0.75rem !important;
+  background-color: #F8F8F8 !important;
+  color: #000000 !important;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #767179;
+  margin-bottom: 0.5rem;
+}
+
+.edit-button {
+  color: #767179;
+  background: none;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-button:hover {
+  color: #F44123;
+}
+
+.save-button {
+  background-color: #F44123 !important;
+  border-color: #F44123 !important;
+  color: white !important;
+  padding: 0.5rem 1.5rem !important;
+  border-radius: 4px !important;
+  transition: all 0.2s ease !important;
+}
+
+.save-button:hover {
+  background-color: #e03a1e !important;
+  border-color: #e03a1e !important;
+}
+
+.cancel-button {
+  background-color: transparent !important;
+  border-color: #F44123 !important;
+  color: #F44123 !important;
+  padding: 0.5rem 1.5rem !important;
+  border-radius: 4px !important;
+  transition: all 0.2s ease !important;
+}
+
+.cancel-button:hover {
+  background-color: rgba(244, 65, 35, 0.1) !important;
+}
+
+.password-change-link {
+  color: #F44123;
+  text-decoration: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.password-change-link:hover {
+  text-decoration: underline;
+  color: #e03a1e;
+}
+
+.form-row {
+  margin-bottom: 1.25rem;
+}
+
+.form-control-plaintext {
+  padding: 0.5rem 0.75rem !important;
+  background-color: #F8F8F8 !important;
+  border: 1px solid #EBC2BB !important;
+  border-radius: 4px !important;
+  color: #000000 !important;
+}

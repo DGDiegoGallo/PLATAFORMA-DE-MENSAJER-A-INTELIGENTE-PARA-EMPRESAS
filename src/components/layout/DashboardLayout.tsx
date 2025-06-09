@@ -9,6 +9,11 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, companyName }) => {
+  const handleChatButtonClick = () => {
+    // Simplemente registramos que se hizo clic en el botón
+    console.log('Chat button clicked');
+  };
+
   return (
     <div className="d-flex flex-column vh-100">
       <Navbar />
@@ -19,8 +24,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, companyName
         </div>
       </div>
       
-      {/* Chatbot button */}
-      <ChatbotButton onClick={() => console.log('Chatbot clicked')} />
+      {/* Chatbot button - Abre el modal directamente */}
+      <ChatbotButton onClick={handleChatButtonClick} />
     </div>
   );
 };

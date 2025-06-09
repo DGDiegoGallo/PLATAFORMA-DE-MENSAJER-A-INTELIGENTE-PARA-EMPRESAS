@@ -1,0 +1,40 @@
+/* Estilos para la sidebar */
+.sidebar-toggle-btn {
+  position: fixed;
+  right: auto;
+  top: 50%;
+  left: 205px; /* 220px - 15px */
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--color-primary, #F44123);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease, left 0.3s ease;
+}
+
+.sidebar-toggle-btn:hover {
+  background-color: #d53920; /* Un poco más oscuro que el color principal */
+}
+
+.sidebar-toggle-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(244, 65, 35, 0.3);
+}
+
+/* Estilos para los elementos de la sidebar cuando está colapsada */
+.sidebar-item-collapsed {
+  justify-content: center;
+  padding: 0.75rem 0;
+}
+
+.sidebar-item-collapsed .item-icon {
+  margin-right: 0;
+}

@@ -1,0 +1,74 @@
+/* Estilos para la página de usuarios */
+
+/* Estilos para la tarjeta de usuarios */
+.users-card {
+  border-radius: 8px;
+  border: 1px solid var(--color-stroke) !important; /* Usando variable CSS */
+  overflow: hidden;
+}
+
+/* Estilos para el botón de agregar usuario */
+.add-user-btn {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  transition: all 0.3s ease;
+}
+
+.add-user-btn:hover, .add-user-btn:focus {
+  background-color: #e03a1e !important; /* Naranja más oscuro (ajustar si es necesario) */
+  border-color: #e03a1e !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(244, 65, 35, 0.25);
+}
+
+.add-user-btn:active {
+  transform: translateY(0);
+}
+
+/* Estilos para el modal de usuarios */
+.user-modal .modal-header {
+  background-color: var(--color-background-secondary);
+  border-bottom: 1px solid var(--color-stroke);
+}
+
+.user-modal .modal-footer {
+  background-color: var(--color-background-secondary);
+  border-top: 1px solid var(--color-stroke);
+}
+
+.user-modal .modal-title {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.user-modal .modal-body {
+  background-color: var(--color-background-primary);
+}
+
+.user-modal .form-label {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.user-modal .form-control,
+.user-modal .form-select {
+  border-color: var(--color-stroke);
+  border-radius: 4px;
+}
+
+.user-modal .form-control:focus,
+.user-modal .form-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 0.2rem rgba(244, 65, 35, 0.25);
+}
+
+.user-modal .btn-primary {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.user-modal .btn-secondary {
+  background-color: var(--color-text-secondary) !important;
+  border-color: var(--color-text-secondary) !important;
+  color: var(--color-background-primary);
+}

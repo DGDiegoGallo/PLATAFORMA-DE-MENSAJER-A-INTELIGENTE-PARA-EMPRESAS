@@ -1,0 +1,55 @@
+.chart-container {
+  height: 250px;
+  position: relative;
+}
+
+.analytics-card {
+  border: 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+}
+
+.analytics-card .card-title {
+  color: #000000;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.activity-timeline .activity-badge {
+  min-width: 40px;
+}
+
+.activity-timeline .activity-item {
+  position: relative;
+}
+
+.activity-timeline .activity-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 40px;
+  bottom: -20px;
+  width: 1px;
+  background-color: #EBC2BB;
+}
+
+.todo-list .todo-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(235, 194, 187, 0.3);
+}
+
+.todo-list .todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-list .form-check-input {
+  border-color: #EBC2BB;
+}
+
+.todo-list .form-check-input:checked {
+  background-color: #F44123;
+  border-color: #F44123;
+}

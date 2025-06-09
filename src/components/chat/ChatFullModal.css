@@ -1,0 +1,117 @@
+/* Estilos para el modal de chat a pantalla completa */
+
+.chat-full-modal {
+  max-width: 90% !important;
+  width: 90% !important;
+  height: 85vh;
+  margin: 5vh auto;
+}
+
+.chat-full-modal-content {
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid var(--color-stroke, #EBC2BB);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  background-color: #FFFFFF;
+}
+
+.chat-modal-header {
+  background-color: #F44123;
+  color: #FFFFFF;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--color-stroke, #EBC2BB);
+}
+
+.chat-modal-header .modal-title {
+  font-weight: 600;
+}
+
+.chat-modal-header .close-btn {
+  color: #FFFFFF;
+  opacity: 0.9;
+  padding: 0.5rem;
+  margin: -0.5rem -0.5rem -0.5rem 0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.chat-modal-header .close-btn:hover {
+  opacity: 1;
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Ajustes para la vista modal */
+.modal-open .modal-backdrop {
+  opacity: 0.8 !important;
+  background-color: #484847;
+}
+
+.modal-open {
+  overflow: hidden;
+  padding-right: 0 !important;
+}
+
+/* Animación de entrada */
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out !important;
+}
+
+.modal.fade.show .modal-dialog {
+  transform: none !important;
+}
+
+/* Ajustes para el contenedor de chat dentro del modal */
+.chat-full-modal .chat-page-container {
+  height: calc(90vh - 60px) !important; /* Ajustar según la altura del header del modal */
+  border-radius: 0 !important;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .chat-full-modal {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .chat-full-modal-content {
+    border-radius: 0;
+    height: 100vh;
+  }
+  
+  .chat-full-modal .chat-page-container {
+    height: calc(100vh - 60px) !important;
+  }
+  
+  .chat-sidebar {
+    flex: 0 0 250px !important; /* Reducir ancho en móviles */
+  }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 576px) {
+  .chat-sidebar {
+    flex: 0 0 100% !important;
+    position: absolute;
+    z-index: 10;
+    height: 100%;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .chat-sidebar.show {
+    transform: translateX(0);
+  }
+  
+  .chat-content-area {
+    width: 100%;
+  }
+}

@@ -1,23 +1,9 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { FaEdit } from 'react-icons/fa';
+import { UserProfileData, ProfileFormProps } from '../../types/interfaces/profile.interfaces';
 
-interface UserProfileData {
-  username: string;
-  fullName: string;
-  phone: string;
-  idType: string;
-  idNumber: string;
-  email: string;
-  address: string;
-  birthDate: string;
-}
-
-interface ProfileFormProps {
-  initialData: UserProfileData;
-  onSave: (data: UserProfileData) => void;
-  onCancel: () => void;
-}
+// Usando las interfaces importadas desde el archivo centralizado
 
 const ProfileForm: React.FC<ProfileFormProps> = ({ initialData, onSave, onCancel }) => {
   const [formData, setFormData] = useState<UserProfileData>(initialData);
