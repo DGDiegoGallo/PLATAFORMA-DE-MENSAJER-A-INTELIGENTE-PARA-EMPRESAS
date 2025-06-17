@@ -1,5 +1,4 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import App from '../App';
 import StylesShowcase from '../pages/StylesShowcase';
 import NotFoundPage from '../pages/NotFoundPage';
 import Layout from '../components/Layout';
@@ -16,11 +15,12 @@ import MessagingChannelsPage from '../views/company/MessagingChannelsPage';
 import ChatPage from '../views/company/ChatPage';
 import AgentDashboard from '../views/agent/AgentDashboard';
 import AgentProfilePage from '../views/agent/AgentProfilePage';
+import LandingPage from '../pages/LandingPage';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout><App /></Layout>,
+    element: <LandingPage />,
   },
   {
     path: "/styles",
@@ -52,6 +52,11 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Navigate to="/auth/login" replace />,
+  },
+  // Redirección de /register a /auth/register para mayor comodidad
+  {
+    path: "/register",
+    element: <Navigate to="/auth/register" replace />,
   },
   // Dashboard y otras rutas protegidas
   {
