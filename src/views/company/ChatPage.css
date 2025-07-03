@@ -156,7 +156,9 @@
   padding: 1rem;
   overflow-y: auto;
   display: flex;
-  flex-direction: column-reverse; /* Mensajes nuevos abajo */
+  flex-direction: column; /* Mantener dirección de columna */
+  max-height: calc(100% - 165px);
+  background-color: #f0f2f5; /* Color de fondo más WhatsApp-like */
 }
 
 .chat-input-area {
@@ -262,33 +264,39 @@
   opacity: 1;
 }
 
-/* Estilos para MessageBubble (se usará en MessageBubble.tsx) */
+/* Estilos para el área de mensajes */
 .message-bubble-container {
   display: flex;
   margin-bottom: 0.75rem;
+  width: 100%;
 }
 
 .message-bubble-container.own-message {
   justify-content: flex-end;
 }
 
+/* Estilos para los globos de mensaje */
 .message-bubble {
   max-width: 70%;
   padding: 0.6rem 0.9rem;
-  border-radius: 18px;
+  border-radius: 8px; /* Bordes más redondeados para estilo WhatsApp */
   color: var(--color-text-primary);
   word-wrap: break-word;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Sombra sutil */
 }
 
+/* Mensaje recibido (de otros usuarios) */
 .message-bubble.received {
-  background-color: var(--color-background-secondary);
-  border-bottom-left-radius: 4px;
+  background-color: #ffffff; /* Fondo blanco para mensajes recibidos */
+  border-top-left-radius: 0px; /* Esquina diferente para indicar dirección */
 }
 
+/* Mensaje enviado (propio) */
 .message-bubble.sent {
-  background-color: var(--color-primary-muted);
-  color: var(--color-primary-dark); /* Texto más oscuro para mejor contraste en fondo claro */
-  border-bottom-right-radius: 4px;
+  background-color: #dcf8c6; /* Color verde claro de WhatsApp */
+  color: #303030; /* Color de texto casi negro para mejor legibilidad */
+  border-top-right-radius: 0px; /* Esquina diferente para indicar dirección */
 }
 
 .message-sender {
@@ -324,4 +332,56 @@
     font-size: 4rem;
     margin-bottom: 1rem;
     opacity: 0.5;
+}
+
+/* Estilos para mensajes programados */
+.message-bubble.scheduled {
+  opacity: 0.8;
+  border: 1px dashed #ddd;
+}
+
+.scheduled-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  padding: 2px 8px;
+  margin-bottom: 5px;
+  color: #666;
+  font-weight: 500;
+}
+
+.message-bubble.sent .scheduled-badge {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #0056b3;
+}
+
+/* Si el usuario es company, ajustar espacio para el panel de mensajes programados */
+.company-role .chat-messages-area {
+  max-height: calc(100% - 250px);
+}
+
+/* Estilos para botones de programación con bot */
+.scheduled-bot-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Estilos adicionales para mensajes programados del bot */
+.message-bubble.scheduled[data-bot="true"] {
+  border: 1px dashed var(--color-primary);
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.bot-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  background-color: rgba(23, 162, 184, 0.1);
+  color: #17a2b8;
+  border-radius: 10px;
+  padding: 2px 8px;
+  margin-bottom: 5px;
+  font-weight: 500;
 }

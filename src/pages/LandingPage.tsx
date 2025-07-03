@@ -5,31 +5,31 @@ import logo from '../assets/images/Logotipo.Preferente 1.png';
 
 const LandingPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-background-primario text-primario-texto font-sans">
+    <div className="d-flex flex-column min-vh-100 bg-light text-dark">
       {/* Header */}
-      <header className="container mx-auto px-6 py-4 flex justify-between items-center">
+      <header className="container py-4 d-flex justify-content-between align-items-center px-3">
         <img src={logo} alt="Yielit Logo" className="h-8" />
         <nav>
-          <Link to="/login" className="text-secundario-texto hover:text-principal mx-2">Iniciar Sesión</Link>
-          <Link to="/register" className="bg-principal text-white px-4 py-2 rounded-md hover:opacity-90 mx-2">Registrarse</Link>
+          <Link to="/login" className="btn btn-outline-primary mx-2">Iniciar Sesión</Link>
+          <Link to="/register" className="btn btn-primary mx-2">Registrarse</Link>
         </nav>
       </header>
 
       {/* Hero Section */}
-      <main className="container mx-auto px-6 py-16 text-center flex flex-col md:flex-row items-center justify-center">
-        <div className="md:w-1/2 md:text-left">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Comunícate de forma <span className="text-principal">inteligente</span> con tu equipo</h1>
-          <p className="text-lg text-secundario-texto mb-8">Optimiza la colaboración, integra IA en tus conversaciones y toma decisiones basadas en datos con nuestra plataforma de mensajería para empresas.</p>
-          <Link to="/register" className="bg-principal text-white px-6 py-3 rounded-md text-lg hover:opacity-90">Comenzar ahora</Link>
+      <main className="container py-5 text-center d-flex flex-column flex-md-row align-items-center justify-content-center flex-grow-1">
+        <div className="col-md-6 text-md-start">
+          <h1 className="display-4 fw-bold mb-4">Comunícate de forma <span className="text-principal">inteligente</span> con tu equipo</h1>
+          <p className="lead text-secondary mb-4">Optimiza la colaboración, integra IA en tus conversaciones y toma decisiones basadas en datos con nuestra plataforma de mensajería para empresas.</p>
+          <Link to="/register" className="btn btn-primary btn-lg">Comenzar ahora</Link>
         </div>
-        <div className="md:w-1/2 mt-12 md:mt-0">
+        <div className="col-md-6 mt-5 mt-md-0">
           <AnimatedChat />
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="bg-background-secundario py-6 mt-16">
-        <div className="container mx-auto px-6 text-center text-secundario-texto">
+      <footer className="bg-dark text-white py-4 mt-auto">
+        <div className="container text-center">
           <p>&copy; {new Date().getFullYear()} Yielit. Todos los derechos reservados.</p>
         </div>
       </footer>

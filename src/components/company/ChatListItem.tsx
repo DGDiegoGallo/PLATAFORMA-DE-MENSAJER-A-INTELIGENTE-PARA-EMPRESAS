@@ -9,7 +9,7 @@ interface ChatListItemProps {
 }
 
 const ChatListItem: React.FC<ChatListItemProps> = ({ conversation, isSelected, onSelect }) => {
-  const { name, avatarUrl, lastMessage, timestamp, isPinned } = conversation;
+  const { name, avatarUrl, lastMessage, timestamp, isPinned, status } = conversation;
 
   const getInitials = (nameString: string) => {
     if (!nameString) return '';
@@ -22,9 +22,12 @@ const ChatListItem: React.FC<ChatListItemProps> = ({ conversation, isSelected, o
 
   return (
     <div 
-      className={`chat-list-item ${isSelected ? 'active' : ''}`}
-      onClick={() => onSelect(conversation)}
-      title={name}
+      className={`chat-list-item ${isSelected ? 'active' : ''} ${status === 'Inactive' ? 'disabled' : ''}`}
+      onClick={() => {
+        if (status !== 'Inactive') onSelect(conversation);
+      }}
+      title={status === 'Inactive' ? `${name} (Inactivo)` : name}
+      style={status === 'Inactive' ? { cursor: 'not-allowed', opacity: 0.6 } : undefined}
     >
       <div className="avatar">
         {avatarUrl ? (

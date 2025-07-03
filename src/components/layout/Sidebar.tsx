@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import useAuth from '../../features/auth/hooks/useAuth';
 import './Sidebar.css';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   FaBuilding, 
   FaUsers, 
@@ -11,7 +12,8 @@ import {
   FaComments, 
   FaSignOutAlt,
   FaChevronLeft,
-  FaChevronRight
+  FaChevronRight,
+  FaWallet
 } from 'react-icons/fa';
 
 interface SidebarItemProps {
@@ -43,23 +45,40 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ icon, text, to, isActive, col
   );
 };
 
-interface SidebarProps {
-  companyName: string;
-}
+import useCompanyStore, { CompanyState } from '../../store/companyStore';
 
-const Sidebar: React.FC<SidebarProps> = ({ companyName }) => {
+const Sidebar: React.FC = () => {
+  const navigate = useNavigate();
+  const companyName = useCompanyStore((state: CompanyState) => state.companyName);
+  const safeCompanyName = (companyName ?? '').trim();
+  const { user, logout } = useAuth();
+  const userRole = user?.rol || user?.role?.name || 'user';
+  const hasCompany = safeCompanyName !== '' && userRole !== 'user';
+  const isAdmin = ['admin', 'superadmin', 'administrator'].includes(userRole);
+  // permitir edición solo para roles distintos de empleado o agente
+  const canEditCompany = !['empleado', 'agente'].includes(userRole);
+
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   
-  const sidebarItems = [
-    { icon: <FaBuilding size={18} />, text: 'Datos Empresa', path: '/company/data' },
-    { icon: <FaUsers size={18} />, text: 'Agentes', path: '/company/agents' },
-    { icon: <FaUserCog size={18} />, text: 'Gestión de usuarios', path: '/company/users' },
-    { icon: <FaChartBar size={18} />, text: 'Análisis y estadísticas', path: '/company/analytics' },
-    { icon: <FaCommentDots size={18} />, text: 'Canal de mensajería', path: '/company/messaging' },
-    { icon: <FaGraduationCap size={18} />, text: 'Capacitación', path: '/company/training' },
-    { icon: <FaComments size={18} />, text: 'Chat', path: '/company/chat' },
-  ];
+  // Determinar si es cliente sin empresa
+  const isClienteSinEmpresa = userRole === 'cliente' && !safeCompanyName;
+
+  // Sidebar items condicionales
+  const sidebarItems = isClienteSinEmpresa
+    ? [
+        { icon: <FaBuilding size={18} />, text: 'Crear Empresa', path: '/company/data' }
+      ]
+    : [
+        { icon: <FaBuilding size={18} />, text: hasCompany ? 'Datos Empresa' : 'Crear Empresa', path: '/company/data' },
+        { icon: <FaUsers size={18} />, text: 'Agentes', path: '/company/agents' },
+        ...(isAdmin ? [{ icon: <FaUserCog size={18} />, text: 'Gestión de usuarios', path: '/company/users' }] : []),
+        { icon: <FaChartBar size={18} />, text: 'Análisis y estadísticas', path: '/company/analytics' },
+        { icon: <FaCommentDots size={18} />, text: 'Canal de mensajería', path: '/company/messaging' },
+        { icon: <FaGraduationCap size={18} />, text: 'Soporte', path: '/company/support' },
+        { icon: <FaComments size={18} />, text: 'Chat', path: '/company/chat' },
+        ...(userRole === 'company' ? [{ icon: <FaWallet size={18} />, text: 'Crypto Banking', path: '/crypto-banking' }] : []),
+      ];
 
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -101,14 +120,16 @@ const Sidebar: React.FC<SidebarProps> = ({ companyName }) => {
           </div>
           {!collapsed && (
             <div className="flex-grow-1">
-              <div className="fw-medium" style={{ fontSize: '14px', color: '#000000' }}>{companyName}</div>
-              <Link 
-                to="/company/data" 
-                className="text-decoration-none" 
-                style={{ fontSize: '12px', color: '#F44123' }}
-              >
-                Editar
-              </Link>
+              <div className="fw-medium" style={{ fontSize: '14px', color: '#000000' }}>{hasCompany ? companyName : 'Sin empresa'}</div>
+              {canEditCompany && (
+                <Link 
+                  to="/company/data" 
+                  className="text-decoration-none" 
+                  style={{ fontSize: '12px', color: '#F44123' }}
+                >
+                  {hasCompany ? 'Editar' : 'Crear empresa'}
+                </Link>
+              )}
             </div>
           )}
         </div>
@@ -130,15 +151,19 @@ const Sidebar: React.FC<SidebarProps> = ({ companyName }) => {
       
       {/* Logout */}
       <div className="p-3 border-top" style={{ borderColor: '#EBC2BB' }}>
-        <Link 
-          to="/auth/logout" 
-          className="d-flex align-items-center text-decoration-none"
-          style={{ color: '#767179' }}
-          title={collapsed ? "Cerrar sesión" : ""}
+        <button
+          type="button"
+          className="d-flex align-items-center text-decoration-none btn btn-link p-0 w-100"
+          style={{ color: '#767179', textDecoration: 'none' }}
+          title={collapsed ? 'Cerrar sesión' : ''}
+          onClick={() => {
+            logout();
+            navigate('/login', { replace: true });
+          }}
         >
           <FaSignOutAlt size={18} className={collapsed ? '' : 'me-3'} />
           {!collapsed && <span>Cerrar sesión</span>}
-        </Link>
+        </button>
       </div>
     </div>
   );

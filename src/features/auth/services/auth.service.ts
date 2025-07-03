@@ -1,8 +1,10 @@
 import { LoginCredentials, AuthResponse, User } from '../types/auth.types';
 import { RegisterCredentials } from '../types/register.types';
+import API_URL from '../../../config/api';
 
-// URL base de la API de Strapi (se configurará más adelante)
-const API_URL = import.meta.env.VITE_STRAPI_API_URL || 'http://localhost:1337';
+// URL base de la API de Strapi configurada globalmente
+// Si quieres usar respuestas mock define VITE_USE_MOCK="true" en tu .env
+const IS_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 /**
  * Servicio para manejar la autenticación con Strapi
@@ -18,7 +20,7 @@ export const authService = {
       // En producción, esto se conectaría a la API real de Strapi
       // Por ahora, simulamos una respuesta exitosa para desarrollo frontend
       
-      if (import.meta.env.DEV) {
+      if (IS_MOCK) {
         // Simulación de respuesta para desarrollo
         return await new Promise((resolve) => {
           setTimeout(() => {
@@ -45,24 +47,22 @@ export const authService = {
         });
       }
       
-      // Código para producción que se conectaría a Strapi
-      const response = await fetch(`${API_URL}/api/auth/local`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          identifier: credentials.email,
-          password: credentials.password,
-        }),
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error.message || 'Error de autenticación');
+      // --- DEMO LOGIN (sin contraseña) --- POR IDENTIFIER (correo/usuario) ---
+      const identifier = credentials.email.trim();
+      const encoded = encodeURIComponent(identifier);
+      const res = await fetch(`${API_URL}/api/users?filters[$or][0][email][$eq]=${encoded}&filters[$or][1][username][$eq]=${encoded}&populate=*`);
+      if (!res.ok) {
+        throw new Error('No se pudo obtener el usuario');
       }
-      
-      return await response.json();
+      const json = await res.json();
+      let userData: any = null;
+      if (Array.isArray(json) && json.length > 0) {
+        userData = json[0];
+      } else if (Array.isArray(json.data) && json.data.length > 0) {
+        userData = { id: json.data[0].id, ...json.data[0].attributes };
+      }
+      if (!userData) throw new Error('Usuario no encontrado');
+      return { jwt: '', user: userData } as AuthResponse;
     } catch (error) {
       console.error('Error en login:', error);
       throw error;
@@ -73,8 +73,23 @@ export const authService = {
    * Cierra la sesión del usuario actual
    */
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    // Limpiar todo el localStorage y sessionStorage
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // Eliminar todas las cookies del dominio
+    if (typeof document !== 'undefined') {
+      const cookies = document.cookie.split(';');
+      for (const cookie of cookies) {
+        const eqPos = cookie.indexOf('=');
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+      }
+    }
+
+    // Disparar un evento personalizado para notificar otros componentes
+    const logoutEvent = new Event('app:logout');
+    window.dispatchEvent(logoutEvent);
   },
 
   /**
@@ -83,8 +98,8 @@ export const authService = {
    * @param user Datos del usuario
    * @param rememberMe Si se debe recordar al usuario
    */
-  saveAuth(token: string, user: User, rememberMe: boolean = false): void {
-    const storage = rememberMe ? localStorage : sessionStorage;
+  saveAuth(token: string, user: User): void {
+    const storage = localStorage;
     storage.setItem('token', token);
     storage.setItem('user', JSON.stringify(user));
   },
@@ -94,7 +109,7 @@ export const authService = {
    * @returns Token JWT o null si no hay sesión
    */
   getToken(): string | null {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
+    return localStorage.getItem('token');
   },
 
   /**
@@ -102,7 +117,7 @@ export const authService = {
    * @returns Datos del usuario o null si no hay sesión
    */
   getUser(): User | null {
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+    const userStr = localStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
   },
 
@@ -124,7 +139,7 @@ export const authService = {
       // En producción, esto se conectaría a la API real de Strapi
       // Por ahora, simulamos una respuesta exitosa para desarrollo frontend
       
-      if (import.meta.env.DEV) {
+      if (IS_MOCK) {
         // Simulación de respuesta para desarrollo
         return await new Promise((resolve) => {
           setTimeout(() => {
@@ -134,6 +149,12 @@ export const authService = {
                 id: 1,
                 username: credentials.username,
                 email: credentials.email,
+                phone: credentials.phone,
+                fullName: credentials.fullName,
+                idType: credentials.idType,
+                idNumber: credentials.idNumber,
+                address: credentials.address,
+                birthDate: credentials.birthDate,
                 provider: 'local',
                 confirmed: true,
                 blocked: false,
@@ -161,6 +182,13 @@ export const authService = {
           username: credentials.username,
           email: credentials.email,
           password: credentials.password,
+          telefono: credentials.phone || '',
+          rol: 'cliente',
+          direccion: credentials.address || '',
+          documentoID: credentials.idNumber || '',
+          fechaNacimiento: credentials.birthDate || null,
+          nombre: credentials.fullName.split(' ')[0] || credentials.fullName,
+          apellido: credentials.fullName.split(' ').slice(1).join(' ') || ''
         }),
       });
       

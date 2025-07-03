@@ -1,0 +1,2200 @@
+                    PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+#064 PLATAFORMA DE MENSAJERÍA
+INTELIGENTE PARA EMPRESAS
+
+       Tema del proyecto: Mensajería, herramienta para mejorar la comunicación
+       interna y externa en una organización.
+
+       Descripción de las startups: Este proyecto fue implementado por TYLICUN
+
+
+OBJETIVOS
+Objetivo general
+Desarrollar e implementar una plataforma de mensajería instantánea inteligente y segura
+que mejore la productividad de los equipos, garantice la protección de datos y recursos, y
+facilite la integración de herramientas, procesos y datos internos de la organización. A
+través de análisis avanzados de datos y tecnología blockchain, el proyecto busca
+maximizar la adopción del stack tecnológico, cumplir con los procesos normativos internos
+y asegurar la seguridad en toda la organización, todo ello con el fin de impulsar la
+eficiencia operativa, la toma de decisiones informada y la gestión efectiva de la
+información crítica.
+
+Objetivo empresarial
+Establecerse como líder en soluciones de mensajería empresarial, mejorando la
+productividad y eficiencia operativa de las organizaciones, mientras se garantiza la
+seguridad y protección de datos.
+
+Objetivo científico-tecnológico
+Emplear tecnologías avanzadas como blockchain para garantizar la seguridad y
+transparencia en la comunicación, algoritmos de análisis de datos para proporcionar
+inteligencia empresarial y automatización de procesos, e integración de herramientas y
+aplicaciones internas para mejorar la eficiencia operativa. Además, implementar
+protocolos de cifrado avanzados para proteger la privacidad de los usuarios y cumplir con
+normativas y regulaciones de seguridad y privacidad, como GDPR y HIPAA.
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+Objetivos Específicos
+   ●​ Desarrollar e implementar algoritmos de inteligencia artificial para la mensajería
+      instantánea que permitan visualizar la productividad de los equipos.​
+
+   ●​ Integrar funcionalidades de análisis de datos avanzados para medir la adopción
+      del stack tecnológico y proporcionar información útil para la toma de decisiones.​
+
+   ●​ Implementar tecnología blockchain para el registro seguro de firmas y procesos
+      normativos internos de la organización.​
+
+   ●​ Desarrollar e integrar medidas de prevención de pérdida de datos nativa para
+      proteger la información sensible.​
+
+   ●​ Establecer un sistema de control de acceso con administración propia mediante
+      claves de cifrado para garantizar la seguridad de los datos.​
+
+   ●​ Facilitar la integración de herramientas, procesos y datos internos de la
+      organización en la plataforma de mensajería.​
+
+   ●​ Establecer protocolos de seguridad para gestionar el acceso a la información
+      crítica en toda la organización.​
+
+   ●​ Realizar análisis de datos de nivel empresarial para evaluar y maximizar la
+      adopción del stack tecnológico.​
+
+   ●​ Cumplir con los estándares y regulaciones internas y externas de la organización
+      en cuanto a protección de datos y seguridad de la información.​
+
+   ●​ Capacitar al personal de la organización en el uso eficaz y seguro de la plataforma
+      de mensajería inteligente
+
+
+FUNCIONALIDADES
+Tecnología Blockchain:
+
+   ●​ Registro Seguro: Implementar blockchain para el registro seguro de firmas y
+      procesos normativos internos.
+
+   ●​ Integración de NFTs: Utilizar blockchains basadas en EVM (Ethereum Virtual
+      Machine) para registrar logros como NFTs, permitiendo la propiedad y el
+      intercambio exclusivo de medallas únicas.
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+Seguridad de la Información:
+
+   ●​ Prevención de Pérdida de Datos: Desarrollar medidas de prevención de pérdida
+      de datos nativa para proteger información sensible.
+
+   ●​ Control de Acceso: Establecer un sistema de control de acceso con
+      administración mediante claves de cifrado para garantizar la seguridad de los
+      datos.
+
+Integración y Gestión Empresarial:
+
+   ●​ Integración de Herramientas y Procesos: Facilitar la integración               de
+      herramientas, procesos y datos internos en la plataforma de mensajería.
+
+   ●​ Gestión Eficiente: Implementar funcionalidades para la gestión efectiva de
+      recursos y procesos dentro de la organización.
+
+
+BENEFICIOS
+   ●​ Comunicación Eficiente: Facilita la interacción fluida entre miembros del equipo y
+      mejora la coordinación de tareas y proyectos.
+
+   ●​ Gestión Integral del Personal: Permite un control efectivo de usuarios y agentes,
+      simplificando la administración de la comunicación interna.
+
+   ●​ Automatización y Alertas: Los bots integrados mejoran la eficiencia operativa al
+      automatizar respuestas y enviar notificaciones importantes.
+
+   ●​ Análisis y Control: Las métricas y estadísticas proporcionan información valiosa
+      sobre la comunicación del equipo, ayudando a identificar áreas de mejora.
+
+   ●​ Privacidad Garantizada: Mantiene la privacidad de los chats individuales,
+      asegurando que las comunicaciones personales estén protegidas.
+
+
+CARACTERÍSTICAS
+La plataforma cuenta con una amplia gama de características que lo hacen único en el
+mercado. Algunas de estas características incluyen:
+
+   ●​ Gestión de Usuarios y Agentes: Invita a tus empleados y permite su acceso
+      mediante su número de teléfono, facilitando la incorporación y gestión de usuarios
+      en la plataforma.
+
+   ●​ Gestión y Aplicación de Bots: Implementa bots para respuestas automáticas,
+      alertas y notificaciones, mejorando la eficiencia de la comunicación y la
+      automatización de procesos.
+                    PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+   ●​ Sistema para Agentes: Administra bots, crea eventos y visualiza métricas y
+      estadísticas para evaluar la comunicación y el desempeño del equipo.
+
+   ●​ Creación de Eventos, Canales y Grupos: Organiza y coordina actividades
+      mediante la creación de eventos, canales temáticos y grupos de trabajo para una
+      comunicación más estructurada.
+
+
+
+
+AUDIENCIA
+Puede ser relevante para cualquier organización que busque mejorar su comunicación
+interna y externa, aumentar la productividad de los equipos y garantizar la seguridad de la
+información. Podemos mencionar algunas:
+
+-Empresas de todos los tamaños y sectores.
+
+- Equipos de trabajo remoto o distribuidos.
+
+- Organizaciones que requieren alta seguridad y privacidad.
+
+- Emprendedores y startups que buscan soluciones de comunicación efectivas.
+
+
+
+
+Datos necesarios para el UX, UI, WRITING.
+Tono de la Aplicación
+El tono de la plataforma es profesional, seguro, innovador y colaborativo. La comunicación
+debe generar confianza, transmitir seguridad y destacar la tecnología avanzada,
+manteniendo una actitud accesible para todos los usuarios de la organización. Ejemplos
+de comunicación incluyen:
+
+
+   ●​ "Optimiza la comunicación de tu equipo con seguridad y eficiencia."
+   ●​ "Protege tus datos con tecnología avanzada y disfruta de una colaboración sin
+      barreras."
+   ●​ "Mejora la productividad de tu equipo con integración inteligente y control total
+      sobre tus datos."
+
+
+Propósito (Funcionalidades)
+   ●​ Tecnología Blockchain: Implementación de blockchain para garantizar la
+      seguridad en el registro de firmas y procesos internos.
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+   ●​ Seguridad de la Información: Uso de medidas avanzadas como la prevención de
+      pérdida de datos y control de acceso con claves de cifrado.
+   ●​ Integración y Gestión Empresarial: Conectar y optimizar herramientas, procesos
+      y datos internos para mejorar la eficiencia operativa.
+   ●​ Automatización de Tareas: Implementación de bots para automatizar respuestas,
+      alertas y la gestión de tareas repetitivas.
+   ●​ Análisis de Datos: Proporcionar estadísticas y métricas que mejoren la toma de
+      decisiones a partir de la evaluación de la adopción tecnológica y la comunicación
+      interna.
+
+
+Integraciones Necesarias
+La plataforma podría requerir integraciones como:
+
+
+   ●​ Sistemas de gestión de proyectos: Para coordinar tareas, proyectos y equipos
+      de trabajo de manera eficiente.
+   ●​ Herramientas de videoconferencia: Para facilitar la comunicación en tiempo real
+      a través de reuniones virtuales.
+   ●​ Plataformas de almacenamiento en la nube: Para almacenar de manera segura
+      los archivos y documentos compartidos dentro de la organización.
+   ●​ Sistemas de gestión de identidad y acceso (IAM): Para garantizar el control de
+      acceso a los datos y recursos internos de la organización de forma segura.
+
+
+Acciones Claves por Usuario
+
+Administrador:
+
+
+   ●​ Gestión de Usuarios y Agentes: Administrar y asignar roles, permisos y accesos
+      a los usuarios dentro de la plataforma.
+   ●​ Monitoreo de Seguridad: Supervisar el cumplimiento de las políticas de
+      seguridad, como la implementación de claves de cifrado y la protección de datos.
+   ●​ Análisis de Productividad: Evaluar los informes de productividad generados por
+      los algoritmos de IA y análisis de datos.
+   ●​ Control de Integración de Herramientas: Asegurar que todas las herramientas y
+      procesos internos se integren correctamente en la plataforma.
+   ●​ Gestión de Normativas: Garantizar que los procesos normativos y de seguridad
+      cumplan con las regulaciones internas y externas.
+
+
+
+
+Empresa:
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+   ●​ Comunicación Interna: Utilizar la plataforma de mensajería para facilitar la
+      comunicación entre miembros del equipo.
+   ●​ Acceso a Recursos: Acceder a herramientas y recursos necesarios para el
+      cumplimiento de tareas y proyectos.
+   ●​ Creación de Canales y Grupos: Organizar equipos y proyectos mediante la
+      creación de canales temáticos y grupos de trabajo.
+   ●​ Automatización de Tareas: Configurar y gestionar bots para responder
+      automáticamente a tareas y enviar alertas y notificaciones.
+   ●​ Acceso a Información Crítica: Acceder a información sensible de manera segura
+      y en tiempo real, garantizando la privacidad de los datos.
+
+
+
+Agente:
+
+
+   ●​ Interacción con Bots: Interactuar con bots para obtener respuestas automáticas
+      o alertas de tareas.
+   ●​ Gestión de Eventos y Tareas: Participar en la creación de eventos y la
+      asignación de tareas dentro de la plataforma.
+   ●​ Visualización de Métricas: Ver las métricas y estadísticas de la productividad del
+      equipo y su desempeño.
+   ●​ Control de Accesos y Privacidad: Garantizar que la información personal y los
+      mensajes sean privados y seguros.
+
+
+
+
+Manejo de Contenido Dinámico
+
+
+   ●​ Notificaciones Automatizadas: Alertas y notificaciones personalizadas
+      generadas por bots para mantener a los usuarios informados de cambios
+      importantes.
+   ●​ Análisis de Productividad: Se mostrarán estadísticas dinámicas que permiten a
+      los usuarios ver su rendimiento y adoptar mejoras en tiempo real.
+   ●​ Gestión de Recursos: El contenido y las configuraciones se actualizan según el
+      uso de herramientas y el progreso de los equipos, lo que permite una experiencia
+      adaptativa.
+
+
+
+
+Experiencia del Usuario
+
+Plataformas de referencia:
+                    PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+    ●​ Slack: Con su enfoque en la comunicación de equipo y la integración de
+       herramientas.
+    ●​ Microsoft Teams: Ofrece control de acceso, seguridad y colaboración con
+       herramientas de productividad.
+    ●​ Trello: Para gestión de proyectos con integración de bots y tareas automáticas.
+    ●​ Discord: Para crear canales y grupos de comunicación específicos.
+    ●​ Zoom: Para integración de videollamadas dentro de equipos de trabajo y
+       seguimiento de reuniones.
+
+Diferenciadores:
+
+Esta plataforma se distingue por su enfoque en la seguridad con tecnologías avanzadas
+como blockchain y cifrado de datos. La integración de automatización de procesos y bots
+hace que las tareas repetitivas se gestionen de manera eficiente, mientras que el análisis
+de datos en tiempo real proporciona métricas útiles para mejorar la productividad del
+equipo. Además, su capacidad para integrar herramientas y procesos internos la convierte
+en una solución integral para organizaciones que necesitan un control total sobre la
+comunicación y el flujo de trabajo.
+
+
+
+
+Errores a evitar:
+
+
+    ●​ Sobrecarga de funcionalidades: Evitar incluir demasiadas herramientas sin un
+       propósito claro que pueda abrumar al usuario.
+    ●​ Falta de simplicidad: La interfaz debe ser intuitiva, con una curva de aprendizaje
+       mínima para garantizar la adopción.
+    ●​ Desatención a la seguridad: No subestimar la importancia de la protección de
+       datos, especialmente al manejar información confidencial.
+
+
+
+
+Consideraciones culturales
+
+:
+    ●​ Cumplimiento normativo global: Asegurarse de que la plataforma cumpla con
+       normativas internacionales como GDPR, HIPAA, etc., considerando que las
+       empresas operan en múltiples regiones.
+    ●​ Accesibilidad en diferentes idiomas: Ofrecer la plataforma en varios idiomas
+       para empresas globales.
+    ●​ Adaptación a diferentes entornos de trabajo: Tener en cuenta que algunas
+       empresas trabajan de manera más informal (startups) mientras que otras requieren
+       una comunicación más estructurada (corporaciones).
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Protopersona:
+
+Usuario empresa:
+
+
+
+Nombre:              Laura Pérez
+
+
+Edad:                42 años
+
+
+Profesión:           Directora de Operaciones
+
+
+Ubicación:           Ciudad con una empresa de tecnología con equipos distribuidos
+                     globalmente
+
+
+Comportamiento:      Laura utiliza la plataforma para coordinar y gestionar el trabajo
+                     de equipos de diferentes departamentos, asegurándose de que
+                     todas las comunicaciones sean seguras y eficaces.
+
+                     Está muy enfocada en la productividad y en mantener la
+                     seguridad de la información, por lo que usa las funciones
+                     avanzadas de cifrado y control de acceso.
+
+                     También monitorea las métricas y estadísticas que la plataforma
+                     genera para evaluar el desempeño y la adopción de nuevas
+                     tecnologías dentro de la empresa.
+
+                     Gestiona la creación de grupos y eventos para optimizar la
+                     coordinación entre distintos equipos y automatizar tareas a
+                     través de los bots integrados.
+                  PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+Necesidades:        Necesita tener un control total sobre los accesos y permisos de
+                    los usuarios para garantizar que solo las personas adecuadas
+                    tengan acceso a información crítica.
+
+                    Requiere herramientas que faciliten la integración de diferentes
+                    procesos y herramientas internas dentro de la plataforma para
+                    optimizar las operaciones diarias.
+
+                    Busca soluciones que le permitan medir la productividad del
+                    equipo de manera eficiente, obteniendo datos precisos para
+                    tomar decisiones informadas.
+
+                    Quiere asegurarse de que la comunicación dentro de la
+                    organización se mantenga fluida y segura, especialmente
+                    cuando se manejan datos sensibles.
+
+
+
+
+Usuario agente:
+
+Nombre:             Miguel Sánchez
+
+
+Edad:               29 años
+
+
+Profesión:          Coordinador de Proyectos
+
+
+Ubicación:          Ciudad con equipos remotos y en constante colaboración entre
+                    países
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+ Comportamiento:       Miguel utiliza la plataforma principalmente para organizar y
+                       coordinar las tareas de su equipo, creando eventos y grupos de
+                       trabajo para facilitar la colaboración remota.
+
+                       Está muy familiarizado con las herramientas tecnológicas, por lo
+                       que utiliza las funciones automatizadas de los bots para enviar
+                       recordatorios y notificaciones importantes a los miembros de su
+                       equipo.
+
+                       Además, revisa periódicamente las métricas y estadísticas para
+                       evaluar el progreso de los proyectos y mejorar la comunicación
+                       entre los miembros.
+
+                       Como su equipo maneja información crítica, Miguel valora la
+                       seguridad de la plataforma y usa las funciones de cifrado y
+                       control de acceso para proteger los datos sensibles.
+
+
+ Necesidades:          Necesita una forma fácil de organizar y coordinar equipos
+                       remotos a través de la creación de canales, eventos y grupos de
+                       trabajo específicos para cada proyecto.
+
+                       Requiere herramientas que le permitan automatizar tareas
+                       repetitivas y enviar alertas, para garantizar que su equipo esté al
+                       tanto de las actualizaciones importantes sin perder tiempo.
+
+                       Necesita tener acceso a métricas y estadísticas que le ayuden a
+                       evaluar el desempeño de su equipo y a ajustar las estrategias de
+                       comunicación o de trabajo según sea necesario.
+
+                       Busca que la plataforma sea segura y garantice la privacidad de
+                       la información, especialmente cuando se trabaja con datos
+                       sensibles o proyectos confidenciales.
+
+
+
+
+Justificación (Por qué se creó la plataforma, pain)
+Esta plataforma se ha creado para satisfacer la necesidad creciente de organizaciones
+que requieren una comunicación interna segura, eficiente y productiva. Al integrar
+tecnologías avanzadas como blockchain y algoritmos de IA, la plataforma ofrece una
+solución integral que no solo mejora la comunicación, sino que también protege los datos
+sensibles, optimiza los procesos internos y facilita la toma de decisiones a partir de
+análisis avanzados.
+                                                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+FUNCIONES – SERVICIOS
+Funcionalidades
+
+N°      Nombre         Dpto.     Descripción                    Usuario      Observación
+
+                                 Gestión de usuario
+                                 Registro,       consulta       y
+        Gestión     de Backend                                    Empresa
+R-001                            modificación de datos básicos.
+        usuarios       , UX                                       /Agente
+                                 Perfiles.
+                                 Configuraciones.
+
+                                 Nombre.
+                                 Tipo.
+        Gestión   de             Identificación.
+        Datos        Backend     Ubicación.
+R-002                                                           Empresa
+        empresariale , UX        Redes sociales.
+        s                        Url.
+                                 Clientes.
+                                 Agentes.
+
+                                 Nombre.
+                                 Fecha inicio.
+        Gestionar      Backend   Fecha fin.
+R-003                                                           Empresa
+        eventos        , UX      Tipo.
+                                 Descripción.
+                                 Reglas del evento.
+                                                        PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+                                      Nombre.
+                                      Intenciones.
+        Gestión      de Backend
+R-004                                 Flujo de conversación.              Empresa, agente
+        Chatbots        , UX / IA
+                                      Respuesta automática.
+                                      Canal de integración.
+
+                                      Nombre.
+        Gestión    de                 Token de acceso.
+                      Backend
+R-005   mensajería                    Configuración del canal.            Empresa, agente
+                      , UX / IA
+        multicanal                    Mensajes.
+                                      Conversaciones.
+
+                                      Recopilar y almacenar datos.
+        Consultar
+                                      Implementar algoritmos.
+        Análisis          Backend
+R-006                                 Consultar        y    visualizar    Agente
+        predictivo        , UX / IA
+                                      resultados.
+        (IA)
+                                      Integrar resultados.
+
+                                      Informes      de       actividad,
+        Generar           Backend     mensajería,           seguridad,
+R-007                                                                     Administrador
+        informes          , UX        colaboración.
+                                      Recomendaciones.
+
+                                      Análisis descriptivo de datos.
+        Panel        de   Backend
+R-008                                 Análisis exploratorio de datos.     Administrador
+        control           , UX
+                                      Análisis predictivos de datos.
+                                                  PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+                                                                                       El usuario tendrá el privilegio de
+                                                                                       acceder a herramientas que
+                                 Centro de atención al usuario:     Empresa,           faciliten la comunicación efectiva
+        Gestionar
+                       Backend   Salas      de       Integración,   Usuario            con los integrantes del equipo,
+R-009   canales     de
+                       , UX      Organización     de     eventos,   registrados,Agen   fomentando una colaboración
+        integración
+                                 videollamadas y soporte remoto.    tes                más       fluida  y    mejorando
+                                                                                       significativamente la integración
+                                                                                       grupal.
+
+        Seguridad de             Encriptación de los datos, bajo
+R-010                Backend                                     Administrador
+        información              algoritmos avanzados.
+                                                 PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Matriz MoSCoW
+ Prioridad    Código         Nombre                                             Descripción
+
+Must have     R-001     Gestión de usuarios    Es esencial ya que permite el registro, consulta y modificación de datos de
+                                               usuarios, así como la gestión de perfiles y configuraciones.
+
+              R-002      Gestión de datos      Funcionalidad para manejar y organizar datos críticos de la empresa.
+                          empresariales
+
+              R-003      Gestionar eventos     Herramienta para la creación, seguimiento y gestión de eventos dentro del
+                                               sistema.
+
+              R-004     Gestión de chatbots    Facilita la creación y administración de chatbots para la interacción con
+                                               usuarios.
+
+              R-005    Gestión de mensajería   Permite la gestión y envío de mensajes a través de múltiples canales de
+                             multicanal        comunicación.
+
+              R-006      Consultar análisis    Proporciona acceso a análisis predictivos generados por inteligencia artificial.
+                          predictivo (IA)
+
+              R-011      Control de acceso     Establecer un sistema de control de acceso con administración mediante
+                                               claves de cifrado para garantizar la seguridad de los datos
+
+Should have   R-007      Panel de control      Función que permite crear informes detallados sobre el rendimiento y otros
+                                               aspectos del sistema.
+
+              R-008    Gestionar canales de    Proporciona una vista centralizada para la gestión de usuarios y proyectos,
+                            integración        mostrando métricas clave.
+                                                         PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+               R-009       Gestionar canales de     Facilita la conexión y comunicación entre diferentes sistemas y plataformas.
+                                integración
+
+Could have     R-010            Seguridad de        Implementación de medidas para proteger la información y asegurar la
+                                 información        confidencialidad e integridad de los datos.
+
+
+
+
+SOLUCIONES PROPUESTAS PARA IA
+
+Nro. de requerimiento: IA-001                  Nombre: clasificar los mensajes -Random Forest Classifier:
+
+Tipo: (Necesario / Deseable)                   Requerimiento que lo utiliza o especializa:       ¿Crítico?
+Necesario                                      Crear un agente que logre clasificar los mensajes Si
+                                               según su estructura en distintos tipos: quejas,
+                                               agradecimiento, consulta, ventas.
+
+Prioridad de desarrollo:                       Documentos de visualización asociados:
+Alta                                           Se necesita un contenedor para cada salida, que será dada en función de
+                                               las entradas.
+
+Entrada:                                       Salida:
+   ●​ intCompType, (Tipo de empresa)              ●​ intMsgType(Tipo de mensaje)
+   ●​ intMsgKeywords(Palabras     clave
+      que describen el mensaje)
+   ●​ intMsgSentiment (Sentimiento del
+      mensaje)
+                                                     PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+Descripción: intCompType, (cadena de texto aleatorio) - intMsgKeywords(cadena de texto aleatoria) -
+intMsgSentiment (cadena de texto aleatoria)
+Precondición: intCompType, (categoric) - intMsgKeywords (categoric)- intMsgSentiment (categoric)
+Descripción:intMsgType (cadena de texto aleatoria)
+Postcondición: :intMsgType (categoric)
+
+Manejo de situaciones anormales:
+-
+
+Criterio de aceptación:
+La cantidad mínima de registros es de 1000.
+
+
+
+
+Nro. de requerimiento: IA-002       Nombre: Chatbot de Atención al Cliente - Chatbots Red Neuronal Feedforward
+                                    Unidireccional.
+
+Tipo: (Necesario / Deseable)        Requerimiento que lo utiliza o ¿Crítico?
+Necesario                           especializa:                        Si
+                                       Saludo, despedida y preguntas de
+                                    atención al cliente
+
+Prioridad de desarrollo:            Documentos de visualización asociados:
+Alta                                Se necesita un contenedor para cada salida, que será dada en función de las entradas.
+
+Entrada:                         Salida:
+Preguntas de atención al cliente Respuestas de atención al cliente, ofreciendo respuestas inmediatas y personalizadas
+personalizadas
+                                                      PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+Descripción:
+Precondición:
+Descripción:
+Postcondición:
+
+Manejo de situaciones anormales:
+-
+
+Criterio de aceptación:
+La cantidad mínima de registros es de 1000.
+
+
+
+
+Soluciones de inteligencia artificial
+
+N°               Tipo                    Algoritmo                                 Requisito asociado
+
+IA-001                                   Random Forest Classifier:                 R-007
+                 Clasificación
+
+IA-002           Chatbot                 Chatbots    Red    Neuronal   Feedforward R-004
+                                         Unidireccional
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+POLÍTICAS
+Las siguientes políticas establecen las normas y procedimientos que regulan el uso y
+acceso a la plataforma desarrollada. Su objetivo es garantizar la seguridad, integridad y
+confidencialidad de los datos, así como optimizar el funcionamiento de los sistemas.
+
+Se entiende lo siguiente:
+
+
+ Proceso
+
+ Proceso         Regla                                              Observación
+
+                    ●​ garantizar la seguridad y confidencialidad
+                       de los datos.
+ Usuario            ●​ prevenir accesos no autorizados.
+                    ●​ proteger contra posibles brechas de
+                       seguridad.
+                                                PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+COLECCIONES REQUERIDAS
+
+
+                                          Posibles Campos
+      Colección
+                     Nombre                  Tipo            Regla
+
+                     Nombre completo         string
+
+                     Correo electrónico      string
+
+                     Contraseña              string
+
+                     Rol                     string                  administrador, agente.
+
+                     Teléfono                string
+
+1     Usuario        Fecha de creación       string
+
+                     Estado                  string                  activo o inactivo
+
+                     Datos demográficos      object            ●​    fecha de nacimiento
+                                                               ●​    género
+                                                               ●​    dirección
+                                                               ●​    documento de identidad
+                                                               ●​    nombre
+                                                               ●​    apellido
+
+                     Nombre                  string
+
+      Datos       de Tipo                    string
+2
+      empresa
+                     Identificación          string            rif, nit, otros.
+                                       PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+               Ubicación            string
+
+               Redes sociales       string
+
+               Url                  string
+
+               Id clientes          string
+
+               Id agentes           string
+
+               Id usuario           string
+
+               Disponibilidad       string               en línea, fuera de línea.
+
+3   Agente     Carga de trabajo     string
+
+               Calificación         string
+
+               Id Grupos            string
+
+               Nombre del grupo     string
+
+               Descripción          string
+
+4   Grupos     Miembros             array             usuarios
+
+               Permisos             string
+
+               Fecha de creación    Date
+
+               Nombre completo      string
+
+               Correo electrónico   string
+5   Clientes
+               Teléfono             string
+                                              PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+                     Redes sociales        string
+
+                     Nombre                string
+
+                     Intenciones           string            atención al cliente, ventas, técnico.
+
+                     Flujo             de string
+                     conversación
+6   Bots
+                     Id        Respuesta string
+                     automática
+
+                     Id      canal     de string             con otros sistemas.
+                     integración
+
+                     nombre                string            WhatsApp, Facebook Messenger, SMS, etc.
+
+    Canales      de token de acceso        string
+7
+    mensajería
+                     configuración     del string
+                     canal
+
+                     Conversación          string
+
+                     Fecha del envío       string
+
+                     Contenido             string            ●​ texto
+                                                             ●​ imagen
+8   Mensajes                                                 ●​ archivo
+
+                     Sentimiento           string            positivo , neutral, negativo.
+
+                     Estado                string            enviado, recibido, leído.
+                                                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+                        Tipo                    string
+
+                        Palabras clave          string
+
+                        Id usuario              string
+
+                        Id   canales      de string
+                        mensajería
+
+                        Fecha de inicio         string
+9    Conversación
+                        Fecha de finalización   string
+
+                        Estado     de      la string              activa, cerrada
+                        conversación
+
+                        Transcripción de la string
+                        conversación
+
+                        Nombre                  string
+
+                        Pasos                   string            mensajes, acciones, decisiones.
+10   Flujo de trabajo
+                        Condición         de string
+                        activación
+
+                        Resultados              string
+
+                        Nombre                  string
+
+     Respuesta          Contenido               string
+11
+     automática
+                        Palabra clave           string
+                                                    PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+                        Condición            de string             horario, tipo de mensaje, categoría.
+                        activación
+
+                        Usuario responde         string
+
+                        Fecha de creación        string
+
+                        Estadística de uso       string            número de activaciones, tasa de éxito.
+
+                        Herramienta              string            nombre de la herramienta integrada.
+                        integrada
+
+                        Tipo de integración      string            API, conectores, etc.
+
+                        Datos transferidos       string
+
+     Canal         de   Id agente                string            responsable de integración.
+12
+     integración
+                        Fecha de creación        string
+
+                        Registro de actividad    array             1.​ fecha.
+                                                                   2.​ tipo de acción.
+                                                                   3.​ datos transferidos.
+
+                        Estado                   string            activa, desactiva.
+
+                        Nombre                   string
+
+                        Fecha inicio             string
+13   Evento
+                        Fecha fin                string
+
+                        Tipo                     string            1.​ encuestas.
+                                                                   2.​ chat.
+                                              PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+                                                             3.​ correo electrónico.
+                                                             4.​ mensaje.
+
+                Descripción                string
+
+                Reglas del evento          string
+
+                Id evento                  string
+
+                Id usuario                 string
+
+                Id cliente                 string
+14   Feedback
+                Id agente                  string
+
+                Fecha y hora               string
+
+                Estado                     string            pendiente, en progreso, resuelto.
+
+                Nombre de usuario         string
+
+
+                Tipo de empresa           string
+
+
+                Tipo de mensaje           string
+15   Interés
+
+                Palabras clave            string
+
+
+                Sentimiento         del
+                                          string
+                mensaje
+                                                         PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+RELACIÓN DE LAS COLECCIONES
+
+RELACIÓN DE COLECCIONES
+                        Colecciones
+Colección                                       Descripción
+                        asociadas
+
+                        Empresa                 Un usuario puede pertenecer a una o varias empresas.
+
+Usuario                 Agente                  Un usuario puede ser un agente.
+
+                        Evento                  Un evento puede estar asociado a uno o más usuarios.
+
+Agente                  Grupos                  Un agente puede pertenecer a uno o varios grupos.
+
+Cliente                 Conversación            Un cliente puede iniciar múltiples conversaciones.
+
+Bots                    Flujo de conversación   Un bot puede tener múltiples flujos de conversación.
+
+Canales            de
+                        Conversación            Una conversación ocurre en un canal de mensajería específico.
+mensajería
+
+                        Mensajes                Una conversación está compuesta de múltiples mensajes.
+Conversación
+                        Flujo de trabajo        Un flujo de trabajo puede activarse a partir de una conversación.
+
+                        Respuesta automática.
+Flujo de trabajo                                Un flujo de trabajo puede desencadenar una respuesta automática.
+
+Respuesta
+                        Mensajes                Una respuesta automática es un tipo de mensaje.
+automática.
+Canal              de
+                        Bots                    Un bot puede integrarse con múltiples canales.
+integración
+                               PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+           Clientes.   Un evento puede estar asociado a uno o más clientes.
+Evento
+           Agentes.    Un evento puede estar asociado a uno o más agentes.
+
+Feedback   Evento      Un feedback está asociado a un evento específico.
+                       PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+REPORTES QUE DEBE EMITIR EL SISTEMA
+
+
+
+                           Posibles Campos
+     N°   Reporte
+                           Campos                   Tipo        Descripción/ Regla
+
+     1    mensajería       mensaje                  colección
+
+                           bots                     colección
+
+                           conversación             colección
+
+                           respuestas automáticas   colección
+          bots
+                           canales de mensajería    colección
+
+                           canales de integración   colección
+
+                           feedback                 colección
+                     PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+DIAGRAMACIÓN
+
+
+DIAGRAMA DE USUARIOS:
+
+
+Usuarios                Funciones                                 Observaciones
+
+
+
+                          ●​ Gestionar funciones del sistema
+                          ●​ Manejar datos de usuarios
+Administrador             ●​ Análisis de datos y seguridad
+(Panel de control)
+
+                          ●​   Gestionar datos básicos y perfil     ●​ Canales de comunicación
+                          ●​   Gestión de datos empresariales          que se pueden crear son:
+                          ●​   Gestión de personal                     Chats, grupos, eventos, bots
+                          ●​   Gestión de agentes                      y canales
+                          ●​   Crear canales de comunicación
+                               multicanal                           ●​ En gestión de personal , se
+                          ●​   Solicitar análisis y monitoreo          asignan los roles de los
+Usuario                   ●​   Integrar herramientas                   usuarios   dentro  de la
+(Empresa)                 ●​   Consulta métricas y estadísticas        plataforma
+                               (IA)
+                          ●​   Capacitación                         ●​ Capacitaciones: Tutoriales
+                          ●​   Alerta y notificaciones
+
+                          ●​ Gestionar datos básicos y perfil
+                          ●​ Consulta métricas y estadísticas
+                             (IA)
+                          ●​ Crea Bots
+Usuario                   ●​ Notificaciones
+(Agente)
+
+
+                          ●​ Gestionar datos básicos y perfil
+                                                                    ●​ Ingresa a los chat
+                          ●​ Chat
+                                                                    ●​ Participa en los eventos
+                          ●​ Notificaciones
+                                                                    ●​ Ingresa a grupos
+Usuario
+(Regular)
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+DIAGRAMA DE ACTIVIDAD DEL USUARIO: GENERAL.
+
+
+
+
+Descripción del diagrama:
+
+   1.​ El usuario ingresa a la pantalla de inicio de sesión
+   2.​ El usuario ingresa los datos de inicio de sesión
+   3.​ Se validan los datos ingresados
+           a.​ Si son válidos, se muestra el menú del sistema
+                  i.​ El usuario opera los módulos del sistema
+                 ii.​ El usuario sale del sistema
+           b.​ Si no lo son, se retorna a la página de inicio de sesión
+
+
+
+
+DIAGRAMA DE ACTIVIDAD. ADMINISTRADOR
+                    PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Descripción del diagrama:
+
+   ●​   El administrador ingresa al sistema
+   ●​   El sistema muestra reportes y estadísticas.
+   ●​   El administrador consulta las estadísticas y reportes.
+   ●​   El administrador selecciona una acción:
+            ○​ Si el administrador selecciona ajustes de plataforma, configura la
+                plataforma y selecciona guardar.
+            ○​ El sistema guarda los cambios y envía notificación al administrador.
+            ○​ Si selecciona editar datos de perfil, ingresa los datos nuevos y guarda los
+                datos.
+            ○​ El sistema guarda los cambios y envía notificación al administrador.
+
+
+
+
+DIAGRAMA DE USUARIO. EMPRESA
+                  PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario ingresa al sistema
+   ●​ El usuario selecciona una sección
+          ○​ Si el usuario selecciona perfil, gestiona los datos de usuario
+          ○​ El sistema valida y guarda los datos
+          ○​ Si el usuario selecciona Gestión de personal,agrega o modifica personal
+             y asigna, modifica y elimina roles de usuario.
+          ○​ El sistema guarda los datos
+          ○​ Si el usuario selecciona Gestión de agentes, agrega agentes y asigna su
+             rol
+          ○​ El sistema guarda lo datos
+          ○​ Si el usuario selecciona Gestión de datos empresariales, ingresa
+             información sobre la empresa .
+          ○​ El sistema valida y guarda los datos
+          ○​ Si el usuario selecciona Gestión de mensajería multicanal, crea y
+             configura el canal de mensajería, agrega o invita miembros y asigna
+             roles.
+          ○​ El sistema crea el canal de mensajería solicitado, agrega los miembros y
+             almacena los datos.
+          ○​ Si el usuario selecciona Gestión de Herramientas y Canales de
+             integración, monitorea,crea, modifica o elimina los canales de
+             integración.
+                 PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+         ○​ El sistema guarda los datos
+         ○​ Si el usuario selecciona Reportes y estadísticas,
+         ○​ El sistema muestra los datos, estadísticas de rendimiento solicitados.
+
+
+DIAGRAMA DE USUARIO. AGENTE
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario ingresa al sistema
+   ●​ El usuario selecciona una sección
+          ○​ Si el usuario selecciona perfil, gestiona los datos de usuario
+          ○​ El sistema valida y guarda los datos
+          ○​ Si el usuario selecciona Gestión de mensajería multicanal, crea y
+             configura los bots
+          ○​ El sistema integra el bot en la plataforma, monitorea y analiza el
+             rendimiento y guarda los cambios.
+
+
+
+
+DIAGRAMA DE ACTIVIDADES DEL USUARIO. Datos básicos y perfil
+                  PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario ingresa al sistema
+          ○​ Si es la primera vez que el usuario ingresa a la plataforma. El sistema le
+             mostrará una presentación con las principales funcionalidades del
+             sistema.
+          ○​ El usuario accede a las opciones de gestión de usuario.
+          ○​ Si no es la primera vez que el usuario accede a la plataforma. El usuario
+             ingresa directamente a las opciones de gestión de usuario.
+   ●​ El usuario selecciona una acción
+   ●​ Si el usuario si desea actualizar la información, ingresa los datos nuevos y el
+      sistema guarda los cambios y envía una notificación al usuario
+
+   ●​ Si selecciona cambiar contraseña.
+          ○​ El usuario ingresa los nuevos datos y selecciona guardar y el sistema
+              guarda los cambios y envía una notificación al usuario
+   ●​ Si el usuario desea autenticar su acceso, completará los pasos requeridos por el
+      sistema
+                  PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+DIAGRAMA DE ACTIVIDADES DEL USUARIO. Empresa. Gestión de datos
+empresariales
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario ingresa al sistema
+   ●​ El usuario ingresa a Gestión de datos empresariales
+   ●​ El usuario selecciona una acción
+          ○​ Si el usuario selecciona crear, ingresa la información de la empresa
+          ○​ El sistema almacena los datos
+          ○​ El usuario recibe una notificación
+          ○​ Si el usuario selecciona modificar, ingresa la información de la empresa
+          ○​ El sistema almacena los datos
+          ○​ El usuario recibe una notificación
+
+
+
+
+DIAGRAMA DE ACTIVIDADES DEL USUARIO. Empresa. Gestión del personal y
+roles
+                 PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario ingresa la sistema
+   ●​ El sistema muestra el panel principal
+   ●​ El usuario selecciona Gestión de personal
+   ●​ El sistema muestra una lista del personal y sus roles
+   ●​ El usuario selecciona un miembro y asigna o modifica su rol y selecciona
+      guardar
+   ●​ El sistema guarda los cambios
+   ●​ El usuario recibe la notificación de los cambios realizados
+   ●​ El sistema monitorea el rendimiento del personal
+
+
+DIAGRAMA DE ACTIVIDADES DEL USUARIO. Empresa. Agente. Gestión de
+canales de mensajería
+                 PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario ingresa al sistema
+   ●​ El sistema muestra el panel principal
+   ●​ El usuario selecciona Crear nuevo
+   ●​ El usuario selecciona el tipo de medio de comunicación que desea crear (Chat,
+      evento, grupo,bots, canales) e ingresa su información y configuración de
+      permisos
+   ●​ El usuario agrega miembros
+   ●​ El sistema Crea el medio de mensajería seleccionado
+   ●​ El sistema agrega o envía la invitación a los miembros seleccionados
+                 PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+   ●​ Muestra el panel del medio de comunicación creado
+
+
+DIAGRAMA DE ACTIVIDADES DEL USUARIO. Empresa/Agente Crear Grupo
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario selecciona crear grupo
+   ●​ El usuario ingresa nombre, foto de perfil, tema descripción y permisos de
+      membresía
+   ●​ El usuario selecciona si quiere agregar miembros
+          ○​ Si quiere agregar miembros, agrega o envia el enlace de invitación y
+             establece los roles de los usuarios y selecciona crear grupo
+          ○​ El sistema crear el grupo, guarda y valdivia los datos
+          ○​ El usuario recibe una notificación
+          ○​ Si el usuario no desea añadir miembros, finaliza el proceso.
+                  PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+DIAGRAMA DE ACTIVIDADES DEL USUARIO. Empresa. Agente Crear evento
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario selecciona crear evento
+   ●​ El usuario ingresa nombre, tema, descripción, fecha y hora de inicio y final del
+      evento
+   ●​ El usuario agrega a los miembros
+   ●​ El sistema crea el evento, agrega o invita a los miembros.
+   ●​ El sistema desarrolla el evento y elimina automáticamente el chat del evento al
+      finalizar
+   ●​ El sistema envía una notificación al usuario.
+
+
+
+
+DIAGRAMA DE ACTIVIDADES DEL USUARIO. Empresa/Agente. Crear canal
+                  PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario selecciona crear canales
+   ●​ El usuario ingresa nombre, tipo de contenido y permisos
+   ●​ El sistema crea canal y envía notificaciones al usuario
+                  PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+DIAGRAMA DE ACTIVIDADES DEL USUARIO.Empresa/Agente Crear bot
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario selecciona crear bot
+   ●​ El usuario ingresa nombre, propósito y funcionalidad del bot
+   ●​ El usuario configura interacciones del bot y realiza pruebas de funcionamiento y
+      realiza los ajustes necesarios
+   ●​ El usuario selecciona el medio de integración del bot y selecciona crear
+   ●​ El sistema integra el bot a la plataforma
+   ●​ El sistema monitorea y boy y envía una notificación al usuario
+   ●​ El usuario selecciona si quiere agregar miembros
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+DIAGRAMA DE ACTIVIDADES DEL USUARIO. Empresa/agente métricas
+
+
+
+
+Descripción del diagrama:
+
+   ●​   El usuario ingresa al sistema
+   ●​   El sistema muestra el panel principal
+   ●​   El usuario ingresa al apartado de métricas
+   ●​   El sistema muestra los datos y gráficos de rendimiento general
+   ●​   El usuario revisa la información
+   ●​   El usuario selecciona si desea generar reporte
+            ○​ Si desea generar reporte
+            ○​ El sistema genera el reporte con los parámetros solicitados
+            ○​ El usuario consulta la información
+                 PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+DIAGRAMA DE ACTIVIDAD DEL USUARIO. Empresa. Reporte
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario ingresa al sistema
+   ●​ El usuario ingresa a Gestión de reportes
+   ●​ El usuario selecciona el tipo de reporte que desea generar y selecciona los
+      parámetros.
+   ●​ El sistema genera el reporte de la información requerida
+   ●​ El usuario puede elegir exportar el reporte
+          ○​ Si el usuario desea exportar el reporte
+          ○​ El sistema descarga el archivo y envía notificación
+          ○​ Si el usuario no desea exportar el reporte, finaliza el proceso
+                 PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+DIAGRAMA DE ACTIVIDAD DEL USUARIO. Agente. Reporte
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario ingresa al sistema
+   ●​ El usuario ingresa a Gestión de reportes
+   ●​ El usuario selecciona el tipo de reporte que desea generar y selecciona los
+      parámetros.
+   ●​ El sistema genera el reporte de la información requerida
+   ●​ El usuario puede elegir exportar el reporte
+          ○​ Si el usuario desea exportar el reporte
+          ○​ El sistema descarga el archivo y envía notificación
+          ○​ Si el usuario no desea exportar el reporte, finaliza el proceso
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+DIAGRAMA DE ACTIVIDAD DEL USUARIO. Capacitación
+
+
+
+
+Descripción del diagrama:
+
+   ●​   El usuario ingresa al sistema
+   ●​   El sistema muestra el dashboard general
+   ●​   El usuario ingresa al apartado de capacitación
+   ●​   El sistema muestra el listado de tutoriales
+   ●​   El usuario interactúa con el contenido
+                  PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+DIAGRAMA DE ACTIVIDADES DEL USUARIO. Empresa. Gestionar canales de
+integración
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario ingresa al sistema
+   ●​ El usuario selecciona una acción
+          ○​ Si el usuario selecciona Crear, ingresa los datos nuevos
+          ○​ El sistema valida los datos
+                  ■​ Si son válidos, guarda los datos y envía una notificación al
+                     usuario.
+                  ■​ Si no son válidos, retorna al usuario al ingreso de datos.
+          ○​ Si el usuario selecciona Modificar, ingresa los datos nuevos
+          ○​ El sistema valida los datos
+                  ■​ Si son válidos, guarda los datos y envía una notificación al
+                     usuario.
+                  ■​ Si no son válidos, retorna al usuario al ingreso de datos.
+          ○​ Si el usuario selecciona eliminar, el sistema borra los datos y envía una
+             notificación al usuario
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+DIAGRAMA DE ACTIVIDAD DEL USUARIO. Usuario Regular. Chat
+
+
+
+
+Descripción del diagrama:
+
+   ●​   El usuario ingresa al sistema
+   ●​   El sistema muestra dashboard
+   ●​   El usuario ingresa al apartado de chat
+   ●​   El usuario selecciona una acción
+            ○​ Si el usuario selecciona un grupo, ingresa al canal de mensajería (Puede
+                acceder a chat, canales de de voz, videollamadas,compartir pantalla)
+        PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+○​ El sistema muestra el panel de chat o mensajería
+○​ El usuario ingresa mensaje o interactúa en canales de voz y
+   videollamadas
+
+○​ Si el usuario selecciona un canal, ingresa al canal de mensajería (Puede
+   consultar la descripción y temática del canal, acceder a chat, canales de
+   de voz, videollamadas,compartir pantalla)
+○​ El sistema muestra el panel de chat o mensajería
+○​ El usuario ingresa mensaje o interactúa en canales de voz y
+   videollamadas
+
+○​ Si el usuario selecciona una sala de chat, ingresa al canal de mensajería
+   (Puede acceder a chat, canales de de voz, videollamadas,compartir
+   pantalla, ver información de perfil del otro usuario)
+○​ El sistema muestra el panel de chat o mensajería
+○​ El usuario ingresa mensaje o interactúa en canales de voz y
+   videollamadas
+
+○​ Si el usuario selecciona un evento, ingresa al evento e interactúa con
+   otro usuarios
+○​ El sistema muestra el panel de chat o mensajería
+○​ El usuario ingresa mensaje o interactúa en canales de voz y
+   videollamadas
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+DIAGRAMA DE ACTIVIDAD DEL USUARIO. Chatbot. Soporte Técnico
+
+
+
+
+Descripción del diagrama:
+
+   ●​   El usuario ingresa a soporte técnico
+   ●​   El usuario ingresa al chatbot
+   ●​   El usuario selecciona el motivo de su consulta
+   ●​   El sistema procesa la información y envía respuestas
+   ●​   El usuario recibe solución
+                 PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+DIAGRAMA DE ACTIVIDAD DEL USUARIO. Empresa. Clasificación de mensajes IA
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El usuario ingresa a mensajes
+   ●​ El sistema (IA) clasifica mensaje recibidos         y   sus   motivos   (Queja,
+      agradecimientos,consulta,venta)
+   ●​ El usuario revisa la información y notificaciones
+                  PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+FLUJO DE DATOS. NIVEL 0
+
+
+
+
+Descripción del diagrama:
+
+   ●​ El administrador ingresa datos de usuario. configura el panel de control y solicita
+      reportes al sistema. El Sistema retorna registros de comportamiento de usuario,
+      alertas, notificaciones y reportes
+
+   ●​ La empresa ingresa datos de usuario y empresariales, gestiona los canales de
+      mensajería, gestiona el personal, solicita reportes y análisis de rendimiento y
+      actividad general. El sistema retorna la gestión de la mensajería. Envía reporte,
+      notificación y alertas de la actividad general y rendimiento de personal.
+
+   ●​ El agente ingresa sus datos de usuario y gestiona y crea los bots de la
+      plataforma. El sistema retorna la gestión de los bots
+
+   ●​ El personal interactúa con la plataforma
+                  PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+FLUJO DE DATOS. NIVEL 1
+
+
+
+
+Descripción del diagrama:
+
+   ●​ La empresa accede al sistema en gestión de usuarios.Tiene acceso a todos los
+      procesos. Gestiona los datos de la empresa y los canales de mensajería.
+      Gestiona el personal y agentes que interactúan en la plataforma y asigna sus
+      roles. Puede gestionar la integración de herramientas a la plataforma. Solicita
+      análisis (IA) del rendimiento del personal y la actividad general y recibe informes
+      y alertas. Consulta tutoriales en capacitación para tener formación sobre los
+      procesos de la plataforma.
+   ●​ El agente accede al sistema en gestión de usuario. Crea los bots en gestión de
+      mensajería multicanal. Solicita análisis y monitoreo (IA) sobre la actividad
+      general y los bots.
+                    PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+    ●​ El personal ingresa al sistema por la gestión de personal realizada por la
+       empresa.
+    ●​ La IA monitorea y analiza la actividad general y rendimiento de personal y envía
+       reportes a la empresa y al agente.
+
+
+ACCESO A LA CARPETA CON LA DIAGRAMACIÓN
+Acceder
+
+CUSTOMER JOURNEY (ETAPAS)
+Las empresas han comprendido que es necesaria una plataforma de mensajería
+instantánea inteligente y segura que mejore la productividad de los equipos, garantice la
+protección de datos y recursos, y facilite la integración de herramientas, procesos y datos
+internos de la organización. Sería ideal que a través de análisis avanzados de datos y
+tecnología blockchain, el proyecto busque maximizar la adopción del stack tecnológico,
+cumplir con los procesos normativos internos y asegurar la seguridad en toda la
+organización. Por tanto, con el fin de impulsar la eficiencia operativa, la toma de
+decisiones informada y la gestión efectiva de la información crítica.
+
+1. DESCUBRIMIENTO
+
+   ●​ La adopción de plataformas que pretenden emplear tecnologías avanzadas como
+      blockchain para garantizar la seguridad y transparencia en la comunicación,
+      algoritmos de análisis de datos y automatización de procesos, integración de
+      herramientas y aplicaciones internas para mejorar la eficiencia operativa, ha
+      generado un creciente interés en:
+
+      ○​ Responsables de la toma de decisiones: CIOs, CTOs, directores de
+         tecnología y jefes de proyectos.
+
+      ○​ Desarrolladores: Ingenieros de software, arquitectos de soluciones y
+         programadores que se encargarán de la integración y personalización de la
+         plataforma.
+
+      ○​ Especialistas en seguridad: Encargados de evaluar y garantizar la seguridad
+         de la plataforma y los datos.
+
+      ○​ Líderes de equipo: Gerentes, supervisores y jefes de departamento que
+         buscan mejorar la comunicación y colaboración dentro de sus equipos.
+
+      ○​ Usuarios finales: Empleados de todos los niveles que utilizarán la plataforma a
+         diario para comunicarse y colaborar.
+
+      ○​ Equipos de cumplimiento normativo: Encargados de asegurar que la
+         plataforma cumpla con las regulaciones internas y externas.
+                    PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+      ○​ Consultores: Especialistas en implementación y configuración de plataformas
+         de mensajería y colaboración.
+
+      ○​ Integradores de sistemas: Empresas que se encargan de conectar la
+         plataforma con otros sistemas y herramientas de la organización.
+
+      ○​ Proveedores de soluciones de seguridad: Empresas que ofrecen soluciones
+         de seguridad complementarias para proteger la plataforma y los datos.
+
+2. CONSIDERACIÓN
+
+   ●​ El usuario busca más información sobre la plataforma, sus características y
+      beneficios.
+
+   ●​ El usuario compara la plataforma con otras que también ofrecen soluciones
+      similares en el mercado.
+
+3. DECISIÓN
+
+Los usuarios optan por utilizar la plataforma de mensajería instantánea debido a su
+capacidad para optimizar sus tareas diarias y mejorar la colaboración dentro de la
+organización. La plataforma ofrece una experiencia de usuario intuitiva, seguridad de
+vanguardia y una integración fluida con las herramientas que ya utilizan, lo que aumenta
+su productividad; además, la posibilidad de acceder a información relevante a través de
+análisis de datos y la garantía de que sus comunicaciones están protegidas por tecnología
+blockchain les brinda confianza y tranquilidad.
+
+En resumen, la plataforma se convierte en un aliado indispensable para aquellos que
+buscan una comunicación eficiente, segura y respaldada por la innovación tecnológica.
+
+
+
+4. SECUENCIA DE ACTIVIDADES (EXPERIENCIA DE USUARIO)
+
+Administrador (Experiencia de usuario)
+
+   ●​ El administrador se registra previamente en la plataforma.
+
+   ●​ Inicia sesión con su cuenta.
+
+   ●​ Al ingresar al sistema podrá.
+
+          ○​ Consultar estadísticas (reportes, métricas de usuarios activos):
+
+                  ■​ Podrá hacer ajustes a la plataforma.
+
+                  ■​ Editará datos de perfil.
+
+                  ■​ Recibirá notificaciones.
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Ver diagrama
+
+Empresa (Experiencia de usuario)
+
+   ●​ La empresa se registra previamente en la plataforma.
+
+   ●​ Inicia sesión con su cuenta.
+
+   ●​ Al ingresar al sistema podrá.
+
+          ○​ Ingresar a perfil:
+
+                 ■​ Podrá actualizar información.
+
+                 ■​ Cambiar contraseña.
+
+          ○​ Gestión de personal y roles:
+
+                 ■​ Seleccionará gestión de personal.
+
+                 ■​ Seleccionará un miembro.
+
+                 ■​ Modificará o asignará un rol.
+
+                 ■​ Seleccionará guardar.
+
+                 ■​ Recibirá la notificación.
+
+          ○​ Gestión de datos empresariales:
+
+                 ■​ Ingresará a gestión de datos empresariales.
+
+                 ■​ Podrá seleccionar la acción de crear o modificar.
+
+                 ■​ Ingresará información de la empresa (nombre, categoría y rubro).
+
+                 ■​ Recibirá notificación.
+
+          ○​ Gestión de canales de mensajería:
+        PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+      ■​ Seleccionará crear nuevo.
+
+      ■​ Seleccionará el tipo de medio de comunicación (chat, evento, grupo,
+         bots y canales).
+
+      ■​ Ingresará información y descripción.
+
+      ■​ Agregará a los miembros.
+
+○​ Crear grupo:
+
+      ■​ Seleccionará crear grupo.
+
+      ■​ Ingresará nombre, descripción, permisos de la membresía.
+
+      ■​ Podrá agregar miembros (seleccionará si o no).
+
+      ■​ Establecerá roles en el grupo.
+
+      ■​ Seleccionará crear.
+
+      ■​ Recibirá la notificación.
+
+○​ Crear evento:
+
+      ■​ Seleccionará crear evento.
+
+      ■​ Ingresará especificaciones del evento (fecha, hora y descripción).
+
+      ■​ Agregará listado de miembros.
+
+      ■​ El sistema creará el evento, enviará las invitaciones, desarrollará el
+         evento (el chat se eliminará automáticamente al terminar el evento)
+
+      ■​ Recibirá la notificación.
+
+○​ Crear canales:
+
+      ■​ Seleccionará crear canales.
+
+      ■​ Ingresará nombre, tipo de contenido, permisos.
+
+      ■​ El sistema creará el canal.
+
+      ■​ Recibirá la notificación.
+
+○​ Crear bot:
+
+      ■​ Seleccionará crear bot.
+
+      ■​ Ingresará nombre, propósito y funcionalidad del bot.
+         PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+       ■​ Configurará interacciones.
+
+       ■​ Realizará pruebas.
+
+       ■​ Realizará ajustes.
+
+       ■​ Seleccionará el medio de integración.
+
+       ■​ Seleccionará crear.
+
+       ■​ El sistema integrará el bot a la plataforma y monitoreará el bot.
+
+       ■​ Recibirá notificación.
+
+○​ Métricas:
+
+       ■​ Ingresará al sistema.
+
+       ■​ El sistema mostrará el dashboard general.
+
+       ■​ Ingresará al apartado de métricas.
+
+       ■​ El sistema mostrará el rendimiento general.
+
+       ■​ Revisará la información.
+
+       ■​ Seleccionará generar reporte (si o no).
+
+       ■​ El sistema generará el reporte.
+
+       ■​ Consultará reporte.
+
+○​ Reportes y estadísticas:
+
+       ■​ Ingresará a gestión de reportes.
+
+       ■​ Seleccionará el reporte que desea generar.
+
+       ■​ Seleccionará los parámetros.
+
+       ■​ Consultará el reporte.
+
+       ■​ Seleccionará descargar.
+
+○​ Capacitación:
+
+       ■​ Ingresará al sistema.
+
+       ■​ El sistema mostrará el dashboard general.
+
+       ■​ Ingresará al apartado de capacitación.
+        PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+       ■​ Mostrará el listado de tutoriales.
+
+       ■​ Interactuará con el contenido.
+
+○​ Gestión de canales de integración:
+
+       ■​ Ingresará a gestión de canales de integración.
+
+       ■​ Podrá crear, modificar o eliminar el canal seleccionado.
+
+       ■​ Configurará los parámetros.
+
+       ■​ El sistema preguntará si desea validar los datos (si o no).
+
+       ■​ El sistema guardará los datos.
+
+       ■​ El sistema monitoreará el canal de integración.
+
+○​ Soporte técnico/chatbot:
+
+       ■​ Seleccionará soporte técnico.
+
+       ■​ Ingresará al chatbot.
+
+       ■​ Seleccionará el motivo de consulta.
+
+       ■​ El sistema procesará la información.
+
+       ■​ El sistema enviará respuestas.
+
+       ■​ El usuario recibirá la solución.
+
+○​ Clasificación de mensajes IA:
+
+       ■​ Ingresará a mensajes.
+
+       ■​ IA clasificará mensajes recibidos         y   sus   motivos   (quejas,
+          agradecimientos, consultas y ventas).
+
+       ■​ La empresa recibirá la información y notificaciones.
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Ver diagrama
+
+
+
+Usuario-Agente (Experiencia de usuario)
+
+   ●​ El usuario se registra previamente en la plataforma.
+
+   ●​ Inicia sesión con su cuenta.
+
+   ●​ Al ingresar al sistema podrá.
+
+          ○​ Acceder a datos de usuario y perfil:
+
+                 ■​ Podrá actualizar información.
+
+                 ■​ Cambiar contraseña.
+
+          ○​ Gestión de roles:
+
+                 ■​ Seleccionará gestión de personal.
+
+                 ■​ Seleccionará un miembro.
+
+                 ■​ Modificará o asignará un rol.
+
+                 ■​ Seleccionará guardar.
+        PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+       ■​ Recibirá la notificación.
+
+○​ Tendrá la opción de gestión de canales de mensajería:
+
+       ■​ Ingresará al sistema.
+
+       ■​ El sistema mostrará el panel de chats principal.
+
+       ■​ Seleccionará crear nuevo.
+
+       ■​ Seleccionará el tipo de medio de comunicación (chat, evento, grupo,
+          bots y canales).
+
+       ■​ Ingresará información y descripción.
+
+       ■​ Agregará a los miembros.
+
+○​ Crear grupo:
+
+       ■​ Seleccionará crear grupo.
+
+       ■​ Ingresará nombre, descripción y permisos de membresía.
+
+       ■​ Podrá agregar miembros (si o no).
+
+       ■​ Seleccionará o invitará miembros.
+
+       ■​ Establecerá roles en el grupo.
+
+       ■​ Seleccionará crear.
+
+       ■​ El sistema validará y guardará los datos.
+
+       ■​ Recibirá notificaciones.
+
+○​ Crear evento:
+
+       ■​ Seleccionará crear evento.
+
+       ■​ Ingresará especificaciones del evento (fecha, hora y descripción).
+
+       ■​ Agregará listado de miembros.
+
+       ■​ El sistema creará el evento, enviará las invitaciones, desarrollará el
+          evento (el chat se eliminará automáticamente al terminar el evento)
+
+       ■​ Recibirá la notificación.
+
+○​ Crear canales:
+
+       ■​ Seleccionará crear canales.
+        PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+      ■​ Ingresará nombre, tipo de contenido permisos.
+
+      ■​ El sistema creará el canal.
+
+      ■​ Recibirá la notificación.
+
+○​ Crear bot:
+
+      ■​ Seleccionará crear bot.
+
+      ■​ Ingresará nombre, propósito y funcionalidad del bot.
+
+      ■​ Configurará las interacciones.
+
+      ■​ Realizará pruebas.
+
+      ■​ Realizará ajustes.
+
+      ■​ Seleccionará el medio de integración.
+
+      ■​ Seleccionará crear.
+
+      ■​ El sistema integrará el bot a la plataforma y monitoreará el bot.
+
+      ■​ Recibirá notificación.
+
+○​ Métricas:
+
+      ■​ Ingresará al sistema.
+
+      ■​ El sistema mostrará el dashboard general.
+
+      ■​ Ingresará al apartado de métricas.
+
+      ■​ El sistema mostrará el rendimiento general.
+
+      ■​ Revisará la información.
+
+      ■​ Seleccionará generar reporte (si o no).
+
+      ■​ El sistema generará el reporte.
+
+      ■​ Consultará reporte.
+
+○​ Reporte:
+
+      ■​ Ingresará a gestión de reportes.
+
+      ■​ Seleccionará el reporte que desea generar.
+
+      ■​ Seleccionará los parámetros.
+        PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+       ■​ El sistema generará el reporte con la información requerida.
+
+       ■​ Consultará el reporte.
+
+       ■​ Seleccionará descargar.
+
+○​ Capacitación:
+
+       ■​ Ingresará al sistema.
+
+       ■​ El sistema mostrará el dashboard general.
+
+       ■​ Ingresará al apartado de capacitación.
+
+       ■​ Mostrará el listado de tutoriales.
+
+       ■​ Interactuará con el contenido.
+
+○​ Soporte técnico/chatbot:
+
+       ■​ Seleccionará soporte técnico.
+
+       ■​ Ingresará al chatbot.
+
+       ■​ Seleccionará el motivo de consulta.
+
+       ■​ El sistema procesará la información.
+
+       ■​ El sistema enviará respuestas.
+
+       ■​ El usuario recibirá la solución.
+                   PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Ver diagrama
+
+
+
+Usuario-Regular (Experiencia de usuario)
+
+   ●​ El usuario se registra previamente en la plataforma.
+
+   ●​ Inicia sesión con su cuenta.
+
+   ●​ Al ingresar al sistema podrá.
+
+          ○​ Acceder a datos de usuario y perfil:
+
+                 ■​ Podrá actualizar información.
+
+                 ■​ Cambiar contraseña.
+
+          ○​ Tendrá la opción de chat:
+
+                 ■​ Ingresará al sistema.
+
+                 ■​ El sistema mostrará el dashboard.
+
+                 ■​ Ingresará al apartado de chat.
+
+                 ■​ Podrá crear grupos, canal, salas de chat y evento.
+
+                 ■​ Tendrá la opción de canal de mensajería para utilizar el chat, canal
+                    de voz y videollamada.
+                 PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+                ■​ El sistema mostrará el chat.
+
+                ■​ Ingresará mensajes.
+
+         ○​ Capacitación:
+
+                ■​ Ingresará al sistema.
+
+                ■​ El sistema mostrará el dashboard general.
+
+                ■​ Ingresará al apartado de capacitación.
+
+                ■​ Mostrará el listado de tutoriales.
+
+                ■​ Interactuará con el contenido.
+
+         ○​ Soporte técnico/chatbot:
+
+                ■​ Seleccionará soporte técnico.
+
+                ■​ Ingresará al chatbot.
+
+                ■​ Seleccionará el motivo de consulta.
+
+                ■​ El sistema procesará la información.
+
+                ■​ El sistema enviará respuestas.
+
+                ■​ El usuario recibirá la solución.
+
+
+
+
+Ver diagrama
+                    PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+5. FIDELIZACIÓN
+
+La fidelización de los usuarios en la plataforma se logrará al ofrecer una experiencia
+integral que va más allá de una simple herramienta de mensajería. Al integrar de manera
+seamless con otras herramientas de trabajo, la plataforma se convertirá en un hub central
+para la comunicación y colaboración, simplificando las tareas diarias. La capacidad de
+tomar decisiones informadas basadas en datos y la garantía de que su información está
+protegida son factores clave que impulsarán la lealtad y el compromiso a largo plazo de
+los usuarios con la plataforma.
+
+6. PROMOCIÓN
+
+Una excelente experiencia de usuario es el motor que impulsará la promoción orgánica de
+esta plataforma de mensajería. Cuando los usuarios interactúan con una herramienta que
+es intuitiva, segura y les facilita el trabajo, se sienten motivados a compartir su
+satisfacción con sus colegas.
+
+La combinación de una interfaz amigable, la capacidad de resolver problemas de manera
+eficiente y la integración seamless con otras herramientas de la organización generará un
+boca a boca positivo. Al experimentar de primera mano los beneficios de la plataforma, los
+usuarios se convertirán en verdaderos embajadores de la marca, recomendándola a otros
+y contribuyendo a su rápida adopción en toda la organización.
+
+
+
+
+ DIAGRAMAS DE DOCUMENTO Y ESQUEMA DE DATOS
+               PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Ver diagrama
+              PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+ESQUEMA DE DATOS EN FORMATO JSON.
+
+Ver JSON
+                    PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+FLUJO DE PANTALLAS
+Página de llegada
+
+
+   ●​ Cabecera con logotipo y menú de navegación
+   ●​ Sección principal para mostrar recursos y funcionalidades
+   ●​ Sección de registro y configuración del perfil
+
+
+Administrador (Panel de control)
+
+
+   ●​ Inicio de sesión
+   ●​ Cabecera con logotipo y menú de navegación
+   ●​ Estadísticas generales
+   ●​ Ajustes de plataforma
+   ●​ Gestor de usuarios
+   ●​ Editar datos perfil
+   ●​ Informes
+        ●​ Pantalla de descarga
+   ●​    Chat (creación de canales, grupos y eventos)
+
+
+
+
+Ver Imagen
+                    PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Usuario (Empresa)
+
+
+   ●​ Inicio de sesión
+   ●​ Cabecera con logotipo y menú de navegación
+   ●​ Dashboard
+   ●​ Perfil de empresa y edición
+   ●​ Datos de empresa
+   ●​ Gestion de Agentes
+   ●​ Gestion de Usuarios
+   ●​ Análisis de estadísticas
+   ●​ Gestión de canales de mensajerías
+   ●​ Capacitación
+   ●​ Video tutorial
+   ●​   Chat (creación de canales, grupos, bots y eventos)
+
+
+
+
+Ver Imagen
+                    PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+Usuario (Agente)
+
+
+   ●​ Inicio de sesión
+   ●​ Cabecera con logotipo y menú de navegación
+   ●​ Dashboard
+   ●​ Edición de Datos
+   ●​ reportes de estadísticas
+   ●​ Chat (creación de canales, grupos, bots y eventos)
+        ●​ Grupos
+        ●​ Bots
+        ●​ Canales
+
+
+
+
+Ver Imagen
+
+
+
+
+Usuario (Regular)
+
+
+   ●​ Inicio de sesión
+   ●​ Chat
+                  PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+  ●​ Edición de Datos de perfil
+
+
+
+
+Ver Imagen
+              PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+FLUJO COMPLETO DE PANTALLAS
+
+
+
+
+Ver Imagen
+                     PLATAFORMA DE MENSAJERÍA INTELIGENTE PARA EMPRESAS
+
+
+
+
+Implementación del wireframe en figma
+
+
+
+
+Ver figma completo
+

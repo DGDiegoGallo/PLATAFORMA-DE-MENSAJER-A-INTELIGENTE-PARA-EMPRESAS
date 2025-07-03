@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import './LoginPage.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import useAuth from '../../features/auth/hooks/useAuth';
 import { LoginCredentials } from '../../features/auth/types/auth.types';
 
 const LoginPage: React.FC = () => {
-  const navigate = useNavigate();
   const { login, isLoading, error } = useAuth();
   
   const [credentials, setCredentials] = useState<LoginCredentials>({
@@ -41,8 +40,18 @@ const LoginPage: React.FC = () => {
     }
     
     try {
-      await login(credentials);
-      navigate('/dashboard');
+      const response = await login(credentials);
+      
+      // Determinar la ruta basada en el rol del usuario
+      const userRole = response?.user?.rol || response?.user?.role?.name || 'user';
+      
+      if (['admin', 'superadmin', 'administrator'].includes(userRole.toLowerCase())) {
+        window.location.href = '/admin/dashboard';
+      } else if (userRole === 'agent') {
+        window.location.href = '/agent/dashboard';
+      } else {
+        window.location.href = '/company/dashboard';
+      }
     } catch (err) {
       console.error('Error de login:', err);
       // El error ya se maneja en el hook useAuth
@@ -183,9 +192,9 @@ const LoginPage: React.FC = () => {
                 name="password"
                 placeholder="Contraseña"
                 value={credentials.password}
-                onChange={handleChange}
                 required
-                minLength={6}
+                minLength={1}
+                onChange={handleChange}
                 style={{
                   display: 'block',
                   flex: '1 1 auto',

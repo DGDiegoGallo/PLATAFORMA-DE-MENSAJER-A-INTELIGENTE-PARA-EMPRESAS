@@ -1,6 +1,6 @@
 export interface LoginCredentials {
   email: string;
-  password: string;
+  password?: string; // opcional para demo sin contraseña
   rememberMe?: boolean;
 }
 
@@ -18,7 +18,18 @@ export interface User {
   blocked: boolean;
   createdAt: string;
   updatedAt: string;
-  role: Role;
+  role?: Role; // Strapi default role object (unused in demo)
+  rol?: string; // Rol de texto personalizado (user, agent, company)
+  phone?: string;
+  fullName?: string;
+  idType?: string;
+  idNumber?: string;
+  address?: string;
+  birthDate?: string;
+  documentoID?: string;
+  nombre?: string;
+  apellido?: string;
+  company?: number | string | Record<string, unknown> | null;
 }
 
 export interface Role {

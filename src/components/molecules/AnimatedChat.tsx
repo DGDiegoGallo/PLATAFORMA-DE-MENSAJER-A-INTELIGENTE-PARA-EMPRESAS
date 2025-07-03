@@ -17,7 +17,7 @@ const AnimatedChat: React.FC = () => {
         {/* Mensaje 2 (Usuario principal) */}
         <div className="flex items-start justify-end">
           <div className="bg-principal text-white p-3 rounded-lg max-w-xs">
-            <p className="text-sm">
+            <p className="text-sm text-black">
               ¡Hola! Va muy bien, estamos avanzando rápido.
             </p>
           </div>

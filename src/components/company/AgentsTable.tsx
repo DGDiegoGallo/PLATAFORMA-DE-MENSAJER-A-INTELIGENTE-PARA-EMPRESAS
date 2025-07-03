@@ -7,7 +7,7 @@ export interface Agent {
   id: string;
   name: string;
   email: string;
-  phone: string;
+  phone?: string;
   role: string;
 }
 
@@ -16,14 +16,15 @@ interface AgentsTableProps {
   onView: (agent: Agent) => void;
   onEdit: (agent: Agent) => void;
   onDelete: (agent: Agent) => void;
+  readOnly?: boolean;
 }
 
-const AgentsTable: React.FC<AgentsTableProps> = ({ agents, onView, onEdit, onDelete }) => {
+const AgentsTable: React.FC<AgentsTableProps> = ({ agents, onView, onEdit, onDelete, readOnly = false }) => {
   const getRoleBadgeColor = (role: string) => {
     switch (role.toLowerCase()) {
       case 'admin':
         return 'admin-role';
-      case 'supervisor':
+      case 'empleado':
         return 'supervisor-role';
       case 'agente':
         return 'agent-role';
@@ -39,7 +40,7 @@ const AgentsTable: React.FC<AgentsTableProps> = ({ agents, onView, onEdit, onDel
           <tr>
             <th>Nombre</th>
             <th>Correo</th>
-            <th>Teléfono</th>
+            
             <th>Rol</th>
             <th className="text-center">Acciones</th>
           </tr>
@@ -50,7 +51,7 @@ const AgentsTable: React.FC<AgentsTableProps> = ({ agents, onView, onEdit, onDel
               <tr key={agent.id}>
                 <td>{agent.name}</td>
                 <td>{agent.email}</td>
-                <td>{agent.phone}</td>
+                
                 <td>
                   <Badge className={`role-badge ${getRoleBadgeColor(agent.role)} px-2 py-1`}>
                     {agent.role}
@@ -66,6 +67,8 @@ const AgentsTable: React.FC<AgentsTableProps> = ({ agents, onView, onEdit, onDel
                     >
                       <FaEye />
                     </Button>
+{!readOnly && (
+                    <>
                     <Button 
                       variant="light" 
                       size="sm" 
@@ -82,13 +85,15 @@ const AgentsTable: React.FC<AgentsTableProps> = ({ agents, onView, onEdit, onDel
                     >
                       <FaTrash />
                     </Button>
+                    </>
+                    )}
                   </div>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={5} className="text-center py-4">
+              <td colSpan={4} className="text-center py-4">
                 No hay agentes registrados
               </td>
             </tr>

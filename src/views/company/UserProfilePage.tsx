@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import DashboardLayout from '../../components/layout/DashboardLayout';
 import ProfileForm from '../../components/user/ProfileForm';
 import { FaUser } from 'react-icons/fa';
 
@@ -41,7 +40,7 @@ const UserProfilePage: React.FC = () => {
   };
 
   return (
-    <DashboardLayout companyName="Nombre de la empresa">
+    <>
       <Container fluid>
         <h2 className="mb-4" style={{ color: '#000000' }}>Mi cuenta</h2>
         
@@ -73,7 +72,7 @@ const UserProfilePage: React.FC = () => {
           </Card.Body>
         </Card>
       </Container>
-    </DashboardLayout>
+    </>
   );
 };
 

@@ -1,149 +1,147 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import StylesShowcase from '../pages/StylesShowcase';
-import NotFoundPage from '../pages/NotFoundPage';
-import Layout from '../components/Layout';
+import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
+
+// Layouts
 import AuthLayout from '../components/layout/AuthLayout';
+import DashboardLayout from '../components/layout/DashboardLayout';
+import AgentDashboardLayout from '../components/layout/AgentDashboardLayout';
+import AdminDashboardLayout from '../components/layout/AdminDashboardLayout';
+import { useAuthContext } from '../contexts/AuthContext';
+
+// Auth Pages
 import LoginPage from '../views/auth/LoginPage';
 import RegisterPage from '../views/auth/RegisterPage';
+import LogoutPage from '../views/auth/LogoutPage';
+
+// Company Pages
 import CompanyDashboard from '../views/company/CompanyDashboard';
-import UserProfilePage from '../views/company/UserProfilePage';
 import CompanyDataPage from '../views/company/CompanyDataPage';
 import AgentsPage from '../views/company/AgentsPage';
 import UsersPage from '../views/company/UsersPage';
 import AnalyticsPage from '../views/company/AnalyticsPage';
 import MessagingChannelsPage from '../views/company/MessagingChannelsPage';
 import ChatPage from '../views/company/ChatPage';
+import SupportPage from '../views/company/SupportPage';
+import CryptoBankingPage from '../views/company/CryptoBankingPage';
+
+// Agent Pages
 import AgentDashboard from '../views/agent/AgentDashboard';
 import AgentProfilePage from '../views/agent/AgentProfilePage';
+
+// Admin Pages
+import AdminDashboard from '../views/admin/AdminDashboard';
+import AdminCompaniesPage from '../views/admin/CompaniesPage';
+import AdminMessagesPage from '../views/admin/MessagesPage';
+import AdminUsersPage from '../views/admin/UsersPage';
+import AdminDataPage from '../views/admin/AdminDataPage';
+
+// Other Pages
 import LandingPage from '../pages/LandingPage';
+import NotFoundPage from '../pages/NotFoundPage';
+import StylesShowcase from '../pages/StylesShowcase';
+
+// Layout components para envolver las rutas
+const CompanyLayout = () => (
+  <DashboardLayout>
+    <Outlet />
+  </DashboardLayout>
+);
+
+const AgentLayout = () => (
+  <AgentDashboardLayout companyName="Mi Empresa">
+    <Outlet />
+  </AgentDashboardLayout>
+);
+
+const AdminLayout = () => {
+  const { user } = useAuthContext();
+  const userRole = (user?.rol || user?.role?.name || 'user').toLowerCase();
+  const isAdmin = ['admin', 'superadmin', 'administrator'].includes(userRole);
+
+  if (!isAdmin) {
+    return <Navigate to="/company/dashboard" replace />;
+  }
+
+  return (
+    <AdminDashboardLayout>
+      <Outlet />
+    </AdminDashboardLayout>
+  );
+};
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <LandingPage />,
   },
   {
-    path: "/styles",
-    element: <Layout><StylesShowcase /></Layout>,
+    path: '/styles',
+    element: <StylesShowcase />,
   },
-  // Rutas de autenticación
+  // Redirecciones rápidas
+  { path: '/login', element: <Navigate to="/auth/login" replace /> },
+  { path: '/register', element: <Navigate to="/auth/register" replace /> },
+
+  /* ====================  AUTH  ==================== */
   {
-    path: "/auth",
+    path: '/auth',
     children: [
-      {
-        index: true,
-        element: <Navigate to="/auth/login" replace />,
-      },
-      {
-        path: "login",
-        element: <AuthLayout><LoginPage /></AuthLayout>,
-      },
-      {
-        path: "register",
-        element: <AuthLayout><RegisterPage /></AuthLayout>,
-      },
-      {
-        path: "forgot-password",
-        element: <AuthLayout><div className="text-center p-5">Recuperar contraseña (próximamente)</div></AuthLayout>,
-      },
+      { index: true, element: <Navigate to="/auth/login" replace /> },
+      { path: 'login', element: <AuthLayout><LoginPage /></AuthLayout> },
+      { path: 'register', element: <AuthLayout><RegisterPage /></AuthLayout> },
+      { path: 'logout', element: <LogoutPage /> },
     ],
   },
-  // Redirección de /login a /auth/login para mayor comodidad
+
+  /* ====================  COMPANY  ==================== */
+  { path: '/dashboard', element: <Navigate to="/company/dashboard" replace /> },
   {
-    path: "/login",
-    element: <Navigate to="/auth/login" replace />,
-  },
-  // Redirección de /register a /auth/register para mayor comodidad
-  {
-    path: "/register",
-    element: <Navigate to="/auth/register" replace />,
-  },
-  // Dashboard y otras rutas protegidas
-  {
-    path: "/dashboard",
-    element: <Navigate to="/company/dashboard" replace />,
-  },
-  // Rutas de la empresa
-  {
-    path: "/company",
+    path: '/company',
+    element: <CompanyLayout />,
     children: [
-      {
-        index: true,
-        element: <Navigate to="/company/dashboard" replace />,
-      },
-      {
-        path: "dashboard",
-        element: <CompanyDashboard />,
-      },
-      {
-        path: "profile",
-        element: <UserProfilePage />,
-      },
-      {
-        path: "data",
-        element: <CompanyDataPage />,
-      },
-      {
-        path: "agents",
-        element: <AgentsPage />,
-      },
-      {
-        path: "users",
-        element: <UsersPage />,
-      },
-      {
-        path: "analytics",
-        element: <AnalyticsPage />,
-      },
-      {
-        path: "messaging",
-        element: <MessagingChannelsPage />,
-      },
-      {
-        path: "chat",
-        element: <ChatPage />,
-      },
-      {
-        path: "chat-modal",
-        element: <ChatPage isEmbedded={true} />,
-      },
-      {
-        path: "training",
-        element: <div className="p-5">Capacitación (próximamente)</div>,
-      },
+      { index: true, element: <Navigate to="/company/dashboard" replace /> },
+      { path: 'dashboard', element: <CompanyDashboard /> },
+      { path: 'data', element: <CompanyDataPage /> },
+      { path: 'agents', element: <AgentsPage /> },
+      { path: 'users', element: <UsersPage /> },
+      { path: 'analytics', element: <AnalyticsPage /> },
+      { path: 'messaging', element: <MessagingChannelsPage /> },
+      { path: 'chat', element: <ChatPage /> },
+      { path: 'support', element: <SupportPage /> },
     ],
   },
-  // Rutas del agente
+
+  /* ====================  CRYPTO  ==================== */
+  { path: '/crypto-banking', element: <DashboardLayout><CryptoBankingPage /></DashboardLayout> },
+
+  /* ====================  AGENT  ==================== */
   {
-    path: "/agent",
+    path: '/agent',
+    element: <AgentLayout />,
     children: [
-      {
-        index: true,
-        element: <Navigate to="/agent/dashboard" replace />,
-      },
-      {
-        path: "dashboard",
-        element: <AgentDashboard />,
-      },
-      {
-        path: "statistics",
-        element: <Navigate to="/agent/dashboard" replace />,
-      },
-      {
-        path: "profile",
-        element: <AgentProfilePage />,
-      },
-      {
-        path: "profile/edit",
-        element: <AgentProfilePage isEditMode={true} />,
-      },
+      { index: true, element: <Navigate to="/agent/dashboard" replace /> },
+      { path: 'dashboard', element: <AgentDashboard /> },
+      { path: 'profile', element: <AgentProfilePage /> },
     ],
   },
-  // Ruta 404 - debe ser la última
+
+  /* ====================  ADMIN  ==================== */
   {
-    path: "*",
-    element: <Layout><NotFoundPage /></Layout>,
+    path: '/admin',
+    element: <AdminLayout />,
+    children: [
+      { index: true, element: <Navigate to="/admin/dashboard" replace /> },
+      { path: 'dashboard', element: <AdminDashboard /> },
+      { path: 'users', element: <AdminUsersPage /> },
+      { path: 'companies', element: <AdminCompaniesPage /> },
+      { path: 'messages', element: <AdminMessagesPage /> },
+      { path: 'statistics', element: <AnalyticsPage /> },
+      { path: 'data', element: <AdminDataPage /> },      // <— aquí la nueva página
+      { path: 'settings', element: <CompanyDataPage /> },
+    ],
   },
+
+  /* ====================  404  ==================== */
+  { path: '*', element: <NotFoundPage /> },
 ]);
 
 export default router;

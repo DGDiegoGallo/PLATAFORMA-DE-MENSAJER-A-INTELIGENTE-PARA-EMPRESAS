@@ -186,6 +186,7 @@ const AgentDashboardLayout: React.FC<AgentDashboardLayoutProps> = ({ children, c
           </div>
 
           <Nav className="flex-column">
+
             <div 
               onClick={() => handleNavigation('/agent/dashboard')}
               className="nav-link"

@@ -37,13 +37,13 @@
 }
 
 .role-badge.supervisor-role {
-  background-color: #EBC2BB; /* Stroke (Naranja muy claro) */
-  color: #F44123; /* Principal (Naranja) */
+  background-color: #EBEBEB; /* gris claro */
+  color: #000000; /* texto negro */
 }
 
 .role-badge.agent-role {
-  background-color: #EBEBEB; /* Background secundario */
-  color: #767179; /* Secundario Texto */
+  background-color: #F44123; /* naranja principal */
+  color: #FFFFFF; /* blanco para alto contraste */
 }
 
 /* Estilos para los botones de acción */

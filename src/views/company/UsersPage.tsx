@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Card, Button, Modal, Form } from 'react-bootstrap'; // Row y Col eliminados
 import { FaPlus } from 'react-icons/fa';
-import DashboardLayout from '../../components/layout/DashboardLayout';
 import UsersTable, { User } from '../../components/company/UsersTable';
 import Pagination from '../../components/ui/Pagination';
 import './UsersPage.css'; // Importar el archivo CSS
@@ -111,7 +110,7 @@ const UsersPage: React.FC = () => {
   };
 
   return (
-    <DashboardLayout companyName="Nombre de la empresa">
+    <>
       <Container fluid>
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 style={{ color: 'var(--color-text-primary)' }}>Usuarios</h2>
@@ -210,7 +209,7 @@ const UsersPage: React.FC = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </DashboardLayout>
+    </>
   );
 };
 
