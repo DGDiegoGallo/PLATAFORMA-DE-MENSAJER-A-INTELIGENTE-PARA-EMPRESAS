@@ -116,7 +116,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                       <td>
                         <span
                           className={`badge ${roleBadgeClassName}`.trim()}
-                          style={{ background: roleBadgeClassName ? undefined : '#F44123', color: '#fff', fontWeight: 600, fontSize: 14 }}
+                          style={{ background: roleBadgeClassName ? undefined : '#F44123', color: '#000', fontWeight: 600, fontSize: 14 }}
                         >
                           {(attr.rol || attr.role?.name) ? (attr.rol || attr.role?.name) : 'No disponible'}
                         </span>
@@ -160,15 +160,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                               <FaEye />
                             </button>
                           )}
-                          {onToggleBlock && (
-                            <button
-                              onClick={() => onToggleBlock(u)}
-                              className={`btn btn-sm ${attr.blocked ? 'btn-outline-success' : 'btn-outline-warning'}`}
-                              title={attr.blocked ? 'Desbloquear usuario' : 'Bloquear usuario'}
-                            >
-                              {attr.blocked ? <FaLockOpen /> : <FaLock />}
-                            </button>
-                          )}
+                          {/* Botón de candado oculto por solicitud del cliente */}
 
                           {onDelete && (
                             <button
