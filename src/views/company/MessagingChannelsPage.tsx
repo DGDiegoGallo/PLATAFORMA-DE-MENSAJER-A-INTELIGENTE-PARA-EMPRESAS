@@ -103,10 +103,32 @@ const MessagingChannelsPage: React.FC = () => {
     setShowEditModal(true);
   };
 
-  const handleEditChannel = (ch: Channel) => {
+  const handleEditChannel = async (ch: Channel) => {
     setModalMode('edit');
-    setCurrentChannel(ch);
-    setShowEditModal(true);
+    
+    try {
+      // Obtener los datos completos del canal para asegurar que tenemos la información más actualizada
+      const channelData = await messageService.getMessageByDocumentId(ch.documentId);
+      const attr = channelData?.attributes ?? channelData ?? {};
+      
+      // Asegurarse de que tenemos los miembros del canal
+      const members = attr.group_member || [];
+      
+      // Actualizar el canal actual con los datos completos
+      setCurrentChannel({
+        ...ch,
+        members: members
+      });
+      
+      setShowEditModal(true);
+    } catch (error) {
+      console.error('Error al cargar los datos del canal:', error);
+      notify('Error al cargar los datos del canal', 'danger');
+      
+      // En caso de error, usar los datos que ya tenemos
+      setCurrentChannel(ch);
+      setShowEditModal(true);
+    }
   };
 
   const handleDeleteChannel = async (ch: Channel) => {
@@ -417,6 +439,71 @@ const MessagingChannelsPage: React.FC = () => {
                 </Form.Group>
               </Col>
             </Row>
+            
+            {modalMode === 'edit' && currentChannel.members && currentChannel.members.length > 0 && (
+              <Form.Group className="mb-3">
+                <Form.Label>Miembros del Canal</Form.Label>
+                <div className="border rounded p-2" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                  {currentChannel.members.map((member: any) => (
+                    <div key={member.id} className="d-flex justify-content-between align-items-center mb-2">
+                      <div>
+                        <span>{member.name}</span>
+                        <Badge bg="secondary" className="ms-2">{member.role}</Badge>
+                      </div>
+                      <Button 
+                        variant="outline-danger" 
+                        size="sm"
+                        onClick={async () => {
+                          if (!currentChannel.documentId) return;
+                          if (!window.confirm(`¿Eliminar a ${member.name} del canal?`)) return;
+                          
+                          try {
+                            // Obtener el canal actual
+                            const existing = await messageService.getMessageByDocumentId(currentChannel.documentId);
+                            const attr = existing?.attributes ?? existing ?? {};
+                            
+                            // Filtrar el miembro a eliminar
+                            const updatedMembers = (attr.group_member || []).filter((m: any) => m.id !== member.id);
+                            
+                            // Obtener los IDs de usuario actualizados
+                            const userIds = updatedMembers
+                              .filter((m: any) => m.userId && typeof m.userId === 'number')
+                              .map((m: any) => m.userId);
+                            
+                            // Actualizar el canal
+                            await messageService.updateGroupMembersByDocumentId(
+                              currentChannel.documentId,
+                              updatedMembers,
+                              userIds
+                            );
+                            
+                            // Actualizar el estado local
+                            setCurrentChannel({
+                              ...currentChannel,
+                              members: updatedMembers
+                            });
+                            
+                            // Actualizar la lista de canales
+                            setChannels(prev => prev.map(c => 
+                              c.documentId === currentChannel.documentId 
+                                ? { ...c, members: updatedMembers } 
+                                : c
+                            ));
+                            
+                            notify('Miembro eliminado del canal', 'success');
+                          } catch (error) {
+                            console.error('Error al eliminar miembro:', error);
+                            notify('Error al eliminar miembro del canal', 'danger');
+                          }
+                        }}
+                      >
+                        Eliminar
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </Form.Group>
+            )}
           </Form>
         </Modal.Body>
 

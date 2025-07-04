@@ -6,6 +6,7 @@ import useAuth from '../../features/auth/hooks/useAuth';
 import { useCompany } from '../../features/company/hooks/useCompany';
 import { userService } from '../../features/auth/services/user.service';
 import { companyService } from '../../features/company/services/company.service';
+import { messageService } from '../../features/company/services/message.service';
 import AgentsTable, { Agent } from '../../components/company/AgentsTable';
 import useChannels from '../../features/company/hooks/useChannels';
 import './AgentsPage.css';
@@ -117,22 +118,57 @@ const AgentsPage: React.FC = () => {
   const confirmDeleteAgent = async () => {
     if (!company || !agentToDelete) return;
     try {
+      // 1. Eliminar el agente de la lista de miembros de la compañía
       const updatedMembers = agents.filter(a => a.id !== agentToDelete.id);
       await companyService.updateMembersByDocumentId((company as CompanyData).documentId!, updatedMembers);
-      // 2) actualizar canales eliminando al miembro
+      
+      // 2. Eliminar el agente de todos los canales de mensajería
       const affected = channels.filter(ch => ch.members.some(m => m.id === agentToDelete.id));
+      console.log(`Eliminando agente de ${affected.length} canales de mensajería`);
+      
       for (const ch of affected) {
-        const newMembers = ch.members.filter(m => m.id !== agentToDelete.id);
-        try{
-          // await messageService.updateGroupMembersByDocumentId(ch.documentId,newMembers,userIds);
-        } catch(error){
-          console.error("Error updating group members:", error);
+        try {
+          // Obtener los datos actuales del canal
+          const channelData = await messageService.getMessageByDocumentId(ch.documentId);
+          const attr = channelData?.attributes ?? channelData ?? {};
+          
+          // Filtrar el miembro a eliminar
+          const newMembers = (attr.group_member || []).filter((m: any) => m.id !== agentToDelete.id);
+          
+          // Obtener los IDs de usuario actualizados (excluyendo el usuario eliminado)
+          const userIds = newMembers
+            .filter((m: any) => m.userId && typeof m.userId === 'number')
+            .map((m: any) => m.userId);
+          
+          // Actualizar el canal sin el miembro eliminado
+          await messageService.updateGroupMembersByDocumentId(ch.documentId, newMembers, userIds);
+          console.log(`Agente eliminado del canal ${ch.name}`);
+          
+          // Actualizar el estado local de los canales
+          setChannels(prev => prev.map(c => c.documentId === ch.documentId ? {...c, members: newMembers} : c));
+        } catch(error) {
+          console.error(`Error eliminando agente del canal ${ch.name}:`, error);
         }
-        setChannels(prev=>prev.map(c=>c.documentId===ch.documentId?{...c,members:newMembers}:c));
       }
+      
+      // 3. Eliminar la relación del usuario con la compañía en Strapi
+      try {
+        // Buscar el usuario por email
+        const user = await userService.getUserByEmail(agentToDelete.email);
+        if (user && user.id) {
+          console.log(`Eliminando relación del usuario ${user.id} con la compañía`);
+          // Establecer la compañía a null para eliminar la relación
+          await userService.assignCompany(user.id, null as any);
+          console.log(`Relación eliminada correctamente`);
+        }
+      } catch (error) {
+        console.error('Error eliminando relación con la compañía:', error);
+      }
+      
+      // 4. Actualizar el estado local
       setAgents(updatedMembers);
-      setNotification({ show: true, message: 'Agente eliminado correctamente', variant: 'success' });
-    } catch(err){
+      setNotification({ show: true, message: 'Agente eliminado correctamente de la compañía y todos los canales', variant: 'success' });
+    } catch(err) {
       setNotification({ show: true, message: 'Error eliminando miembro', variant: 'danger' });
       console.error(err);
     } finally {
@@ -198,9 +234,9 @@ const AgentsPage: React.FC = () => {
         const foundUser = await userService.getUserByEmail(currentAgent.email);
         console.log("Usuario encontrado:", foundUser);
         
-        // Crear el nuevo miembro
+        // Crear el nuevo miembro con ID único
         const newMember: Agent = {
-          id: Date.now().toString(),
+          id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
           name: `${currentAgent.firstName} ${currentAgent.lastName}`,
           email: currentAgent.email,
           role: currentAgent.role,

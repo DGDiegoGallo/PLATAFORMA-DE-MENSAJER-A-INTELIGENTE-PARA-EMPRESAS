@@ -208,14 +208,21 @@ export const companyService = {
     // Obtener todos los datos actuales de la compañía
     const currentCompany = await this.getCompanyByDocumentId(documentId);
     if (!currentCompany) throw new Error('No se pudo obtener la compañía actual');
-    // Mezclar los miembros nuevos con los existentes (por id/email únicos)
-    const updatedMembers = members;
+    
+    // Asegurarse de que todos los miembros tengan un ID único
+    const membersWithUniqueIds = members.map(member => {
+      if (!member.id) {
+        return { ...member, id: Date.now().toString() + Math.random().toString(36).substring(2, 9) };
+      }
+      return member;
+    });
+    
     // Construir el payload completo, sin documentId
     const fullPayload: Record<string, any> = {
       name: currentCompany.name,
       description: currentCompany.description,
       crypto_assets: currentCompany.crypto_assets,
-      members: updatedMembers,
+      members: membersWithUniqueIds,
       bots: (typeof currentCompany === 'object' && currentCompany && 'bots' in currentCompany) ? (currentCompany as Record<string, unknown>).bots : undefined,
       metrics: (typeof currentCompany === 'object' && currentCompany && 'metrics' in currentCompany) ? (currentCompany as Record<string, unknown>).metrics : undefined,
       users_permissions_users: (typeof currentCompany === 'object' && currentCompany && 'users_permissions_users' in currentCompany) ? (currentCompany as Record<string, unknown>).users_permissions_users : undefined,
@@ -279,15 +286,18 @@ export const companyService = {
     if (!compData) throw new Error('Compañía no encontrada');
     const companyId = compData.id;
     const existingMembers = compData.attributes.members ?? [];
-    const updatedMembers = [
-      ...existingMembers,
-      {
-        id: Date.now().toString(),
-        name: `${payload.firstName} ${payload.lastName}`,
-        email: payload.email,
-        role: payload.role,
-      },
-    ];
+    
+    // Crear un nuevo miembro con ID único
+    const newMember = {
+      id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
+      name: `${payload.firstName} ${payload.lastName}`,
+      email: payload.email,
+      role: payload.role,
+    };
+    
+    // Agregar el nuevo miembro a la lista existente
+    const updatedMembers = [...existingMembers, newMember];
+    
     const body = { data: { members: updatedMembers } };
     const putRes = await fetch(`${API_URL}/api/companies/${companyId}`, {
       method: 'PATCH',
@@ -352,7 +362,7 @@ export const companyService = {
     const updatedMembers = [
       ...existingMembers,
       {
-        id: Date.now().toString(), // ID local, no es foreign key (podríamos usar newUserId, pero evitamos duplicar data)
+        id: Date.now().toString() + Math.random().toString(36).substring(2, 9), // ID local único, no es foreign key
         userId: newUserId, // Esto ayuda a mantener relación con el id real del usuario en la DB
         name: `${payload.firstName} ${payload.lastName}`,
         email: payload.email, // duplicamos el dato para facilitar búsquedas
