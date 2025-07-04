@@ -46,7 +46,9 @@ const RegisterForm: React.FC = () => {
     e.preventDefault();
     try {
       await register(credentials);
-      navigate('/dashboard');
+      // Recargar la página antes de navegar para asegurar que todos los datos antiguos se limpien
+      // y se carguen los nuevos datos del usuario correctamente
+      window.location.href = '/dashboard';
     } catch {
       /* error handled in useAuth */
     }

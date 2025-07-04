@@ -142,6 +142,12 @@ export const useAuth = () => {
     setError(null);
     
     try {
+      // Importar el store de la compañía para limpiar los datos
+      // Nota: Importación dinámica para evitar dependencias circulares
+      const companyStore = (await import('../../../store/companyStore')).default;
+      // Limpiar los datos de la compañía en el store
+      companyStore.getState().clearCompanyData();
+      
       const response = await authService.register(credentials);
       
       const sanitized = sanitizeUser(response.user as RawUser);

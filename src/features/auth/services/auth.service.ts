@@ -99,9 +99,14 @@ export const authService = {
    * @param rememberMe Si se debe recordar al usuario
    */
   saveAuth(token: string, user: User): void {
-    const storage = localStorage;
-    storage.setItem('token', token);
-    storage.setItem('user', JSON.stringify(user));
+    // Limpiar datos específicos de autenticación antes de guardar nuevos datos
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('companyName');
+    
+    // Guardar los nuevos datos de autenticación
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
   },
 
   /**
@@ -136,6 +141,11 @@ export const authService = {
    */
   async register(credentials: RegisterCredentials): Promise<AuthResponse> {
     try {
+      // Limpiar localStorage y sessionStorage antes de registrar un nuevo usuario
+      // para evitar que datos antiguos persistan
+      localStorage.clear();
+      sessionStorage.clear();
+      
       // En producción, esto se conectaría a la API real de Strapi
       // Por ahora, simulamos una respuesta exitosa para desarrollo frontend
       
