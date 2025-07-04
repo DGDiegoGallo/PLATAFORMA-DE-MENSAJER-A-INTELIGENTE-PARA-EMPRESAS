@@ -270,20 +270,7 @@ const LoginPage: React.FC = () => {
                 Recuérdame
               </label>
             </div>
-            <Link 
-              to="/auth/forgot-password" 
-              style={{ 
-                color: '#F44123', 
-                textDecoration: 'none',
-                direction: 'ltr',
-                textAlign: 'right',
-                display: 'block',
-                fontSize: '0.9rem',
-                transition: 'all 0.3s ease'
-              }}
-            >
-              ¿Olvidaste tu contraseña?
-            </Link>
+            {/* Enlace de recuperación de contraseña oculto por solicitud del cliente */}
           </div>
 
           <button 
