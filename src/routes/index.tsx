@@ -21,7 +21,7 @@ import AnalyticsPage from '../views/company/AnalyticsPage';
 import MessagingChannelsPage from '../views/company/MessagingChannelsPage';
 import ChatPage from '../views/company/ChatPage';
 import SupportPage from '../views/company/SupportPage';
-import CryptoBankingPage from '../views/company/CryptoBankingPage';
+import CryptoWalletPage from '../views/company/CryptoWalletPage';
 
 // Agent Pages
 import AgentDashboard from '../views/agent/AgentDashboard';
@@ -54,7 +54,7 @@ const AgentLayout = () => (
 
 const AdminLayout = () => {
   const { user } = useAuthContext();
-  const userRole = (user?.rol || user?.role?.name || 'user').toLowerCase();
+  const userRole = user?.rol || 'user';
   const isAdmin = ['admin', 'superadmin', 'administrator'].includes(userRole);
 
   if (!isAdmin) {
@@ -66,6 +66,34 @@ const AdminLayout = () => {
       <Outlet />
     </AdminDashboardLayout>
   );
+};
+
+// Wrapper para Crypto Wallet que detecta el rol y usa el layout correcto
+const CryptoWalletWrapper = () => {
+  const { user } = useAuthContext();
+  const userRole = user?.rol || 'user';
+  
+  // Determinar el layout según el rol
+  if (['admin', 'superadmin', 'administrator'].includes(userRole)) {
+    return (
+      <AdminDashboardLayout>
+        <CryptoWalletPage />
+      </AdminDashboardLayout>
+    );
+  } else if (userRole === 'agent') {
+    return (
+      <AgentDashboardLayout companyName="Mi Empresa">
+        <CryptoWalletPage />
+      </AgentDashboardLayout>
+    );
+  } else {
+    // Para company, cliente, user, etc.
+    return (
+      <DashboardLayout>
+        <CryptoWalletPage />
+      </DashboardLayout>
+    );
+  }
 };
 
 const router = createBrowserRouter([
@@ -111,7 +139,10 @@ const router = createBrowserRouter([
   },
 
   /* ====================  CRYPTO  ==================== */
-  { path: '/crypto-banking', element: <DashboardLayout><CryptoBankingPage /></DashboardLayout> },
+  { 
+    path: '/crypto-wallet', 
+    element: <CryptoWalletWrapper /> 
+  },
 
   /* ====================  AGENT  ==================== */
   {

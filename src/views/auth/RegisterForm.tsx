@@ -4,6 +4,7 @@ import useAuth from '../../features/auth/hooks/useAuth';
 import { RegisterCredentials } from '../../features/auth/types/register.types';
 import InputField from '../../components/common/InputField';
 import PasswordField from '../../components/common/PasswordField';
+import { WalletCreatedModal } from '../../components/auth/WalletCreatedModal';
 
 const RegisterForm: React.FC = () => {
   const navigate = useNavigate();
@@ -22,6 +23,13 @@ const RegisterForm: React.FC = () => {
     confirmPassword: '',
     termsAccepted: false,
   });
+
+  // Estado para el modal de wallet creada
+  const [showWalletModal, setShowWalletModal] = useState(false);
+  const [walletData, setWalletData] = useState<{
+    pin: string;
+    walletAddress: string;
+  } | null>(null);
 
   // Eliminada validación HTML5 adicional
 
@@ -45,13 +53,33 @@ const RegisterForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await register(credentials);
-      // Recargar la página antes de navegar para asegurar que todos los datos antiguos se limpien
-      // y se carguen los nuevos datos del usuario correctamente
-      window.location.href = '/dashboard';
-    } catch {
+      console.log('🚀 Iniciando proceso de registro...');
+      const response = await register(credentials);
+      
+      // Verificar si se creó la wallet automáticamente
+      if (response.walletData) {
+        console.log('🎉 Wallet creada durante el registro, mostrando modal:', response.walletData);
+        setWalletData({
+          pin: response.walletData.pin,
+          walletAddress: response.walletData.wallet.wallet_address
+        });
+        setShowWalletModal(true);
+      } else {
+        console.log('⚠️ No se encontraron datos de wallet, navegando directamente...');
+        // Si no hay datos de wallet, navegar directamente
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      console.error('❌ Error durante el registro:', error);
       /* error handled in useAuth */
     }
+  };
+
+  const handleWalletModalClose = () => {
+    console.log('📱 Usuario confirmó que guardó el PIN, navegando al dashboard...');
+    setShowWalletModal(false);
+    setWalletData(null);
+    navigate('/dashboard');
   };
 
   const passwordsMatch =
@@ -209,6 +237,16 @@ const RegisterForm: React.FC = () => {
           </form>
         </div>
       </div>
+
+      {/* Modal para mostrar PIN de wallet creada */}
+      {showWalletModal && walletData && (
+        <WalletCreatedModal
+          isOpen={showWalletModal}
+          onClose={handleWalletModalClose}
+          pin={walletData.pin}
+          walletAddress={walletData.walletAddress}
+        />
+      )}
     </div>
   );
 };

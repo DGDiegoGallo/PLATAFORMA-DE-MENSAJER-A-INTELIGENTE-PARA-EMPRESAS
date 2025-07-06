@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import useAuth from '../../features/auth/hooks/useAuth';
 import { LoginCredentials } from '../../features/auth/types/auth.types';
+import { WalletCreatedModal } from '../../components/auth/WalletCreatedModal';
 
 const LoginPage: React.FC = () => {
   const { login, isLoading, error } = useAuth();
@@ -16,6 +17,7 @@ const LoginPage: React.FC = () => {
   
   const [showPassword, setShowPassword] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [showWalletModal, setShowWalletModal] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -321,7 +323,43 @@ const LoginPage: React.FC = () => {
               >Crear una cuenta</Link>
             </p>
           </div>
+
+          {/* Botón temporal para probar el modal - REMOVER EN PRODUCCIÓN */}
+          <button 
+            type="button"
+            onClick={() => setShowWalletModal(true)}
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: '0.5rem 0.75rem',
+              fontSize: '0.9rem',
+              fontWeight: '500',
+              lineHeight: '1.4',
+              color: '#fff',
+              textAlign: 'center',
+              backgroundColor: '#17a2b8',
+              border: '1px solid #17a2b8',
+              borderRadius: '0.25rem',
+              cursor: 'pointer',
+              marginTop: '1rem',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            Probar Modal Wallet (Solo Testing)
+          </button>
         </form>
+
+        {/* Modal de Wallet Creada */}
+        <WalletCreatedModal
+          isOpen={showWalletModal}
+          onClose={() => setShowWalletModal(false)}
+          walletData={{
+            pin: '5757',
+            address: '0x78e9CC505C5bB6c23C9B8D0812610461d885cba8',
+            balance: 0,
+            network: 'BSC (BEP20)'
+          }}
+        />
       </div>
     </div>
   );

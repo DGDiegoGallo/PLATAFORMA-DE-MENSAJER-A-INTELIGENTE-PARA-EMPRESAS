@@ -36,3 +36,94 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #e03a1e;
 }
+
+/* ✨ ANIMACIONES PERSONALIZADAS ✨ */
+
+/* Animación flotante para elementos */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Animación para navbar al hacer scroll */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animación suave para hover en botones */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Clase utilitaria para transiciones suaves */
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+/* Hover effects para botones */
+.btn:hover {
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}
+
+/* Animación para cards */
+.card:hover {
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Animación para elementos que entran desde abajo */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animación para elementos que entran desde la izquierda */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animación para elementos que entran desde la derecha */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

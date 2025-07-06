@@ -1,4 +1,5 @@
 import { onCLS, onFID, onLCP, onINP, onTTFB, Metric } from 'web-vitals';
+import API_URL from '../config/api';
 
 interface MetricPayload {
   name: string;
@@ -18,7 +19,7 @@ const sendMetric = (metric: Metric) => {
   };
 
   // Strapi v4 espera { data: {...} }
-  fetch('http://localhost:1337/api/metrics', {
+  fetch(`${API_URL}/api/metrics`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ data: payload }),

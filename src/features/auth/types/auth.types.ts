@@ -1,3 +1,5 @@
+import { UserWallet } from '../../../services/userWallet.service';
+
 export interface LoginCredentials {
   email: string;
   password?: string; // opcional para demo sin contraseña
@@ -7,6 +9,10 @@ export interface LoginCredentials {
 export interface AuthResponse {
   jwt: string;
   user: User;
+  walletData?: {
+    wallet: UserWallet; // Datos de la wallet creada automáticamente
+    pin: string; // PIN original para mostrar al usuario
+  };
 }
 
 export interface User {

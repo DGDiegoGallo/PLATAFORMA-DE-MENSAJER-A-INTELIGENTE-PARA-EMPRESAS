@@ -6,7 +6,6 @@ const IS_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 export interface CompanyPayload {
   name?: string;
   description?: Record<string, unknown>;
-  crypto_assets?: Record<string, unknown>;
   documentId?: string;
   members?: any[];
 }
@@ -34,7 +33,7 @@ export const companyService = {
 
     // Strapi v4+ expects { data: { name, description } }
     type StrapiBody = { data: Record<string, unknown> };
-    const body: StrapiBody = { data: { name: payload.name, description: payload.description, crypto_assets: payload.crypto_assets } };
+    const body: StrapiBody = { data: { name: payload.name, description: payload.description } };
     if (userId) {
       // Assuming you created a many-to-many relation called "users" in the Company collection
       body.data.users_permissions_users = [userId];
@@ -89,7 +88,6 @@ export const companyService = {
     const cleanedPayload = deepClean({
       name: payload.name,
       description: payload.description,
-      crypto_assets: payload.crypto_assets,
       members: payload.members,
       bots: (typeof payload === 'object' && payload && 'bots' in payload) ? (payload as Record<string, unknown>).bots : undefined,
       metrics: (typeof payload === 'object' && payload && 'metrics' in payload) ? (payload as Record<string, unknown>).metrics : undefined,
@@ -97,7 +95,7 @@ export const companyService = {
     });
     const body: StrapiBody = { data: cleanedPayload as Record<string, unknown> };
 
-    let res = await fetch(`${API_URL}/api/companies/${documentId}`, {
+    const res = await fetch(`${API_URL}/api/companies/${documentId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -119,7 +117,7 @@ export const companyService = {
     }
 
     type StrapiBody = { data: Record<string, unknown> };
-    const body: StrapiBody = { data: { name: payload.name, description: payload.description, crypto_assets: payload.crypto_assets } };
+    const body: StrapiBody = { data: { name: payload.name, description: payload.description } };
 
     const res = await fetch(`${API_URL}/api/companies/${id}`, {
       method: 'PATCH',
@@ -221,7 +219,6 @@ export const companyService = {
     const fullPayload: Record<string, any> = {
       name: currentCompany.name,
       description: currentCompany.description,
-      crypto_assets: currentCompany.crypto_assets,
       members: membersWithUniqueIds,
       bots: (typeof currentCompany === 'object' && currentCompany && 'bots' in currentCompany) ? (currentCompany as Record<string, unknown>).bots : undefined,
       metrics: (typeof currentCompany === 'object' && currentCompany && 'metrics' in currentCompany) ? (currentCompany as Record<string, unknown>).metrics : undefined,

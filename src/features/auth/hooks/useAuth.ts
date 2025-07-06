@@ -156,6 +156,35 @@ export const useAuth = () => {
         setUser(sanitized);
       }
       setIsAuthenticated(true);
+
+      // 🔥 CREAR WALLET AUTOMÁTICAMENTE DESPUÉS DEL REGISTRO
+      console.log('🎯 Usuario registrado exitosamente, creando wallet automáticamente...');
+      
+      try {
+        // Importar el servicio de wallet
+        const { userWalletService } = await import('../../../services/userWallet.service');
+        
+        // Crear wallet para el usuario recién registrado
+        const walletResult = await userWalletService.createUserWallet(response.user.id);
+        
+        console.log('🎉 Wallet creada exitosamente:', {
+          userId: response.user.id,
+          walletAddress: walletResult.wallet.wallet_address,
+          documentId: walletResult.wallet.documentId,
+          pin: walletResult.pin
+        });
+
+        // Agregar los datos de wallet a la respuesta para que el formulario pueda mostrar el modal
+        response.walletData = {
+          wallet: walletResult.wallet,
+          pin: walletResult.pin
+        };
+
+      } catch (walletError) {
+        console.error('❌ Error creando wallet automáticamente:', walletError);
+        // No fallar el registro completo por error de wallet, pero sí notificar
+        console.warn('⚠️ El usuario se registró correctamente pero hubo un problema creando la wallet');
+      }
       
       return response;
     } catch (err: unknown) {

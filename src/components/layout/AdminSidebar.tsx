@@ -9,7 +9,8 @@ import {
   FaChevronRight,
   FaShieldAlt,
   FaComments,
-  FaDatabase
+  FaDatabase,
+  FaWallet
 } from 'react-icons/fa';
 import './Sidebar.css';
 import useAuth from '../../features/auth/hooks/useAuth';
@@ -55,6 +56,7 @@ const AdminSidebar: React.FC = () => {
     { icon: <FaComments size={18} />, text: 'Gestión de Mensajes', path: '/admin/messages' },
     // { icon: <FaChartLine size={18} />, text: 'Estadísticas Globales', path: '/admin/statistics' },
     { icon: <FaDatabase size={18} />, text: 'Gestión de Datos', path: '/admin/data' },
+    { icon: <FaWallet size={18} />, text: 'Crypto Wallet', path: '/crypto-wallet' },
     // { icon: <FaCog size={18} />, text: 'Configuración', path: '/admin/settings' },
   ];
 

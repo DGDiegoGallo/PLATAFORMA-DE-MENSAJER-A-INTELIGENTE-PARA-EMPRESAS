@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaUser, FaChartBar, FaComments, FaUsers, FaRobot, FaLayerGroup, FaCalendarAlt, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser, FaChartBar, FaComments, FaUsers, FaRobot, FaLayerGroup, FaCalendarAlt, FaSignOutAlt, FaWallet } from 'react-icons/fa';
 
 interface AgentDashboardLayoutProps {
   children: React.ReactNode;
@@ -278,6 +278,21 @@ const AgentDashboardLayout: React.FC<AgentDashboardLayoutProps> = ({ children, c
             >
               <FaCalendarAlt />
               <span>Eventos</span>
+            </div>
+            <div 
+              onClick={() => handleNavigation('/crypto-wallet')}
+              className="nav-link"
+              style={{ 
+                color: isActive('/crypto-wallet') ? '#F44123' : '#767179', 
+                padding: '0.5rem 1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                cursor: 'pointer'
+              }}
+            >
+              <FaWallet />
+              <span>Crypto Wallet</span>
             </div>
           </Nav>
 

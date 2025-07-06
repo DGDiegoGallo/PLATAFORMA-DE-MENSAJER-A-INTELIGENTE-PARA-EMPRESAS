@@ -52,7 +52,7 @@ const Sidebar: React.FC = () => {
   const companyName = useCompanyStore((state: CompanyState) => state.companyName);
   const safeCompanyName = (companyName ?? '').trim();
   const { user, logout } = useAuth();
-  const userRole = user?.rol || user?.role?.name || 'user';
+  const userRole = user?.rol || 'user';
   const hasCompany = safeCompanyName !== '' && userRole !== 'user';
   const isAdmin = ['admin', 'superadmin', 'administrator'].includes(userRole);
   // permitir edición solo para roles distintos de empleado o agente
@@ -67,7 +67,8 @@ const Sidebar: React.FC = () => {
   // Sidebar items condicionales
   const sidebarItems = isClienteSinEmpresa
     ? [
-        { icon: <FaBuilding size={18} />, text: 'Crear Empresa', path: '/company/data' }
+        { icon: <FaBuilding size={18} />, text: 'Crear Empresa', path: '/company/data' },
+        { icon: <FaWallet size={18} />, text: 'Crypto Wallet', path: '/crypto-wallet' },
       ]
     : [
         { icon: <FaBuilding size={18} />, text: hasCompany ? 'Datos Empresa' : 'Crear Empresa', path: '/company/data' },
@@ -77,7 +78,7 @@ const Sidebar: React.FC = () => {
         { icon: <FaCommentDots size={18} />, text: 'Canal de mensajería', path: '/company/messaging' },
         { icon: <FaGraduationCap size={18} />, text: 'Soporte', path: '/company/support' },
         { icon: <FaComments size={18} />, text: 'Chat', path: '/company/chat' },
-        ...(userRole === 'company' ? [{ icon: <FaWallet size={18} />, text: 'Crypto Banking', path: '/crypto-banking' }] : []),
+        { icon: <FaWallet size={18} />, text: 'Crypto Wallet', path: '/crypto-wallet' },
       ];
 
   const toggleCollapse = () => {
