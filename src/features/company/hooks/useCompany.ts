@@ -7,6 +7,7 @@ interface UseCompanyReturn {
   company: CompanyResponse | null;
   loading: boolean;
   error: string | null;
+  refreshCompany: () => void;
 }
 
 // Define member interface
@@ -28,12 +29,11 @@ export const useCompany = (): UseCompanyReturn => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   useEffect(() => {
     const fetchCompany = async () => {
       if (!user?.id) return; // sin usuario no buscamos
-
-      // Si ya está cacheado en memoria evitamos nueva llamada
-      if (company) return;
 
       setLoading(true);
       try {
@@ -49,9 +49,13 @@ export const useCompany = (): UseCompanyReturn => {
 
     fetchCompany();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
+  }, [user?.id, refreshTrigger]);
 
-  return { company, loading, error };
+  const refreshCompany = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+
+  return { company, loading, error, refreshCompany };
 };
 
 /**
@@ -70,10 +74,18 @@ export const useCompanyByAgent = (): UseCompanyReturn => {
       if (!user?.id || !user?.email) return;
       
       // Verificar si es rol agente (puede estar en rol o role.name)
-      const isAgent = user.rol === 'agente' || 
+      const isAgent = user.rol?.toLowerCase() === 'agente' || 
                      user.role?.name?.toLowerCase() === 'agente' ||
-                     user.rol === 'empleado' || 
+                     user.rol?.toLowerCase() === 'empleado' || 
                      user.role?.name?.toLowerCase() === 'empleado';
+      
+      // DEBUG: Logs para verificar detección de agente
+      console.log('=== DEBUG useCompanyByAgent ===');
+      console.log('user.rol:', user.rol);
+      console.log('user.role?.name:', user.role?.name);
+      console.log('isAgent:', isAgent);
+      console.log('user.company:', user.company);
+      console.log('===============================');
                      
       if (!isAgent) return;
 
@@ -152,7 +164,7 @@ export const useCompanyByAgent = (): UseCompanyReturn => {
 
           const isMember = members.some((member: CompanyMember) => {
             const isMatch = member.email.toLowerCase() === user.email.toLowerCase() && 
-                          (member.role.toLowerCase() === 'agente' || member.role.toLowerCase() === 'empleado');
+                          (member.role?.toLowerCase() === 'agente' || member.role?.toLowerCase() === 'empleado');
             if (isMatch) {
               console.log('¡Se encontró el agente/empleado en la compañía!', member);
             }
@@ -187,7 +199,12 @@ export const useCompanyByAgent = (): UseCompanyReturn => {
     fetchCompanyForAgent();
   }, [user?.id, user?.email, user?.rol, user?.company]);
 
-  return { company, loading, error };
+  const refreshCompany = () => {
+    // Para useCompanyByAgent, simplemente reforzamos recarga
+    setCompany(null);
+  };
+
+  return { company, loading, error, refreshCompany };
 };
 
 export default useCompany;

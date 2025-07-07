@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Modal, Spinner, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Container, Card } from 'react-bootstrap';
 import { useAuth } from '../../features/auth/hooks/useAuth';
 import { useCompany, useCompanyByAgent } from '../../features/company/hooks/useCompany';
 import { companyService, CompanyPayload as BaseCompanyPayload } from '../../features/company/services/company.service';
 import { userService } from '../../features/auth/services/user.service';
 import CompanyForm from '../../components/company/CompanyForm';
+import LoadingModal from '../../components/common/LoadingModal';
 import useCompanyStore, { CompanyState } from '../../store/companyStore';
 import API_URL from '../../config/api';
 
@@ -22,8 +23,10 @@ const CompanyDataPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, setUser } = useAuth() as ReturnType<typeof useAuth>;
   const userRole = user?.rol || user?.role?.name || 'user';
-  const isEmployeeOrAgent = ['empleado', 'agente'].includes(userRole);
-  const isAgent = userRole === 'agente';
+  const isEmployeeOrAgent = ['empleado', 'agente'].includes(userRole.toLowerCase());
+  const isAgent = userRole.toLowerCase() === 'agente';
+
+
 
   // Determine which hook to use based on user role
   const { company: companyFromHook, loading: companyLoading } = useCompany();
@@ -32,6 +35,18 @@ const CompanyDataPage: React.FC = () => {
   // Use the appropriate data based on role
   const loadedCompany = isAgent ? agentCompanyData : companyFromHook;
   const loadingCompany = isAgent ? agentCompanyLoading : companyLoading;
+
+  // DEBUG: Logs para verificar datos de empresa
+  console.log('=== DEPURACIÓN EMPRESA ===');
+  console.log('userRole:', userRole);
+  console.log('isAgent:', isAgent);
+  console.log('isEmployeeOrAgent:', isEmployeeOrAgent);
+  console.log('companyFromHook:', companyFromHook);
+  console.log('agentCompanyData:', agentCompanyData);
+  console.log('loadedCompany:', loadedCompany);
+  console.log('loadingCompany:', loadingCompany);
+  console.log('isSinEmpresa:', !loadedCompany);
+  console.log('==========================');
 
   const defaultFields = {
     documentType: 'Rif',
@@ -124,13 +139,13 @@ const CompanyDataPage: React.FC = () => {
           }
         }
       
-        // Mostrar feedback y redirigir al dashboard después de 2 s
+        // Mostrar feedback y redirigir al dashboard después del auto-cierre del modal
         setTimeout(() => {
           setStatus('success');
+          // Para creación, navegar después de que el modal se cierre automáticamente
           setTimeout(() => {
-            setStatus('idle');
             navigate('/company');
-          }, 1500);
+          }, 3500); // Modal se cierra a los 3000ms, navegamos 500ms después
         }, 2000);
       } else {
         // Actualizar compañía existente
@@ -215,29 +230,28 @@ const CompanyDataPage: React.FC = () => {
     service: (companyFormData?.description && typeof companyFormData.description === 'object' ? (companyFormData.description as Record<string, unknown>).service as string : undefined) ?? defaultFields.service,
   }), [companyFormData]);
 
+  const handleCloseModal = useCallback(() => {
+    setStatus('idle');
+  }, []);
+
   return (
     <>
-      <Modal show={status !== 'idle' || loadingCompany} centered onHide={() => setStatus('idle')}>
-        <Modal.Body className="text-center">
-          {loadingCompany || status === 'loading' ? (
-            <>
-              <Spinner animation="border" variant="primary" className="mb-3" />
-              <p className="mb-0">
-                {loadingCompany 
-                  ? isEmployeeOrAgent 
-                    ? 'Cargando información de la empresa...' 
-                    : 'Cargando datos de la empresa...' 
-                  : 'Guardando datos de la empresa...'}
-              </p>
-            </>
-          ) : (
-            <>
-              <div style={{fontSize:'3rem', color:'#28a745'}}>&#10003;</div>
-              <p className="mb-0">¡Datos guardados!</p>
-            </>
-          )}
-        </Modal.Body>
-      </Modal>
+      <LoadingModal
+        show={status !== 'idle' || loadingCompany}
+        isLoading={loadingCompany || status === 'loading'}
+        loadingText={loadingCompany 
+          ? isEmployeeOrAgent 
+            ? 'Cargando información de la empresa...' 
+            : 'Cargando datos de la empresa...' 
+          : 'Guardando datos de la empresa...'}
+        successText="¡Datos guardados exitosamente!"
+        loadingSubtext="Por favor, espere un momento"
+        successSubtext={companyFormData?.name 
+          ? "Los datos se han guardado correctamente" 
+          : "Empresa creada exitosamente. Redirigiendo al dashboard..."}
+        onClose={handleCloseModal}
+        autoCloseDelay={3000}
+      />
 
       <Container fluid>
         <div className="d-flex justify-content-between align-items-center mb-4">
@@ -289,15 +303,18 @@ const CompanyDataPage: React.FC = () => {
             
             {/* Formulario de edición solo si hay empresa */}
             {!isSinEmpresa && companyFormData && (
-              <CompanyForm 
-                readOnly={isEmployeeOrAgent || (userRole === 'company' && !isEditing)}
-                initialValues={memoizedInitialValues}
-                onSave={async (data) => {
-                  await handleSaveCompany(data);
-                  if (userRole === 'company') setIsEditing(false);
-                }}
-                createMode={false}
-              />
+              <>
+
+                <CompanyForm 
+                  readOnly={isEmployeeOrAgent || (userRole === 'company' && !isEditing)}
+                  initialValues={memoizedInitialValues}
+                  onSave={async (data) => {
+                    await handleSaveCompany(data);
+                    if (userRole === 'company') setIsEditing(false);
+                  }}
+                  createMode={false}
+                />
+              </>
             )}
           </Card.Body>
         </Card>

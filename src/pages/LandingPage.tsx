@@ -37,79 +37,184 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="min-vh-100">
-      {/* Header */}
+      {/* Header - Navbar completamente nueva */}
       <header 
-        className={`navbar navbar-expand-lg fixed-top transition-all ${
-          isScrolled ? 'navbar-light bg-white shadow-sm' : 'navbar-dark'
-        }`}
-        style={{ 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          backgroundColor: isScrolled ? '#ffffff' : 'rgba(255, 255, 255, 0.1)',
           transition: 'all 0.3s ease',
-          backdropFilter: isScrolled ? 'none' : 'blur(10px)',
-          backgroundColor: isScrolled ? 'white' : 'rgba(255, 255, 255, 0.1)'
+          padding: '12px 0',
+          boxShadow: isScrolled ? '0 2px 10px rgba(0,0,0,0.1)' : 'none'
         }}
       >
-        <div className="container">
-          <Link className="navbar-brand d-flex align-items-center" to="/">
-            <div className="d-flex align-items-center me-2">
-              <FaComments 
-                size={32} 
-                style={{ color: isScrolled ? 'var(--color-primary)' : 'white' }}
-                className="me-2"
-              />
-              <img 
-                src={logo} 
-                alt="Yielit Logo" 
-                height="32"
-              />
-            </div>
-            <span className="fw-bold fs-4" style={{ color: isScrolled ? 'var(--color-primary)' : 'white' }}>
-              YIELIT
-            </span>
-          </Link>
-          
-          <button 
-            className="navbar-toggler" 
-            type="button" 
-            data-bs-toggle="collapse" 
-            data-bs-target="#navbarNav"
+        <div 
+          style={{
+            maxWidth: '1200px',
+            margin: '0 auto',
+            padding: '0 20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
+          {/* Logo */}
+          <Link 
+            to="/" 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none',
+              color: 'inherit'
+            }}
           >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <nav className="navbar-nav me-auto">
+            <FaComments 
+              size={28} 
+              color={isScrolled ? '#F44123' : '#ffffff'}
+              style={{ marginRight: '8px' }}
+            />
+            <img 
+              src={logo} 
+              alt="Yielit Logo" 
+              height="28"
+            />
+          </Link>
+
+          {/* Navigation Menu - Desktop */}
+          <div 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '30px'
+            }}
+          >
+            {/* Menu Items */}
+            <nav style={{ display: 'flex', gap: '25px' }}>
               <button 
-                className="nav-link btn btn-link text-decoration-none"
                 onClick={() => scrollToSection('features')}
-                style={{ color: isScrolled ? 'var(--color-text-primary)' : 'white' }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: isScrolled ? '#333333' : '#ffffff',
+                  cursor: 'pointer',
+                  fontSize: '15px',
+                  padding: '8px 12px',
+                  borderRadius: '4px',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = isScrolled ? 'rgba(244, 65, 35, 0.1)' : 'rgba(255, 255, 255, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
               >
                 Características
               </button>
               <button 
-                className="nav-link btn btn-link text-decoration-none"
                 onClick={() => scrollToSection('crypto')}
-                style={{ color: isScrolled ? 'var(--color-text-primary)' : 'white' }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: isScrolled ? '#333333' : '#ffffff',
+                  cursor: 'pointer',
+                  fontSize: '15px',
+                  padding: '8px 12px',
+                  borderRadius: '4px',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = isScrolled ? 'rgba(244, 65, 35, 0.1)' : 'rgba(255, 255, 255, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
               >
                 Crypto
               </button>
               <button 
-                className="nav-link btn btn-link text-decoration-none"
                 onClick={() => scrollToSection('testimonials')}
-                style={{ color: isScrolled ? 'var(--color-text-primary)' : 'white' }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: isScrolled ? '#333333' : '#ffffff',
+                  cursor: 'pointer',
+                  fontSize: '15px',
+                  padding: '8px 12px',
+                  borderRadius: '4px',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = isScrolled ? 'rgba(244, 65, 35, 0.1)' : 'rgba(255, 255, 255, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
               >
                 Testimonios
               </button>
             </nav>
-            <div className="navbar-nav">
+
+            {/* Auth Buttons */}
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
               <Link 
-                to="/login" 
-                className="btn btn-outline-primary me-2 d-flex align-items-center"
+                to="/auth/login"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '8px 16px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  textDecoration: 'none',
+                  borderRadius: '6px',
+                  border: `2px solid ${isScrolled ? '#F44123' : '#ffffff'}`,
+                  color: isScrolled ? '#F44123' : '#ffffff',
+                  backgroundColor: 'transparent',
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = isScrolled ? '#F44123' : '#ffffff';
+                  e.currentTarget.style.color = isScrolled ? '#ffffff' : '#F44123';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = isScrolled ? '#F44123' : '#ffffff';
+                }}
               >
-                <FaUser className="me-2" />
+                <FaUser size={12} style={{ marginRight: '6px' }} />
                 Iniciar Sesión
               </Link>
-              <Link to="/register" className="btn btn-primary">
-                Registrarse Gratis
+              
+              <Link 
+                to="/auth/register"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '8px 16px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  textDecoration: 'none',
+                  borderRadius: '6px',
+                  border: `2px solid ${isScrolled ? '#F44123' : '#ffffff'}`,
+                  backgroundColor: isScrolled ? '#F44123' : '#ffffff',
+                  color: isScrolled ? '#ffffff' : '#F44123',
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                Registrarse
               </Link>
             </div>
           </div>
@@ -175,7 +280,7 @@ const LandingPage: React.FC = () => {
               
               <div className="d-flex flex-wrap gap-3 mb-4">
                 <Link 
-                  to="/register" 
+                  to="/auth/register" 
                   className="btn btn-light btn-lg px-4 py-3"
                   style={{ color: 'var(--color-primary)' }}
                 >
@@ -202,7 +307,7 @@ const LandingPage: React.FC = () => {
             
             <div className="col-lg-6 mt-5 mt-lg-0">
               <div className="position-relative">
-                <AnimatedChat />
+          <AnimatedChat />
                 {/* Floating elements */}
                 <div 
                   className="position-absolute bg-white rounded-3 shadow-lg p-3 d-flex align-items-center"
@@ -503,8 +608,7 @@ const LandingPage: React.FC = () => {
                   style={{ color: 'var(--color-primary)' }}
                   className="me-2"
                 />
-                <img src={logo} alt="Yielit Logo" height="32" className="me-2" />
-                <span className="text-white fw-bold fs-4">YIELIT</span>
+                <img src={logo} alt="Yielit Logo" height="32" />
               </div>
               <p className="text-secondary">
                 La plataforma de mensajería empresarial más avanzada con IA y Crypto Wallet USDT integrada.
@@ -516,7 +620,7 @@ const LandingPage: React.FC = () => {
               <ul className="list-unstyled">
                 <li><button className="btn btn-link text-secondary p-0 text-decoration-none" onClick={() => scrollToSection('features')}>Características</button></li>
                 <li><button className="btn btn-link text-secondary p-0 text-decoration-none" onClick={() => scrollToSection('crypto')}>Crypto</button></li>
-                <li><Link to="/register" className="btn btn-link text-secondary p-0 text-decoration-none">Prueba Gratuita</Link></li>
+                <li><Link to="/auth/register" className="btn btn-link text-secondary p-0 text-decoration-none">Prueba Gratuita</Link></li>
               </ul>
             </div>
             

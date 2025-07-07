@@ -67,6 +67,7 @@ const AdminDashboard: React.FC = () => {
 
         // Mensajes por tipo
         const typeCounts: Record<string, number> = {};
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         messagesArr.forEach((m: any) => {
           const t = (m.attributes?.type ?? m.type ?? 'desconocido').toLowerCase();
           typeCounts[t] = (typeCounts[t] || 0) + 1;
@@ -74,10 +75,13 @@ const AdminDashboard: React.FC = () => {
         setMessagesByType(typeCounts);
 
         // Información de empresas
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const compInfos: SafeCompanyInfo[] = companiesArr.map((c: any) => {
           const attr = c.attributes ?? c;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const membersArr: any[] =
             attr.users_permissions_users?.data ?? attr.members ?? [];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const mappedMembers = membersArr.map((m: any) => {
             const ma = m.attributes ?? m;
             return {
@@ -89,13 +93,13 @@ const AdminDashboard: React.FC = () => {
               role: ma.role || ma.rol,
             };
           });
-          const { hash, usdt, nft_hash, ...restDesc } =
-            (attr.description ?? {}) as Record<string, string>;
+          const { ...restDesc } = (attr.description ?? {}) as Record<string, string>;
           return { name: attr.name, members: mappedMembers, description: restDesc };
         });
         setCompanyInfos(compInfos);
 
         // Información de usuarios
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const usrInfos: SafeUserInfo[] = usersArr.map((u: any) => {
           const attr = u.attributes ?? u;
           const fullName =
@@ -324,7 +328,7 @@ const AdminDashboard: React.FC = () => {
         ))}
       </div>
 
-      {/* Gráfico de barras */}
+      {/* Gráfico de barras compacto */}
       <div className="row mt-5">
         <div className="col-12 mb-4">
           <div className="card border-0 shadow-sm">
@@ -335,7 +339,7 @@ const AdminDashboard: React.FC = () => {
               {usersCount !== null &&
               companiesCount !== null &&
               messagesCount !== null ? (
-                <div id="chartReport">
+                <div id="chartReport" style={{ height: '300px' }}>
                   <Bar
                     data={{
                       labels: ['Usuarios', 'Empresas', 'Mensajes'],
@@ -344,19 +348,106 @@ const AdminDashboard: React.FC = () => {
                           label: 'Totales',
                           data: [usersCount, companiesCount, messagesCount],
                           backgroundColor: ['#4A6FDC', '#F44123', '#2DA771'],
+                          borderWidth: 1,
+                          borderRadius: 6,
+                          maxBarThickness: 80,
                         },
                       ],
                     }}
-                    options={{ plugins: { legend: { display: false } } }}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: {
+                          display: false
+                        },
+                        tooltip: {
+                          callbacks: {
+                            label: function(context) {
+                              return `${context.label}: ${context.parsed.y}`;
+                            }
+                          }
+                        }
+                      },
+                      scales: {
+                        y: {
+                          beginAtZero: true,
+                          ticks: {
+                            precision: 0,
+                            font: {
+                              size: 12
+                            }
+                          },
+                          grid: {
+                            display: true,
+                            color: 'rgba(0, 0, 0, 0.1)'
+                          }
+                        },
+                        x: {
+                          ticks: {
+                            font: {
+                              size: 12,
+                              weight: 'bold'
+                            }
+                          },
+                          grid: {
+                            display: false
+                          }
+                        }
+                      },
+                      layout: {
+                        padding: {
+                          top: 20,
+                          bottom: 10,
+                          left: 10,
+                          right: 10
+                        }
+                      }
+                    }}
                   />
                 </div>
               ) : (
-                <p className="text-muted">Cargando métricas…</p>
+                <div className="text-center py-4">
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Cargando métricas...</span>
+                  </div>
+                  <p className="text-muted mt-2">Cargando métricas…</p>
+                </div>
               )}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Información adicional en formato compacto */}
+      {Object.keys(messagesByType).length > 0 && (
+        <div className="row mt-4">
+          <div className="col-12">
+            <div className="card border-0 shadow-sm">
+              <div className="card-header bg-white border-0">
+                <h5 className="mb-0">Distribución de Mensajes</h5>
+              </div>
+              <div className="card-body">
+                <div className="row g-3">
+                  {Object.entries(messagesByType).map(([type, count]) => (
+                    <div key={type} className="col-md-4 col-sm-6">
+                      <div className="d-flex align-items-center p-3 bg-light rounded">
+                        <div className="flex-grow-1">
+                          <h6 className="mb-0 text-capitalize">{type}</h6>
+                          <span className="text-muted small">Tipo de mensaje</span>
+                        </div>
+                        <div className="text-end">
+                          <h4 className="mb-0 fw-bold text-primary">{count}</h4>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

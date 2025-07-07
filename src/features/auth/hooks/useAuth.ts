@@ -71,15 +71,16 @@ export const useAuth = () => {
         const storedToken = authService.getToken();
         const storedUser = authService.getUser();
         
-        // Comparar con el estado actual para evitar ciclos de renderizado
-        const currentUserStr = user ? JSON.stringify(user) : null;
-        const storedUserStr = storedUser ? JSON.stringify(storedUser) : null;
-        
+        // Verificar token
         if (!!storedToken !== isAuthenticated) {
           setIsAuthenticated(!!storedToken);
         }
         
-        if (storedUserStr !== currentUserStr) {
+        // Verificar usuario - comparar IDs en lugar de objetos completos
+        const currentUserId = user?.id;
+        const storedUserId = storedUser?.id;
+        
+        if (currentUserId !== storedUserId) {
           setUser(storedUser ? sanitizeUser(storedUser as RawUser) : null);
         }
       } catch (error) {
@@ -90,8 +91,8 @@ export const useAuth = () => {
     // Configurar los listeners
     window.addEventListener('storage', handleStorageChange);
     
-    // Verificar cambios cada segundo
-    const interval = setInterval(checkLocalStorage, 1000);
+    // Verificar cambios cada 5 segundos (reducir frecuencia para evitar loops)
+    const interval = setInterval(checkLocalStorage, 5000);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);

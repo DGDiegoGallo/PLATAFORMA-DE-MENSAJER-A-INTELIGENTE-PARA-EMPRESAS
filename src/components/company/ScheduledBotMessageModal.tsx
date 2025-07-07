@@ -22,8 +22,14 @@ const ScheduledBotMessageModal: React.FC<ScheduledBotMessageModalProps> = ({
   const [message, setMessage] = useState<string>('');
   const [selectedBot, setSelectedBot] = useState<BotInfo | null>(null);
   
-  // Obtener fecha de hoy formateada YYYY-MM-DD para el mínimo del input
-  const today = new Date().toISOString().split('T')[0];
+  // Obtener fecha de hoy formateada YYYY-MM-DD para el mínimo del input (fecha local)
+  const today = (() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  })();
   
   // Inicializar el mensaje con el mensaje actual cuando se abre el modal
   useEffect(() => {
@@ -43,9 +49,12 @@ const ScheduledBotMessageModal: React.FC<ScheduledBotMessageModalProps> = ({
     // Crear objeto Date con la fecha y hora seleccionadas
     const scheduledTime = new Date(`${date}T${time}:00`);
     
-    // Verificar que sea una fecha futura
-    if (scheduledTime <= new Date()) {
-      alert('Por favor, selecciona una fecha y hora futura.');
+    // Verificar que sea al menos 1 minuto en el futuro para dar tiempo al procesamiento
+    const now = new Date();
+    const minTime = new Date(now.getTime() + 1 * 60 * 1000); // 1 minuto en el futuro
+    
+    if (scheduledTime <= minTime) {
+      alert('Por favor, selecciona una hora que sea al menos 1 minuto en el futuro.');
       return;
     }
       

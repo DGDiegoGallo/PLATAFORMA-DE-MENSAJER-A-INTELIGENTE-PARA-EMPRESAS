@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Card, Button, Modal, Form, Row, Col, Spinner } from 'react-bootstrap';
+import { Container, Card, Button, Modal, Form, Row, Col, Spinner, Alert } from 'react-bootstrap';
 
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaCheckCircle, FaTimesCircle, FaExclamationTriangle, FaSearch } from 'react-icons/fa';
 import useAuth from '../../features/auth/hooks/useAuth';
 import { useCompany } from '../../features/company/hooks/useCompany';
 import { userService } from '../../features/auth/services/user.service';
@@ -16,15 +16,24 @@ interface CompanyData {
   members?: Agent[];
 }
 
+interface SuggestedUser {
+  id: number;
+  username: string;
+  email: string;
+  nombre?: string;
+  apellido?: string;
+  rol?: string;
+}
+
 const AgentsPage: React.FC = () => {
   // Lista de agentes proveniente de la compañía
   const [agents, setAgents] = useState<Agent[]>([]);
 
-  const { company } = useCompany();
+  const { company, refreshCompany } = useCompany();
   const { channels, setChannels } = useChannels();
   const { user } = useAuth();
   const userRole = user?.rol || user?.role?.name || 'user';
-  const readOnly = ['empleado', 'agente'].includes(userRole);
+  const readOnly = ['empleado', 'agente'].includes(userRole.toLowerCase());
 
   // Estado para modal de ver detalles
   const [showViewModal, setShowViewModal] = useState(false);
@@ -37,6 +46,32 @@ const AgentsPage: React.FC = () => {
   const [agentToDelete, setAgentToDelete] = useState<Agent | null>(null);
   // Estado para notificaciones
   const [notification, setNotification] = useState<{ show: boolean; message: string; variant: 'success' | 'danger' }>({ show: false, message: '', variant: 'success' });
+
+  // Modal state for adding/editing agents
+  const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState<'add' | 'edit'>('add');
+  
+  // Estado para verificación de usuarios
+  const [verificationStatus, setVerificationStatus] = useState<'idle' | 'checking' | 'success' | 'not_found' | 'mismatch' | 'suggestions'>('idle');
+  const [verificationMessage, setVerificationMessage] = useState<string>('');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
+
+  interface NewAgentForm {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+  }
+
+  const [currentAgent, setCurrentAgent] = useState<NewAgentForm>({
+    id: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    role: 'Agente'
+  });
 
   // Sincroniza los miembros con el estado local cuando llegue la compañía
   useEffect(() => {
@@ -53,25 +88,6 @@ const AgentsPage: React.FC = () => {
   useEffect(() => {
     console.log("Current agents state:", agents);
   }, [agents]);
-
-  // Modal state for adding/editing agents
-  const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState<'add' | 'edit'>('add');
-  interface NewAgentForm {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-  }
-
-  const [currentAgent, setCurrentAgent] = useState<NewAgentForm>({
-    id: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    role: 'Agente'
-  });
 
   // Handle view agent details
   const handleViewAgent = async (agent: Agent) => {
@@ -167,6 +183,8 @@ const AgentsPage: React.FC = () => {
       
       // 4. Actualizar el estado local
       setAgents(updatedMembers);
+      // 5. Refrescar los datos de la compañía
+      refreshCompany();
       setNotification({ show: true, message: 'Agente eliminado correctamente de la compañía y todos los canales', variant: 'success' });
     } catch(err) {
       setNotification({ show: true, message: 'Error eliminando miembro', variant: 'danger' });
@@ -175,6 +193,119 @@ const AgentsPage: React.FC = () => {
       setShowDeleteModal(false);
       setAgentToDelete(null);
     }
+  };
+
+  // Función para verificar usuario en Strapi
+  const verifyUserInStrapi = async () => {
+    if (!currentAgent.email || !currentAgent.firstName || !currentAgent.lastName) {
+      setVerificationStatus('idle');
+      setVerificationMessage('Por favor complete todos los campos antes de verificar');
+      return;
+    }
+
+    setIsVerifying(true);
+    setVerificationStatus('checking');
+    setVerificationMessage('Verificando usuario en la base de datos...');
+
+    try {
+      // Buscar usuario por email
+      const foundUser = await userService.getUserByEmail(currentAgent.email);
+      
+      if (!foundUser) {
+        setVerificationStatus('not_found');
+        setVerificationMessage('No se encontró un usuario con este correo electrónico en el sistema');
+        return;
+      }
+
+      // Comparar nombre y apellido (normalizar para comparación)
+      const normalizeString = (str: string) => str.toLowerCase().trim();
+      
+      const foundFirstName = normalizeString(foundUser.nombre || '');
+      const foundLastName = normalizeString(foundUser.apellido || '');
+      const inputFirstName = normalizeString(currentAgent.firstName);
+      const inputLastName = normalizeString(currentAgent.lastName);
+
+      if (foundFirstName === inputFirstName && foundLastName === inputLastName) {
+        setVerificationStatus('success');
+        setVerificationMessage(`Usuario verificado correctamente: ${foundUser.nombre} ${foundUser.apellido}`);
+        setSuggestedUsers([]);
+      } else {
+        // Buscar sugerencias de usuarios similares
+        try {
+          // Siempre incluir al usuario encontrado por email como primera sugerencia
+          const emailUserSuggestion: SuggestedUser = {
+            id: foundUser.id,
+            username: foundUser.username,
+            email: foundUser.email,
+            nombre: foundUser.nombre,
+            apellido: foundUser.apellido,
+            rol: foundUser.rol
+          };
+
+          // Buscar otros usuarios similares por nombre
+          const nameSuggestions = await userService.getUsersByName(currentAgent.firstName, currentAgent.lastName);
+          
+          // Combinar sugerencias: primero el usuario del email, luego otros similares
+          const allSuggestions: SuggestedUser[] = [emailUserSuggestion];
+          
+          // Agregar otras sugerencias que no sean el mismo usuario del email
+          nameSuggestions.forEach(user => {
+            if (user.id !== foundUser.id) {
+              allSuggestions.push(user);
+            }
+          });
+
+          // Siempre mostrar sugerencias cuando no coincidan los datos
+          setVerificationStatus('suggestions');
+          setVerificationMessage(`Los datos no coinciden. En el sistema: "${foundUser.nombre} ${foundUser.apellido}" vs Ingresado: "${currentAgent.firstName} ${currentAgent.lastName}"`);
+          setSuggestedUsers(allSuggestions);
+          
+        } catch (error) {
+          console.error('Error buscando sugerencias:', error);
+          // Aún así, mostrar al menos el usuario encontrado por email
+          const emailUserSuggestion: SuggestedUser = {
+            id: foundUser.id,
+            username: foundUser.username,
+            email: foundUser.email,
+            nombre: foundUser.nombre,
+            apellido: foundUser.apellido,
+            rol: foundUser.rol
+          };
+          
+          setVerificationStatus('suggestions');
+          setVerificationMessage(`Los datos no coinciden. En el sistema: "${foundUser.nombre} ${foundUser.apellido}" vs Ingresado: "${currentAgent.firstName} ${currentAgent.lastName}"`);
+          setSuggestedUsers([emailUserSuggestion]);
+        }
+      }
+    } catch (error) {
+      console.error('Error verificando usuario:', error);
+      setVerificationStatus('not_found');
+      setVerificationMessage('Error al verificar el usuario. Intente nuevamente.');
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  // Resetear verificación cuando cambien los datos
+  useEffect(() => {
+    if (modalMode === 'add') {
+      setVerificationStatus('idle');
+      setVerificationMessage('');
+      setSuggestedUsers([]);
+    }
+  }, [currentAgent.email, currentAgent.firstName, currentAgent.lastName, modalMode]);
+
+  // Función para seleccionar una sugerencia
+  const handleSelectSuggestion = (suggestion: SuggestedUser) => {
+    setCurrentAgent(prev => ({
+      ...prev,
+      firstName: suggestion.nombre || '',
+      lastName: suggestion.apellido || '',
+      email: suggestion.email
+    }));
+    setVerificationStatus('success');
+    setVerificationMessage(`Usuario verificado correctamente: ${suggestion.nombre} ${suggestion.apellido}`);
+    setSuggestedUsers([]);
   };
 
   // Handle add new agent
@@ -188,6 +319,9 @@ const AgentsPage: React.FC = () => {
       email: '',
       role: 'Agente'
     });
+    setVerificationStatus('idle');
+    setVerificationMessage('');
+    setSuggestedUsers([]);
     setShowModal(true);
   };
 
@@ -203,7 +337,18 @@ const AgentsPage: React.FC = () => {
   // Handle save agent
   const handleSaveAgent = async () => {
     if (!company) return;
+    
     if (modalMode === 'add') {
+      // Verificar que la verificación sea exitosa antes de proceder
+      if (verificationStatus !== 'success') {
+        setNotification({ 
+          show: true, 
+          message: 'Debe verificar el usuario antes de agregarlo', 
+          variant: 'danger' 
+        });
+        return;
+      }
+
       // Llama al servicio para crear usuario y vincularlo
       try {
         if (!company) {
@@ -216,7 +361,7 @@ const AgentsPage: React.FC = () => {
           return;
         }
 
-        const currentMembers: Agent[] = Array.isArray((company as CompanyData).members) ? (company as CompanyData).members || [] : [];
+        const currentMembers: Agent[] = [...agents]; // Usar el estado local que siempre está sincronizado
         console.log("Current members before adding:", currentMembers);
         
         // Verificar si el usuario ya existe como miembro
@@ -287,7 +432,12 @@ const AgentsPage: React.FC = () => {
 
         // Actualizar estado local
         setAgents(updatedMembers);
+        // Refrescar los datos de la compañía
+        refreshCompany();
         setNotification({ show: true, message: 'Agente añadido correctamente', variant: 'success' });
+        // Resetear verificación
+        setVerificationStatus('idle');
+        setVerificationMessage('');
       } catch (err) {
         console.error("Error añadiendo agente:", err);
         setNotification({ show: true, message: (err as Error).message, variant: 'danger' });
@@ -331,6 +481,8 @@ const AgentsPage: React.FC = () => {
         
         // Actualizar estado local
         setAgents(updatedMembers);
+        // Refrescar los datos de la compañía
+        refreshCompany();
         setNotification({ show: true, message: 'Agente actualizado correctamente', variant: 'success' });
       } catch(err){
         setNotification({ show: true, message: 'Error actualizando agente', variant: 'danger' });
@@ -434,6 +586,80 @@ const AgentsPage: React.FC = () => {
               />
             </Form.Group>
 
+            {modalMode === 'add' && (
+              <div className="mb-3">
+                <Button 
+                  variant="outline-primary" 
+                  onClick={verifyUserInStrapi}
+                  disabled={isVerifying || !currentAgent.email || !currentAgent.firstName || !currentAgent.lastName}
+                  className="d-flex align-items-center gap-2"
+                >
+                  {isVerifying ? (
+                    <>
+                      <Spinner animation="border" size="sm" />
+                      <span>Verificando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaSearch />
+                      <span>Verificar usuario</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
+
+            {verificationStatus === 'success' && modalMode === 'add' && (
+              <Alert variant="success" className="mb-3">
+                <div className="d-flex align-items-center gap-2">
+                  <FaCheckCircle className="text-success" />
+                  <span>{verificationMessage}</span>
+                </div>
+              </Alert>
+            )}
+
+            {verificationStatus === 'not_found' && modalMode === 'add' && (
+              <Alert variant="warning" className="mb-3">
+                <div className="d-flex align-items-center gap-2">
+                  <FaTimesCircle className="text-warning" />
+                  <span>{verificationMessage}</span>
+                </div>
+              </Alert>
+            )}
+
+            {verificationStatus === 'checking' && modalMode === 'add' && (
+              <Alert variant="info" className="mb-3">
+                <div className="d-flex align-items-center gap-2">
+                  <Spinner animation="border" size="sm" />
+                  <span>{verificationMessage}</span>
+                </div>
+              </Alert>
+            )}
+
+            {verificationStatus === 'suggestions' && suggestedUsers.length > 0 && modalMode === 'add' && (
+              <div className="mb-3">
+                <h6 className="mb-2">🔍 Quizás quisiste decir:</h6>
+                <div className="d-flex flex-column gap-2">
+                  {suggestedUsers.map((suggestion) => (
+                    <Button
+                      key={suggestion.id}
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => handleSelectSuggestion(suggestion)}
+                      className="d-flex justify-content-between align-items-center"
+                    >
+                      <span>
+                        <strong>{suggestion.nombre} {suggestion.apellido}</strong>
+                        <br />
+                        <small className="text-muted">{suggestion.email}</small>
+                      </span>
+                      <FaSearch className="text-primary" />
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <Form.Group className="mb-3">
               <Form.Label>Rol</Form.Label>
               <Form.Control 
@@ -452,7 +678,11 @@ const AgentsPage: React.FC = () => {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={handleSaveAgent}>
+          <Button 
+            variant="danger" 
+            onClick={handleSaveAgent}
+            disabled={modalMode === 'add' && verificationStatus !== 'success'}
+          >
             {modalMode === 'add' ? 'Agregar' : 'Guardar cambios'}
           </Button>
         </Modal.Footer>

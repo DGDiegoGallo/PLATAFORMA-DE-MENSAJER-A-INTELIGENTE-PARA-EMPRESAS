@@ -1,7 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useCompany } from '../../features/company/hooks/useCompany';
 import { messageService } from '../../features/company/services/message.service';
-import { userService } from '../../features/auth/services/user.service';
 import useChannels, { ChannelType, ChannelStatus, Channel } from '../../features/company/hooks/useChannels';
 import {
   Container,
@@ -14,7 +13,7 @@ import {
   Badge,
   Spinner,
 } from 'react-bootstrap';
-import { FaPlus, FaFilter, FaTimes, FaLink } from 'react-icons/fa';
+import { FaPlus, FaFilter, FaTimes } from 'react-icons/fa';
 import { ToastContainer, toast as toastify } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ChannelsTable from '../../components/company/ChannelsTable';
@@ -22,6 +21,38 @@ import Pagination from '../../components/ui/Pagination';
 import './MessagingChannelsPage.css';
 
 const ITEMS_PER_PAGE = 7;
+
+// Funciones auxiliares para traducir tipos y roles
+const translateChannelType = (type: string): string => {
+  switch (type) {
+    case 'group': return 'Grupo';
+    case 'channel': return 'Canal';
+    case 'event': return 'Eventos';
+    default: return type;
+  }
+};
+
+const translateUserRole = (role: string): string => {
+  switch (role?.toLowerCase()) {
+    case 'company': return 'Empresario';
+    case 'empleado': return 'Empleado';
+    case 'agente': return 'Agente';
+    case 'admin': return 'Administrador';
+    default: return role || 'Sin rol';
+  }
+};
+
+interface CompanyMember {
+  id: number;
+  documentId: string;
+  username: string;
+  email: string;
+  nombre: string;
+  apellido: string;
+  rol: string;
+  blocked: boolean;
+  confirmed: boolean;
+}
 
 const MessagingChannelsPage: React.FC = () => {
   // Permisos basados en rol guardado en localStorage (demo)
@@ -32,12 +63,14 @@ const MessagingChannelsPage: React.FC = () => {
       return '';
     }
   })();
-  const canManage = userRole === 'company';
+  const canManage = userRole === 'company' || userRole === 'agente';
   const { company } = useCompany();
   const { channels, creating, createError, createChannel, deleteChannel, setChannels } = useChannels();
 
   /* ---------------------------- estados locales --------------------------- */
   const [currentPage, setCurrentPage] = useState(1);
+  const [companyMembers, setCompanyMembers] = useState<CompanyMember[]>([]);
+  const [loadingMembers, setLoadingMembers] = useState(false);
 
   // modal crear / editar
   const [showEditModal, setShowEditModal] = useState(false);
@@ -47,12 +80,103 @@ const MessagingChannelsPage: React.FC = () => {
   };
   const [modalMode, setModalMode] = useState<'add' | 'edit'>('add');
   const [currentChannel, setCurrentChannel] = useState<Partial<Channel>>({});
+  const [originalMembers, setOriginalMembers] = useState<any[]>([]);
+  const [editedMembers, setEditedMembers] = useState<any[]>([]);
 
   // modal añadir miembros
   const [showMembersModal, setShowMembersModal] = useState(false);
   const [selectedChannelForMembers, setSelectedChannelForMembers] = useState<Channel | null>(null);
   const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
   const [savingMembers, setSavingMembers] = useState(false);
+
+  // modal detalles
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedChannelDetails, setSelectedChannelDetails] = useState<Channel | null>(null);
+
+  // filtros
+  const [filterType, setFilterType] = useState<ChannelType | ''>('');
+  const [filterStatus, setFilterStatus] = useState<ChannelStatus | ''>('');
+  const [filterName, setFilterName] = useState('');
+
+  const loading = !channels || !Array.isArray(channels);
+
+  // Función para obtener miembros de la empresa usando populate
+  const fetchCompanyMembers = async () => {
+    if (!company?.documentId) return;
+    
+    setLoadingMembers(true);
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:1337';
+      
+      // Obtener los messages/channels con populate para acceder a los miembros de la empresa
+      const response = await fetch(`${apiUrl}/api/messages?populate=company&filters[company][documentId][$eq]=${company.documentId}`);
+      
+      if (!response.ok) {
+        throw new Error('Error al obtener los miembros de la empresa');
+      }
+      
+      const data = await response.json();
+      console.log('API Response for company members:', data);
+      
+      // Buscar el primer mensaje que tenga company con members
+      let companyMembers: any[] = [];
+      if (data.data && data.data.length > 0) {
+        for (const item of data.data) {
+          if (item.company && item.company.members) {
+            companyMembers = item.company.members;
+            break;
+          }
+        }
+      }
+      
+      // Si no encontramos miembros en los messages, intentar obtenerlos directamente de companies
+      if (companyMembers.length === 0) {
+        const companyResponse = await fetch(`${apiUrl}/api/companies?populate=users_permissions_users&filters[documentId][$eq]=${company.documentId}`);
+        
+        if (companyResponse.ok) {
+          const companyData = await companyResponse.json();
+          console.log('Company data from API:', companyData);
+          const companyItem = companyData.data[0];
+          
+          if (companyItem && companyItem.users_permissions_users) {
+            companyMembers = companyItem.users_permissions_users.map((user: any) => ({
+              id: user.id.toString(),
+              name: `${user.nombre} ${user.apellido}`,
+              email: user.email,
+              role: user.rol,
+              userId: user.id
+            }));
+          }
+        }
+      }
+      
+      // Convertir a formato esperado
+      const members = companyMembers.map((member: any) => ({
+        id: member.userId || member.id,
+        documentId: member.documentId || '',
+        username: member.username || '',
+        email: member.email,
+        nombre: member.name?.split(' ')[0] || member.nombre || '',
+        apellido: member.name?.split(' ').slice(1).join(' ') || member.apellido || '',
+        rol: member.role || member.rol || '',
+        blocked: false,
+        confirmed: true,
+      }));
+      
+      console.log('Processed company members:', members);
+      setCompanyMembers(members);
+    } catch (error) {
+      console.error('Error fetching company members:', error);
+      notify('Error al cargar los miembros de la empresa', 'danger');
+    } finally {
+      setLoadingMembers(false);
+    }
+  };
+
+  // Cargar miembros cuando se monta el componente o cambia la empresa
+  useEffect(() => {
+    fetchCompanyMembers();
+  }, [company?.documentId]);
 
   const handleAddMembers = (ch: Channel) => {
     setSelectedChannelForMembers(ch);
@@ -64,22 +188,20 @@ const MessagingChannelsPage: React.FC = () => {
     setSelectedMemberIds(prev => prev.includes(memberId) ? prev.filter(id => id !== memberId) : [...prev, memberId]);
   };
 
-  interface CompanyMember { id: string; name: string; role: string; email?: string }
-  const membersList: CompanyMember[] = Array.isArray((company as any)?.members) ? (company as any).members : [];
-
-  // modal detalles
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [selectedChannelDetails, setSelectedChannelDetails] = useState<Channel | null>(null);
-
-  // filtros
-  const [filterType, setFilterType] = useState<ChannelType | ''>('');
-  const [filterStatus, setFilterStatus] = useState<ChannelStatus | ''>('');
-  const [filterName, setFilterName] = useState('');
-
-  // Estado para el proceso de relacionar canales
-  const [relatingChannels, setRelatingChannels] = useState(false);
-
-  const loading = !channels || !Array.isArray(channels);
+  // Filtrar miembros para excluir los que ya están en el canal seleccionado
+  const membersList = useMemo(() => {
+    if (!selectedChannelForMembers || !companyMembers.length) return companyMembers;
+    
+    const channelMemberIds = selectedChannelForMembers.members?.map(m => m.id?.toString()).filter(Boolean) || [];
+    const channelMemberUserIds = selectedChannelForMembers.members?.map(m => m.userId?.toString()).filter(Boolean) || [];
+    
+    return companyMembers.filter(member => {
+      const memberId = member.id?.toString();
+      return memberId && 
+             !channelMemberIds.includes(memberId) && 
+             !channelMemberUserIds.includes(memberId);
+    });
+  }, [companyMembers, selectedChannelForMembers]);
 
   /* ------------------------------ funciones ------------------------------- */
   const filteredChannels = useMemo(() => {
@@ -111,41 +233,90 @@ const MessagingChannelsPage: React.FC = () => {
       const channelData = await messageService.getMessageByDocumentId(ch.documentId);
       const attr = channelData?.attributes ?? channelData ?? {};
       
-      // Asegurarse de que tenemos los miembros del canal
-      const members = attr.group_member || [];
+      // Asegurarse de que tenemos los miembros del canal y normalizarlos
+      const rawMembers = attr.group_member || [];
+      const normalizedMembers = rawMembers.map((member: any) => ({
+        // Usar userId como id, o crear uno si no existe
+        id: member.id || member.userId || `temp-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+        name: member.name,
+        email: member.email,
+        role: member.role,
+        userId: member.userId
+      }));
+      
+      console.log('Miembros normalizados para edición:', normalizedMembers);
       
       // Actualizar el canal actual con los datos completos
       setCurrentChannel({
         ...ch,
-        members: members
+        members: normalizedMembers
       });
+      
+      // Guardar los miembros originales y establecer los editados
+      setOriginalMembers([...normalizedMembers]);
+      setEditedMembers([...normalizedMembers]);
       
       setShowEditModal(true);
     } catch (error) {
       console.error('Error al cargar los datos del canal:', error);
       notify('Error al cargar los datos del canal', 'danger');
       
-      // En caso de error, usar los datos que ya tenemos
+      // En caso de error, usar los datos que ya tenemos pero normalizarlos también
+      const fallbackMembers = (ch.members || []).map((member: any) => ({
+        id: member.id || member.userId || `temp-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+        name: member.name,
+        email: member.email,
+        role: member.role,
+        userId: member.userId
+      }));
+      
       setCurrentChannel(ch);
+      setOriginalMembers(fallbackMembers);
+      setEditedMembers(fallbackMembers);
       setShowEditModal(true);
     }
   };
 
   const handleDeleteChannel = async (ch: Channel) => {
     console.log('Intentando eliminar canal', ch.documentId, ch);
-    if (!window.confirm(`¿Eliminar canal "${ch.name}"?`)) return;
     try {
       await deleteChannel(ch);
     } catch (error) {
       console.error(error);
-      alert('Error eliminando canal');
+      notify('Error eliminando canal', 'danger');
     }
+  };
+
+  // Función para eliminar miembro del estado local (sin persistir)
+  const handleRemoveMemberFromEdit = (memberId: string) => {
+    console.log('=== ELIMINANDO MIEMBRO ===');
+    console.log('ID a eliminar:', memberId);
+    console.log('Miembros actuales:', editedMembers);
+    
+    setEditedMembers(prev => {
+      const filtered = prev.filter(m => {
+        const keep = m.id !== memberId;
+        console.log(`Miembro ${m.id} (${m.name}) - Mantener: ${keep}`);
+        return keep;
+      });
+      
+      console.log('Miembros después del filtro:', filtered);
+      return filtered;
+    });
+  };
+
+  // Función para cancelar edición y revertir cambios
+  const handleCancelEdit = () => {
+    setCurrentChannel(prev => ({ ...prev, members: originalMembers }));
+    setEditedMembers([]);
+    setOriginalMembers([]);
+    setShowEditModal(false);
   };
 
   const [savingEdit,setSavingEdit]=useState(false);
   const handleSaveChannel = async () => {
     if (!currentChannel.name || !currentChannel.type || !currentChannel.status) {
-      alert('Nombre, Tipo y Estado son obligatorios.');
+      notify('Nombre, Tipo y Estado son obligatorios.', 'danger');
       return;
     }
 
@@ -170,43 +341,63 @@ const MessagingChannelsPage: React.FC = () => {
 
           // 2. Construir el objeto completo para el PUT
           const companyId = company?.id;
+          
+          // Usar los miembros editados en lugar de los originales
+          const userIds = editedMembers
+            .filter((m: any) => m.userId && typeof m.userId === 'number')
+            .map((m: any) => m.userId);
+
           const body: Record<string, any> = {
             name: currentChannel.name,
             type: currentChannel.type,
             status_of_channel: currentChannel.status.toLowerCase(),
+            // IMPORTANTE: Preservar la relación con company
             company: companyId,
-            // Preservar relaciones y campos existentes
-            group_member: attr.group_member ?? [],
-            users_permissions_users: Array.isArray(attr.users_permissions_users)
-              ? attr.users_permissions_users.map((u: any) => (typeof u === 'object' && u !== null && 'id' in u ? u.id : u))
-              : [],
+            // Usar los miembros editados
+            group_member: editedMembers,
+            users_permissions_users: userIds,
             bot_interaction: attr.bot_interaction ?? {},
             content: attr.content ?? [],
           };
 
-          // 3. PUT con el objeto completo
-          const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/messages/${currentChannel.documentId}`, {
+          // 3. PUT con el objeto completo - usar URL correcta
+          const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:1337';
+          const res = await fetch(`${apiUrl}/api/messages/${currentChannel.documentId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ data: body }),
           });
-          if (!res.ok) throw new Error(await res.text());
+          
+          if (!res.ok) {
+            const errorText = await res.text();
+            console.error('Error response:', errorText);
+            throw new Error(`Error ${res.status}: ${errorText}`);
+          }
+          
           const updated = await res.json();
           const updatedAttr = updated.data?.attributes ?? updated.data ?? updated;
+          
+          // Actualizar el estado local con los cambios guardados
           setChannels(prev=>prev.map(c=>c.documentId===currentChannel.documentId?{
             ...c,
             name: updatedAttr.name,
             type: updatedAttr.type,
-            status: (updatedAttr.status_of_channel?.toLowerCase()==='active')?'Active':'Inactive'
+            status: (updatedAttr.status_of_channel?.toLowerCase()==='active')?'Active':'Inactive',
+            members: editedMembers
           }:c));
-          notify('Canal actualizado','success');
+          
+          notify('Canal actualizado correctamente','success');
         } catch(err){
           notify('Error actualizando canal','danger');
-          console.error(err);
+          console.error('Error en handleSaveChannel:', err);
         } finally {
           setSavingEdit(false);
         }
       }
+      
+      // Limpiar estados de edición
+      setOriginalMembers([]);
+      setEditedMembers([]);
       setShowEditModal(false);
     } catch {
       notify(createError || 'Error creando canal','danger');
@@ -225,52 +416,6 @@ const MessagingChannelsPage: React.FC = () => {
     setFilterStatus('');
     setFilterName('');
     setCurrentPage(1);
-  };
-
-  // Función para relacionar todos los canales con la compañía
-  const handleRelateChannelsToCompany = async () => {
-    if (!company || !company.id) {
-      notify('No se encontró información de la compañía', 'danger');
-      return;
-    }
-
-    setRelatingChannels(true);
-    try {
-      console.log('Iniciando proceso de relacionar canales con la compañía...');
-      console.log(`Compañía seleccionada: ID=${company.id}, nombre=${company.name}`);
-      
-      let successCount = 0;
-      let errorCount = 0;
-      
-      // Procesar cada canal
-      for (const channel of channels) {
-        try {
-          console.log(`Procesando canal: ${channel.name} (${channel.documentId})`);
-          await messageService.assignCompanyToMessage(channel.documentId, Number(company.id));
-          successCount++;
-        } catch (error) {
-          console.error(`Error relacionando canal ${channel.name}:`, error);
-          errorCount++;
-        }
-      }
-      
-      // Notificar resultado
-      if (successCount > 0) {
-        notify(`${successCount} canales relacionados correctamente con la compañía`, 'success');
-      }
-      
-      if (errorCount > 0) {
-        notify(`${errorCount} canales no pudieron ser relacionados`, 'danger');
-      }
-      
-      // Recargar canales para reflejar los cambios
-      // Esta parte dependería de cómo estés implementando la recarga de canales
-    } catch (error) {
-      console.error('Error general relacionando canales:', error);
-      notify('Error procesando la operación', 'danger');
-    } finally {
-      setRelatingChannels(false);
-    }
   };
 
   /* -------------------------------- render -------------------------------- */
@@ -322,7 +467,7 @@ const MessagingChannelsPage: React.FC = () => {
                   <option value="">Todos</option>
                   <option value="group">Grupo</option>
                   <option value="channel">Canal</option>
-                  <option value="event">Evento</option>
+                  <option value="event">Eventos</option>
                 </Form.Select>
                 </Form.Group>
               </Col>
@@ -395,7 +540,7 @@ const MessagingChannelsPage: React.FC = () => {
         )}
       </Container>
 
-      {/* modals */}
+      {/* Modal Crear/Editar Canal */}
       <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>{modalMode === 'add' ? 'Crear Canal' : 'Editar Canal'}</Modal.Title>
@@ -421,7 +566,7 @@ const MessagingChannelsPage: React.FC = () => {
                   >
                     <option value="group">Grupo</option>
                     <option value="channel">Canal</option>
-                    <option value="event">Evento</option>
+                    <option value="event">Eventos</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -440,67 +585,65 @@ const MessagingChannelsPage: React.FC = () => {
               </Col>
             </Row>
             
-            {modalMode === 'edit' && currentChannel.members && currentChannel.members.length > 0 && (
+            {modalMode === 'edit' && editedMembers && editedMembers.length > 0 && (
               <Form.Group className="mb-3">
                 <Form.Label>Miembros del Canal</Form.Label>
                 <div className="border rounded p-2" style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                  {currentChannel.members.map((member: any) => (
-                    <div key={member.id} className="d-flex justify-content-between align-items-center mb-2">
-                      <div>
-                        <span>{member.name}</span>
-                        <Badge bg="secondary" className="ms-2">{member.role}</Badge>
+                  {editedMembers.map((member: any) => {
+                    const isCompanyOwner = member.role?.toLowerCase() === 'company';
+                    return (
+                      <div key={member.id} className="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                          <span>{member.name}</span>
+                          <Badge bg="secondary" className="ms-2" style={{ color: 'black' }}>
+                            {translateUserRole(member.role)}
+                          </Badge>
+                          {isCompanyOwner && (
+                            <Badge bg="warning" className="ms-2" style={{ color: 'black' }}>
+                              Propietario
+                            </Badge>
+                          )}
+                        </div>
+                        {!isCompanyOwner ? (
+                          <Button 
+                            variant="outline-danger" 
+                            size="sm"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              console.log(`Eliminando miembro: ${member.id} - ${member.name}`);
+                              handleRemoveMemberFromEdit(member.id);
+                            }}
+                          >
+                            Eliminar
+                          </Button>
+                        ) : (
+                          <Button 
+                            variant="outline-secondary" 
+                            size="sm"
+                            disabled
+                            title="No se puede eliminar al propietario de la empresa"
+                          >
+                            Propietario
+                          </Button>
+                        )}
                       </div>
-                      <Button 
-                        variant="outline-danger" 
-                        size="sm"
-                        onClick={async () => {
-                          if (!currentChannel.documentId) return;
-                          if (!window.confirm(`¿Eliminar a ${member.name} del canal?`)) return;
-                          
-                          try {
-                            // Obtener el canal actual
-                            const existing = await messageService.getMessageByDocumentId(currentChannel.documentId);
-                            const attr = existing?.attributes ?? existing ?? {};
-                            
-                            // Filtrar el miembro a eliminar
-                            const updatedMembers = (attr.group_member || []).filter((m: any) => m.id !== member.id);
-                            
-                            // Obtener los IDs de usuario actualizados
-                            const userIds = updatedMembers
-                              .filter((m: any) => m.userId && typeof m.userId === 'number')
-                              .map((m: any) => m.userId);
-                            
-                            // Actualizar el canal
-                            await messageService.updateGroupMembersByDocumentId(
-                              currentChannel.documentId,
-                              updatedMembers,
-                              userIds
-                            );
-                            
-                            // Actualizar el estado local
-                            setCurrentChannel({
-                              ...currentChannel,
-                              members: updatedMembers
-                            });
-                            
-                            // Actualizar la lista de canales
-                            setChannels(prev => prev.map(c => 
-                              c.documentId === currentChannel.documentId 
-                                ? { ...c, members: updatedMembers } 
-                                : c
-                            ));
-                            
-                            notify('Miembro eliminado del canal', 'success');
-                          } catch (error) {
-                            console.error('Error al eliminar miembro:', error);
-                            notify('Error al eliminar miembro del canal', 'danger');
-                          }
-                        }}
-                      >
-                        Eliminar
-                      </Button>
-                    </div>
-                  ))}
+                    );
+                  })}
+                </div>
+                {editedMembers.length === 0 && (
+                  <div className="text-center text-muted mt-3">
+                    <p>No hay miembros en este canal.</p>
+                  </div>
+                )}
+              </Form.Group>
+            )}
+            
+            {modalMode === 'edit' && (!editedMembers || editedMembers.length === 0) && (
+              <Form.Group className="mb-3">
+                <Form.Label>Miembros del Canal</Form.Label>
+                <div className="border rounded p-2 text-center text-muted">
+                  <p className="mb-0">No hay miembros en este canal.</p>
                 </div>
               </Form.Group>
             )}
@@ -508,7 +651,7 @@ const MessagingChannelsPage: React.FC = () => {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+          <Button variant="secondary" onClick={handleCancelEdit}>
             Cancelar
           </Button>
           <Button variant="primary" onClick={handleSaveChannel} disabled={creating||savingEdit}>
@@ -518,21 +661,28 @@ const MessagingChannelsPage: React.FC = () => {
         </Modal.Footer>
       </Modal>
 
+      {/* Modal Añadir Miembros */}
       <Modal show={showMembersModal} onHide={() => setShowMembersModal(false)}>
           <Modal.Header closeButton>
           <Modal.Title>Añadir miembros a {selectedChannelForMembers?.name}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {membersList.length ? (
+          {loadingMembers ? (
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100px' }}>
+              <Spinner animation="border" variant="danger" role="status">
+                <span className="visually-hidden">Cargando miembros...</span>
+              </Spinner>
+            </div>
+          ) : membersList.length ? (
               <Form>
-                {membersList.map((m: any) => (
+              {membersList.map((member: CompanyMember) => (
                   <Form.Check
-                    key={m.id}
+                  key={member.id}
                     type="checkbox"
-                    id={`member-${m.id}`}
-                    label={`${m.name} (${m.role ?? ''})`}
-                    checked={selectedMemberIds.includes(m.id)}
-                    onChange={() => toggleMember(m.id)}
+                  id={`member-${member.id}`}
+                  label={`${member.nombre} ${member.apellido} (${translateUserRole(member.rol)})`}
+                  checked={selectedMemberIds.includes(member.id.toString())}
+                  onChange={() => toggleMember(member.id.toString())}
                   />
                 ))}
               </Form>
@@ -548,29 +698,27 @@ const MessagingChannelsPage: React.FC = () => {
               try {
                 // construir lista actualizada sin duplicados
                 const existing = Array.isArray(selectedChannelForMembers.members) ? selectedChannelForMembers.members : [];
-                const selectedObjs = membersList.filter(m => selectedMemberIds.includes(m.id));
+              const selectedObjs = membersList.filter(m => selectedMemberIds.includes(m.id.toString())).map(m => ({
+                id: m.id.toString(),
+                name: `${m.nombre} ${m.apellido}`,
+                email: m.email,
+                role: m.rol,
+                userId: m.id
+              }));
                 const merged = [...existing, ...selectedObjs.filter(s => !existing.some(e => e.id === s.id))];
                 // obtener ids de usuarios en Strapi
-                const userIds: number[] = [];
-                for (const mem of merged) {
-                  if ((mem as any).userId && typeof (mem as any).userId === 'number') {
-                    userIds.push((mem as any).userId);
-                  } else if (mem.email) {
-                    try {
-                      const u = await userService.getUserByEmail(mem.email);
-                      if (u && u.id) {
-                        (mem as any).userId = u.id;
-                        userIds.push(u.id);
-                      }
-                    } catch (_) {/* ignore individual errors */}
-                  }
-                }
+              const userIds: number[] = merged
+                .filter(m => m.userId && typeof m.userId === 'number')
+                  .map(m => m.userId!);
+              
                 await messageService.updateGroupMembersByDocumentId(selectedChannelForMembers.documentId, merged, userIds);
                 // actualizar estado local
                 setChannels(prev => prev.map(c => c.documentId === selectedChannelForMembers.documentId ? { ...c, members: merged } : c));
                 setShowMembersModal(false);
+              notify('Miembros añadidos correctamente', 'success');
               } catch (err) {
-                alert((err as Error).message);
+              console.error('Error añadiendo miembros:', err);
+              notify('Error añadiendo miembros al canal', 'danger');
               } finally {
                 setSavingMembers(false);
               }
@@ -581,12 +729,13 @@ const MessagingChannelsPage: React.FC = () => {
           </Modal.Footer>
         </Modal>
 
+      {/* Modal Detalles del Canal */}
       <Modal show={showDetailsModal} onHide={() => setShowDetailsModal(false)}>
           <Modal.Header closeButton>
           <Modal.Title>Detalles: {selectedChannelDetails?.name}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-          <p><strong>Tipo:</strong> {selectedChannelDetails?.type}</p>
+          <p><strong>Tipo:</strong> {translateChannelType(selectedChannelDetails?.type || '')}</p>
             <p>
               <strong>Estado:</strong>{' '}
             <Badge bg={selectedChannelDetails?.status === 'Active' ? 'success' : 'danger'}>
@@ -594,11 +743,11 @@ const MessagingChannelsPage: React.FC = () => {
               </Badge>
             </p>
           <p><strong>Creado:</strong> {selectedChannelDetails?.creationDate ? new Date(selectedChannelDetails.creationDate).toLocaleDateString() : 'N/A'}</p>
-          <h5 className="mt-4">Miembros ({selectedChannelDetails?.members.length})</h5>
-          {selectedChannelDetails?.members.length ? (
+          <h5 className="mt-4">Miembros ({selectedChannelDetails?.members?.length || 0})</h5>
+          {selectedChannelDetails?.members?.length ? (
               <ul>
               {selectedChannelDetails?.members.map(m => (
-                  <li key={m.id}>{m.name} — {m.role}</li>
+                <li key={m.id}>{m.name} — {translateUserRole(m.role)}</li>
                 ))}
               </ul>
             ) : (

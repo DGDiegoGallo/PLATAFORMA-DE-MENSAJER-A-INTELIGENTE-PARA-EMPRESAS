@@ -4,6 +4,7 @@ import { FaClock, FaTrash, FaRobot } from 'react-icons/fa';
 import ScheduleMessageModal from './ScheduleMessageModal';
 import ScheduledBotMessageModal from './ScheduledBotMessageModal';
 import { BotInfo } from '../bot/BotSelectorModal';
+import { messageService, MessageEntry } from '../../features/company/services/message.service';
 
 export interface ScheduledMessage {
   id: string;
@@ -20,7 +21,7 @@ interface ScheduledMessagesManagerProps {
   conversationName: string | undefined;
   onScheduleMessage: (message: string, scheduledTime: Date) => void;
   onScheduleBotMessage?: (message: string, scheduledTime: Date, bot: BotInfo) => void;
-  currentMessage: string;
+  currentMessage?: string;
   availableBots: BotInfo[];
 }
 
@@ -29,70 +30,78 @@ const ScheduledMessagesManager: React.FC<ScheduledMessagesManagerProps> = ({
   conversationName,
   onScheduleMessage,
   onScheduleBotMessage,
-  currentMessage,
+  currentMessage = '',
   availableBots = []
 }) => {
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [showBotScheduleModal, setShowBotScheduleModal] = useState(false);
   const [scheduledMessages, setScheduledMessages] = useState<ScheduledMessage[]>([]);
+  const [loading, setLoading] = useState(false);
   
-  // Cargar mensajes programados del localStorage al iniciar
-  useEffect(() => {
+  // Cargar mensajes programados del servidor
+  const loadScheduledMessages = async () => {
+    if (!conversationId) return;
+    
     try {
-      const saved = localStorage.getItem('scheduledMessages');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        // Convertir strings de fecha a objetos Date
-        const messages = parsed.map((msg: Record<string, unknown>) => ({
-          ...msg,
-          scheduledTime: new Date(msg.scheduledTime as string)
-        }));
-        setScheduledMessages(messages);
-      }
+      setLoading(true);
+      const serverMessages = await messageService.getScheduledMessagesForConversation(conversationId);
+      
+      // Convertir MessageEntry a ScheduledMessage
+      const convertedMessages: ScheduledMessage[] = serverMessages.map((entry: MessageEntry, index: number) => ({
+        id: `${conversationId}-${index}-${entry.scheduledFor}`,
+        content: entry.message,
+        scheduledTime: new Date(entry.scheduledFor!),
+        conversationId: conversationId,
+        conversationName: conversationName || 'Chat',
+        withBot: !!entry.botInfo,
+        botInfo: entry.botInfo ? {
+          name: entry.botInfo.name,
+          prompt: entry.botInfo.prompt
+        } : undefined
+      }));
+      
+      setScheduledMessages(convertedMessages);
     } catch (error) {
       console.error('Error loading scheduled messages:', error);
+    } finally {
+      setLoading(false);
     }
-  }, []);
-  
-  // Guardar mensajes programados en localStorage cuando cambien
-  useEffect(() => {
-    localStorage.setItem('scheduledMessages', JSON.stringify(scheduledMessages));
-  }, [scheduledMessages]);
-  
-  const handleSchedule = (scheduledTime: Date) => {
-    if (!currentMessage.trim() || !conversationId) return;
-    
-    const newScheduledMessage: ScheduledMessage = {
-      id: Date.now().toString(),
-      content: currentMessage,
-      scheduledTime,
-      conversationId,
-      conversationName: conversationName || 'Chat'
-    };
-    
-    setScheduledMessages(prev => [...prev, newScheduledMessage]);
-    onScheduleMessage(currentMessage, scheduledTime);
   };
   
-  const handleBotSchedule = (message: string, scheduledTime: Date, botInfo: BotInfo) => {
+  // Cargar mensajes programados al iniciar y cuando cambie la conversación
+  useEffect(() => {
+    loadScheduledMessages();
+  }, [conversationId]);
+  
+  const handleSchedule = async (message: string, scheduledTime: Date) => {
+    if (!message.trim() || !conversationId) return;
+    
+    try {
+      await onScheduleMessage(message, scheduledTime);
+      // Recargar mensajes programados después de programar
+      await loadScheduledMessages();
+    } catch (error) {
+      console.error('Error scheduling message:', error);
+    }
+  };
+  
+  const handleBotSchedule = async (message: string, scheduledTime: Date, botInfo: BotInfo) => {
     if (!message.trim() || !conversationId || !onScheduleBotMessage) return;
     
-    const newScheduledMessage: ScheduledMessage = {
-      id: Date.now().toString(),
-      content: message,
-      scheduledTime,
-      conversationId,
-      conversationName: conversationName || 'Chat',
-      withBot: true,
-      botInfo
-    };
-    
-    setScheduledMessages(prev => [...prev, newScheduledMessage]);
-    onScheduleBotMessage(message, scheduledTime, botInfo);
+    try {
+      await onScheduleBotMessage(message, scheduledTime, botInfo);
+      // Recargar mensajes programados después de programar
+      await loadScheduledMessages();
+    } catch (error) {
+      console.error('Error scheduling bot message:', error);
+    }
   };
   
-  const handleDelete = (id: string) => {
-    setScheduledMessages(prev => prev.filter(msg => msg.id !== id));
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDelete = async (_id: string) => {
+    // TODO: Implementar eliminación en el servidor
+    // Por ahora, solo recargar para mostrar el estado actual
+    await loadScheduledMessages();
   };
   
   // Formatear fecha para mostrar
@@ -107,11 +116,6 @@ const ScheduledMessagesManager: React.FC<ScheduledMessagesManagerProps> = ({
     });
   };
   
-  // Filtrar mensajes para esta conversación
-  const conversationMessages = conversationId 
-    ? scheduledMessages.filter(msg => msg.conversationId === conversationId)
-    : [];
-  
   return (
     <Card className="mt-3 mb-3">
       <Card.Header className="d-flex justify-content-between align-items-center">
@@ -124,9 +128,12 @@ const ScheduledMessagesManager: React.FC<ScheduledMessagesManagerProps> = ({
             size="sm" 
             variant="outline-primary"
             className="me-2"
-            onClick={() => setShowBotScheduleModal(true)}
-            disabled={!currentMessage.trim() || !conversationId || availableBots.length === 0}
-            title={availableBots.length === 0 ? "No hay bots disponibles" : "Programar con respuesta de bot"}
+            onClick={() => {
+              console.log('Bots disponibles:', availableBots);
+              setShowBotScheduleModal(true);
+            }}
+            disabled={!conversationId}
+            title={availableBots.length === 0 ? "No hay bots disponibles - pero puedes crear uno en el modal" : "Programar con respuesta de bot"}
           >
             <FaRobot className="me-1" /> Programar con bot
           </Button>
@@ -134,18 +141,20 @@ const ScheduledMessagesManager: React.FC<ScheduledMessagesManagerProps> = ({
             size="sm" 
             variant="primary"
             onClick={() => setShowScheduleModal(true)}
-            disabled={!currentMessage.trim() || !conversationId}
+            disabled={!conversationId}
           >
             Programar mensaje
           </Button>
         </div>
       </Card.Header>
       <Card.Body>
-        {conversationMessages.length === 0 ? (
+        {loading ? (
+          <p className="text-center text-muted">Cargando mensajes programados...</p>
+        ) : scheduledMessages.length === 0 ? (
           <p className="text-muted text-center">No hay mensajes programados para esta conversación</p>
         ) : (
           <ListGroup>
-            {conversationMessages.map(msg => (
+            {scheduledMessages.map(msg => (
               <ListGroup.Item 
                 key={msg.id}
                 className="d-flex justify-content-between align-items-center"
@@ -169,6 +178,7 @@ const ScheduledMessagesManager: React.FC<ScheduledMessagesManagerProps> = ({
                   variant="outline-danger" 
                   size="sm"
                   onClick={() => handleDelete(msg.id)}
+                  title="Eliminar mensaje programado"
                 >
                   <FaTrash size={14} />
                 </Button>

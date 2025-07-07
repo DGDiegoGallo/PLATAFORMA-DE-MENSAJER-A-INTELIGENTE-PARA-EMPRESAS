@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { FaArrowRight, FaSearch, FaUser, FaExclamationTriangle, FaCheckCircle, FaSpinner, FaInfoCircle, FaWallet, FaNetworkWired } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaArrowRight, FaSearch, FaUser, FaExclamationTriangle, FaCheckCircle, FaSpinner, FaInfoCircle, FaWallet, FaEnvelope, FaBuilding, FaUsers } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { userWalletService } from '../../services/userWallet.service';
+import { useAuthContext } from '../../contexts/AuthContext';
 import 'animate.css';
 
 interface NetworkOption {
@@ -37,9 +38,10 @@ export const TransferForm: React.FC<TransferFormProps> = ({
   onSuccess,
   onNewTransfer
 }) => {
+  const { user } = useAuthContext();
   const [step, setStep] = useState(1);
   const [recipientInput, setRecipientInput] = useState('');
-  const [searchMode, setSearchMode] = useState<'walletId' | 'address'>('walletId');
+  const [searchMode, setSearchMode] = useState<'walletId' | 'email' | 'company'>('walletId');
   const [recipientUser, setRecipientUser] = useState<RecipientUser | null>(null);
   const [toAddress, setToAddress] = useState('');
   const [selectedNetwork, setSelectedNetwork] = useState<NetworkOption>(networks[0]);
@@ -47,6 +49,17 @@ export const TransferForm: React.FC<TransferFormProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [processingStep, setProcessingStep] = useState('');
+  const [companyMembers, setCompanyMembers] = useState<RecipientUser[]>([]);
+  const [showMembersList, setShowMembersList] = useState(false);
+
+  // Resetear searchMode si el usuario no tiene rol 'company' y está en modo 'company'
+  useEffect(() => {
+    if (user?.rol !== 'company' && searchMode === 'company') {
+      setSearchMode('walletId');
+      setShowMembersList(false);
+      setCompanyMembers([]);
+    }
+  }, [user?.rol, searchMode]);
 
   const availableBalance = currentBalance;
   const transferAmount = parseFloat(amount) || 0;
@@ -59,9 +72,20 @@ export const TransferForm: React.FC<TransferFormProps> = ({
     return ethAddressRegex.test(address);
   };
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const searchRecipient = async () => {
+    if (searchMode === 'company') {
+      // Para búsqueda por empresa, cargar la lista de miembros
+      await loadCompanyMembers();
+      return;
+    }
+
     if (!recipientInput.trim()) {
-      toast.error('Ingresa un Wallet ID o dirección');
+      toast.error(searchMode === 'email' ? 'Ingresa un email' : 'Ingresa un Wallet ID');
       return;
     }
 
@@ -76,21 +100,19 @@ export const TransferForm: React.FC<TransferFormProps> = ({
         } else {
           toast.error('Usuario no encontrado con este Wallet ID');
         }
-      } else {
-        if (!validateAddress(recipientInput)) {
-          toast.error('Dirección inválida');
+      } else if (searchMode === 'email') {
+        if (!validateEmail(recipientInput.trim())) {
+          toast.error('Email inválido');
           return;
         }
         
-        const user = await userWalletService.findUserByWalletAddress(recipientInput);
+        const user = await userWalletService.findUserByEmail(recipientInput.trim());
         if (user) {
           setRecipientUser(user);
-          setToAddress(recipientInput);
-          toast.success(`Usuario encontrado: ${user.username}`);
+          setToAddress(user.walletAddress);
+          toast.success(`Usuario encontrado: ${user.username} (${user.email})`);
         } else {
-          setRecipientUser(null);
-          setToAddress(recipientInput);
-          toast.info('Transferencia a dirección externa');
+          toast.error('Usuario no encontrado con este email o no tiene wallet');
         }
       }
     } catch (error) {
@@ -99,6 +121,37 @@ export const TransferForm: React.FC<TransferFormProps> = ({
     } finally {
       setIsSearching(false);
     }
+  };
+
+  const loadCompanyMembers = async () => {
+    if (!user?.id) {
+      toast.error('No se pudo identificar el usuario actual');
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const members = await userWalletService.getCompanyMembers(user.id);
+      if (members.length > 0) {
+        setCompanyMembers(members);
+        setShowMembersList(true);
+        toast.info(`Se encontraron ${members.length} miembro(s) de tu empresa`);
+      } else {
+        toast.warning('No se encontraron otros miembros en tu empresa con wallet');
+      }
+    } catch (error) {
+      console.error('Error loading company members:', error);
+      toast.error('Error al cargar miembros de la empresa');
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const selectMember = (member: RecipientUser) => {
+    setRecipientUser(member);
+    setToAddress(member.walletAddress);
+    setShowMembersList(false);
+    toast.success(`Miembro seleccionado: ${member.username} (${member.email})`);
   };
 
   const validateTransfer = () => {
@@ -264,32 +317,112 @@ export const TransferForm: React.FC<TransferFormProps> = ({
                   Wallet ID
                 </label>
 
-                <input type="radio" className="btn-check" name="searchMode" id="address" autoComplete="off" 
-                       checked={searchMode === 'address'} onChange={() => setSearchMode('address')} />
-                <label className="btn btn-outline-primary" htmlFor="address">
-                  <FaNetworkWired className="me-2" />
-                  Dirección
+                <input type="radio" className="btn-check" name="searchMode" id="email" autoComplete="off" 
+                       checked={searchMode === 'email'} onChange={() => setSearchMode('email')} />
+                <label className="btn btn-outline-primary" htmlFor="email">
+                  <FaEnvelope className="me-2" />
+                  Email
                 </label>
+
+                {/* Solo mostrar opción "Empresa" para usuarios con rol "company" */}
+                {user?.rol === 'company' && (
+                  <>
+                    <input type="radio" className="btn-check" name="searchMode" id="company" autoComplete="off" 
+                           checked={searchMode === 'company'} onChange={() => setSearchMode('company')} />
+                    <label className="btn btn-outline-primary" htmlFor="company">
+                      <FaBuilding className="me-2" />
+                      Empresa
+                    </label>
+                  </>
+                )}
               </div>
 
-              {/* Campo de búsqueda */}
-              <div className="input-group mb-4">
-                <input
-                  type="text"
-                  className="form-control form-control-lg"
-                  value={recipientInput}
-                  onChange={(e) => setRecipientInput(e.target.value)}
-                  placeholder={searchMode === 'walletId' ? 'Ingresa el Wallet ID del destinatario' : 'Ingresa la dirección de la wallet'}
-                />
-                <button
-                  className="btn btn-primary"
-                  type="button"
-                  onClick={searchRecipient}
-                  disabled={isSearching}
-                >
-                  {isSearching ? <FaSpinner className="fa-spin" /> : <FaSearch />}
-                </button>
-              </div>
+              {/* Campo de búsqueda - ocultar para empresa */}
+              {searchMode !== 'company' && (
+                <div className="input-group mb-4">
+                  <input
+                    type="text"
+                    className="form-control form-control-lg"
+                    value={recipientInput}
+                    onChange={(e) => setRecipientInput(e.target.value)}
+                    placeholder={searchMode === 'walletId' ? 'Ingresa el Wallet ID del destinatario' : searchMode === 'email' ? 'Ingresa el email del destinatario' : ''}
+                  />
+                  <button
+                    className="btn btn-primary"
+                    type="button"
+                    onClick={searchRecipient}
+                    disabled={isSearching}
+                  >
+                    {isSearching ? <FaSpinner className="fa-spin" /> : <FaSearch />}
+                  </button>
+                </div>
+              )}
+
+              {/* Botón para buscar miembros de empresa */}
+              {searchMode === 'company' && !showMembersList && (
+                <div className="text-center mb-4">
+                  <button
+                    className="btn btn-primary btn-lg"
+                    onClick={searchRecipient}
+                    disabled={isSearching}
+                  >
+                    {isSearching ? (
+                      <>
+                        <FaSpinner className="fa-spin me-2" />
+                        Buscando miembros...
+                      </>
+                    ) : (
+                      <>
+                        <FaUsers className="me-2" />
+                        Ver miembros de mi empresa
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+
+              {/* Lista de miembros de la empresa */}
+              {showMembersList && companyMembers.length > 0 && (
+                <div className="mb-4 animate__animated animate__fadeIn">
+                  <h6 className="mb-3">
+                    <FaUsers className="me-2 text-primary" />
+                    Miembros de tu empresa ({companyMembers.length})
+                  </h6>
+                  <div className="row g-3">
+                    {companyMembers.map((member) => (
+                      <div key={member.id} className="col-md-6">
+                        <div 
+                          className="card border border-primary-subtle cursor-pointer h-100 hover-shadow"
+                          onClick={() => selectMember(member)}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <div className="card-body p-3">
+                            <div className="d-flex align-items-center">
+                              <div className="avatar-circle me-3">
+                                <FaUser className="text-primary" />
+                              </div>
+                              <div className="flex-grow-1">
+                                <h6 className="mb-1 fw-bold">{member.username}</h6>
+                                <small className="text-muted d-block">{member.email}</small>
+                                <small className="text-muted">{member.walletId.slice(0, 12)}...</small>
+                              </div>
+                              <FaArrowRight className="text-primary" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-center mt-3">
+                    <button 
+                      className="btn btn-link"
+                      onClick={() => setShowMembersList(false)}
+                    >
+                      Ocultar lista
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Información del destinatario */}
               {recipientUser && (
@@ -454,10 +587,19 @@ export const TransferForm: React.FC<TransferFormProps> = ({
                 <button
                   className="btn btn-primary btn-lg px-5"
                   onClick={processTransfer}
-                  disabled={!amount || parseFloat(amount) <= 0 || totalCost > availableBalance}
+                  disabled={!amount || parseFloat(amount) <= 0 || totalCost > availableBalance || isProcessing}
                 >
-                  Transferir Ahora
-                  <FaArrowRight className="ms-2" />
+                  {isProcessing ? (
+                    <>
+                      <FaSpinner className="fa-spin me-2" />
+                      Procesando...
+                    </>
+                  ) : (
+                    <>
+                      Transferir Ahora
+                      <FaArrowRight className="ms-2" />
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -465,14 +607,16 @@ export const TransferForm: React.FC<TransferFormProps> = ({
 
           {/* Step 3: Procesando */}
           {step === 3 && (
-            <div className="p-5 text-center animate__animated animate__fadeIn">
-              <div className="mb-4">
+            <div className="d-flex flex-column justify-content-center align-items-center py-5 animate__animated animate__fadeIn">
+              <div className="mb-4 d-flex justify-content-center">
                 <div className="spinner-border text-primary" style={{width: '4rem', height: '4rem'}} role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
               </div>
-              <h5 className="mb-3">Procesando transferencia</h5>
-              <p className="text-muted mb-4">{processingStep}</p>
+              <div className="text-center w-100">
+                <h5 className="mb-3 text-center">Procesando transferencia</h5>
+                <p className="text-muted mb-4 text-center">{processingStep}</p>
+              </div>
               <div className="alert alert-info border-0">
                 <FaInfoCircle className="me-2" />
                 Por favor, no cierres esta ventana mientras se procesa la transferencia.
@@ -482,15 +626,17 @@ export const TransferForm: React.FC<TransferFormProps> = ({
 
           {/* Step 4: Completado */}
           {step === 4 && (
-            <div className="p-5 text-center animate__animated animate__bounceIn">
-              <div className="mb-4">
+            <div className="d-flex flex-column justify-content-center align-items-center py-5 animate__animated animate__bounceIn">
+              <div className="mb-4 d-flex justify-content-center">
                 <FaCheckCircle className="text-success" size={64} />
               </div>
-              <h4 className="text-success mb-3">¡Transferencia exitosa!</h4>
-              <p className="mb-4">
-                Se han transferido <strong>{transferAmount.toFixed(6)} USDT</strong>
-              </p>
-              <div className="card border-0 bg-light mb-4">
+              <div className="text-center w-100">
+                <h4 className="text-success mb-3 text-center">¡Transferencia exitosa!</h4>
+                <p className="mb-4 text-center">
+                  Se han transferido <strong>{transferAmount.toFixed(6)} USDT</strong>
+                </p>
+              </div>
+              <div className="card border-0 bg-light mb-4" style={{ maxWidth: '400px' }}>
                 <div className="card-body">
                   <p className="mb-1">
                     <strong>A:</strong> {recipientUser ? recipientUser.username : truncateAddress(toAddress)}
@@ -516,7 +662,8 @@ export const TransferForm: React.FC<TransferFormProps> = ({
         </div>
       </div>
 
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .bg-gradient-primary {
           background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
@@ -611,7 +758,24 @@ export const TransferForm: React.FC<TransferFormProps> = ({
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
-      `}</style>
+        
+        .avatar-circle {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: #f8f9fa;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #dee2e6;
+        }
+        
+        .hover-shadow:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        `
+      }} />
     </div>
   );
 }; 

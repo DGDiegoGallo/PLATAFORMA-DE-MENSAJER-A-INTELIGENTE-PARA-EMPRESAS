@@ -127,21 +127,42 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
 
       // Monitorear el cierre de la ventana de Stripe
       const checkClosed = setInterval(async () => {
-        if (stripeWindow.closed) {
-          clearInterval(checkClosed);
-          
-          // Cuando se cierra la ventana, verificar el estado del pago
-          setProcessingStep('Verificando pago...');
-          
-          try {
-            // Aquí puedes agregar lógica para verificar el estado del pago
-            // Por ejemplo, consultando el estado de la sesión de checkout
-            await simulateStripePayment();
-          } catch (error) {
-            console.error('Error verificando pago:', error);
-            setIsProcessing(false);
-            toast.error('Error verificando el pago');
+        try {
+          // Verificar si la ventana está cerrada
+          if (stripeWindow.closed) {
+            clearInterval(checkClosed);
+            
+            // Cuando se cierra la ventana, verificar el estado del pago
+            setProcessingStep('Verificando pago...');
+            
+            try {
+              // Simular una verificación del estado del pago
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              await simulateStripePayment();
+            } catch (error) {
+              console.error('Error verificando pago:', error);
+              setIsProcessing(false);
+              toast.error('Error verificando el pago');
+            }
+            return;
           }
+
+          // Verificar si la ventana ha navegado a una página de éxito
+          try {
+            const currentUrl = stripeWindow.location.href;
+            if (currentUrl.includes('success') || currentUrl.includes('completed')) {
+              // Si detectamos una URL de éxito, cerrar la ventana y procesar el pago
+              stripeWindow.close();
+              clearInterval(checkClosed);
+              setProcessingStep('Verificando pago...');
+              await simulateStripePayment();
+              return;
+            }
+          } catch (error) {
+            // Error de acceso cross-origin es normal, ignorar
+          }
+        } catch (error) {
+          console.error('Error monitoreando ventana:', error);
         }
       }, 1000);
 
@@ -367,32 +388,38 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
                   </div>
                 ) : (
                   /* Estado de procesamiento */
-                  <div className="text-center py-4">
-                    <div className="mb-3">
+                  <div className="d-flex flex-column justify-content-center align-items-center py-5">
+                    <div className="mb-4 d-flex justify-content-center">
                       <div 
                         className="spinner-border" 
                         style={{ 
                           color: 'var(--color-primary)',
-                          width: '3rem',
-                          height: '3rem'
+                          width: '3.5rem',
+                          height: '3.5rem'
                         }} 
                         role="status"
                       >
                         <span className="visually-hidden">Cargando...</span>
                       </div>
                     </div>
-                    <h5 style={{ color: 'var(--color-primary)' }}>{processingStep}</h5>
-                    <p style={{ color: 'var(--color-text-secondary)' }}>
-                      Procesando compra de ${dollarAmount} → {estimatedUSDT.toFixed(2)} USDT
-                    </p>
-                    <div className="progress mt-3" style={{ height: '8px' }}>
-                      <div
-                        className="progress-bar progress-bar-striped progress-bar-animated"
-                        style={{ 
-                          backgroundColor: 'var(--color-primary)',
-                          width: '60%'
-                        }}
-                      />
+                    <div className="text-center w-100">
+                      <h5 className="mb-3 text-center" style={{ color: 'var(--color-primary)' }}>
+                        {processingStep}
+                      </h5>
+                      <p className="mb-4 text-center" style={{ color: 'var(--color-text-secondary)' }}>
+                        Procesando compra de ${dollarAmount} → {estimatedUSDT.toFixed(2)} USDT
+                      </p>
+                    </div>
+                    <div className="d-flex justify-content-center w-100">
+                      <div className="progress" style={{ height: '8px', width: '300px' }}>
+                        <div
+                          className="progress-bar progress-bar-striped progress-bar-animated"
+                          style={{ 
+                            backgroundColor: 'var(--color-primary)',
+                            width: '60%'
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
                 )}

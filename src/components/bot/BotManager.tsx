@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Card, Row, Col, Modal, Toast, ToastContainer } from 'react-bootstrap';
+import { Form, Button, Card, Row, Col, Modal, Toast, ToastContainer, Spinner } from 'react-bootstrap';
 import useChannels from '../../features/company/hooks/useChannels';
 import { messageService } from '../../features/company/services/message.service';
 
@@ -32,6 +32,7 @@ const BotManager: React.FC = () => {
   const [peakHour, setPeakHour] = useState('--:--');
   const [efficiency, setEfficiency] = useState(0);
   const [totalMessages, setTotalMessages] = useState(0);
+  const [deleting, setDeleting] = useState(false);
   
   // Verificar rol del usuario para determinar permisos
   const userLS = (() => {
@@ -71,9 +72,9 @@ const BotManager: React.FC = () => {
       const content = ((msg as Record<string, unknown>)?.content as unknown[]) ?? ((msg as Record<string, unknown>)?.attributes?.content as unknown[]) ?? [];
 
       // Total de mensajes enviados por el bot seleccionado
-      // @ts-ignore
+      // @ts-expect-error - Dynamic property access on unknown type
       const botMessages = content.filter((c: Record<string, unknown>) => {
-        // @ts-ignore
+        // @ts-expect-error - Dynamic property access on unknown type
         const senderName = ((c as Record<string, unknown>)?.sender_info as Record<string, unknown>)?.nombre ?? (c as Record<string, unknown>)?.sender;
         return senderName === statsSelectedBot;
       });
@@ -82,9 +83,9 @@ const BotManager: React.FC = () => {
 
       // Hora pico de mensajes (muy simplificado)
       const hourCounts: Record<string, number> = {};
-      // @ts-ignore
+      // @ts-expect-error - Dynamic property access on unknown type
       content.forEach((c: Record<string, unknown>) => {
-        // @ts-ignore
+        // @ts-expect-error - Dynamic property access on unknown type
         const horaStr: string | undefined = ((c as Record<string, unknown>)?.sender_info as Record<string, unknown>)?.hora as string | undefined;
         if (!horaStr) return;
         const timePart = horaStr.split(',')[1]?.trim(); // Ej: "21:12"
@@ -130,6 +131,11 @@ const BotManager: React.FC = () => {
     setShowConfirm(false);
     console.log('Procediendo a eliminar bot');
     try {
+      setDeleting(true);
+      
+      // Delay artificial para hacer la demo más realista (2 segundos)
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
       // Obtener bots actuales del canal
       const msg = await messageService.getMessageByDocumentId(statsChannelId);
       const raw = (msg as unknown as Record<string, unknown>)?.bot_interaction ?? msg?.attributes?.bot_interaction ?? {};
@@ -151,6 +157,8 @@ const BotManager: React.FC = () => {
       setEfficiency(0);
     } catch (error) {
       alert((error as Error).message);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -183,24 +191,48 @@ const BotManager: React.FC = () => {
                   </Form.Group>
                 </Col>
                 <Col md={4} className="d-flex align-items-end">
-                  <Button disabled={!name || !prompt || !channelId || saving} onClick={async () => {
-                    try {
-                      setSaving(true);
-                      // 1. Obtener registro actual
-                      const msg = await messageService.getMessageByDocumentId(channelId);
-                      const existingBotsRaw = (msg as unknown as Record<string, unknown>)?.bot_interaction ?? msg?.attributes?.bot_interaction ?? {};
-                      const existingBots = typeof existingBotsRaw === 'string' ? JSON.parse(existingBotsRaw) : existingBotsRaw;
-                      const updatedBotInteraction = { ...existingBots, [name]: { Prompt: prompt } };
-                      await messageService.updateBotsByDocumentId(channelId, updatedBotInteraction);
-                      showNotification('Bot agregado correctamente', 'success');
-                      setName('');
-                      setPrompt('');
-                    } catch (error) {
-                      alert((error as Error).message);
-                    } finally {
-                      setSaving(false);
-                    }
-                  }}>Guardar</Button>
+                  <Button 
+                    disabled={!name || !prompt || !channelId || saving} 
+                    variant={saving ? "outline-primary" : "primary"}
+                    onClick={async () => {
+                      try {
+                        setSaving(true);
+                        
+                        // Delay artificial para hacer la demo más realista (2.5 segundos)
+                        await new Promise(resolve => setTimeout(resolve, 2500));
+                        
+                        // 1. Obtener registro actual
+                        const msg = await messageService.getMessageByDocumentId(channelId);
+                        const existingBotsRaw = (msg as unknown as Record<string, unknown>)?.bot_interaction ?? msg?.attributes?.bot_interaction ?? {};
+                        const existingBots = typeof existingBotsRaw === 'string' ? JSON.parse(existingBotsRaw) : existingBotsRaw;
+                        const updatedBotInteraction = { ...existingBots, [name]: { Prompt: prompt } };
+                        await messageService.updateBotsByDocumentId(channelId, updatedBotInteraction);
+                        showNotification('Bot agregado correctamente', 'success');
+                        setName('');
+                        setPrompt('');
+                      } catch (error) {
+                        alert((error as Error).message);
+                      } finally {
+                        setSaving(false);
+                      }
+                    }}
+                  >
+                    {saving ? (
+                      <>
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                          className="me-2"
+                        />
+                        Creando bot...
+                      </>
+                    ) : (
+                      'Guardar'
+                    )}
+                  </Button>
                 </Col>
                 <Col md={12}>
                   <Form.Group>
@@ -246,7 +278,28 @@ const BotManager: React.FC = () => {
                 </Form.Select>
               </Form.Group>
               <Button className="mt-3 w-100" variant="secondary" disabled={!statsChannelId || !statsSelectedBot} onClick={updateStats}>Actualizar datos</Button>
-              <Button className="mt-2 w-100" variant="danger" disabled={!statsChannelId || !statsSelectedBot} onClick={() => setShowConfirm(true)}>Eliminar bot</Button>
+              <Button 
+                className="mt-2 w-100" 
+                variant={deleting ? "outline-danger" : "danger"} 
+                disabled={!statsChannelId || !statsSelectedBot || deleting} 
+                onClick={() => setShowConfirm(true)}
+              >
+                {deleting ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      className="me-2"
+                    />
+                    Eliminando bot...
+                  </>
+                ) : (
+                  'Eliminar bot'
+                )}
+              </Button>
             </Card.Body>
           </Card>
         </Col>

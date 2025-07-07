@@ -2,7 +2,8 @@
 @import './variables.css';
 @import './utilities.css';
 
-/* Add AG BODY font */
+/* Add AG BODY font - COMENTADO TEMPORALMENTE - archivos de fuente no encontrados */
+/*
 @font-face {
   font-family: 'AG BODY';
   src: url('../assets/fonts/AG-BODY.woff2') format('woff2'),
@@ -11,6 +12,7 @@
   font-style: normal;
   font-display: swap;
 }
+*/
 
 /* Global styles */
 body {
@@ -61,8 +63,34 @@ body {
   }
 }
 
-/* Animación suave para hover en botones */
+/* Animación para spinner personalizado */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animación de pulso para íconos de éxito */
 @keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
+}
+
+/* Animación suave para hover en botones */
+@keyframes buttonHover {
   0% {
     transform: scale(1);
   }
@@ -70,6 +98,18 @@ body {
     transform: scale(1.05);
   }
   100% {
+    transform: scale(1);
+  }
+}
+
+/* Animación para modal que aparece */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
     transform: scale(1);
   }
 }
@@ -90,6 +130,11 @@ body {
   transform: translateY(-5px);
   transition: all 0.3s ease;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal personalizado con animación */
+.modal-content {
+  animation: modalFadeIn 0.3s ease-out;
 }
 
 /* Animación para elementos que entran desde abajo */

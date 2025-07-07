@@ -96,7 +96,6 @@ export const authService = {
    * Guarda la información de autenticación en localStorage
    * @param token Token JWT
    * @param user Datos del usuario
-   * @param rememberMe Si se debe recordar al usuario
    */
   saveAuth(token: string, user: User): void {
     // Limpiar datos específicos de autenticación antes de guardar nuevos datos
@@ -105,7 +104,8 @@ export const authService = {
     localStorage.removeItem('companyName');
     
     // Guardar los nuevos datos de autenticación
-    localStorage.setItem('token', token);
+    // Si no hay token, guardar uno vacío para modo demo
+    localStorage.setItem('token', token || '');
     localStorage.setItem('user', JSON.stringify(user));
   },
 
@@ -128,10 +128,23 @@ export const authService = {
 
   /**
    * Verifica si el usuario está autenticado
-   * @returns true si hay un token válido
+   * @returns true si hay un token válido o un usuario válido en localStorage (modo demo)
    */
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    const user = this.getUser();
+    
+    // Si hay token, está autenticado
+    if (token && token !== '') {
+      return true;
+    }
+    
+    // Si no hay token pero hay usuario válido (modo demo), también está autenticado
+    if (user && user.id) {
+      return true;
+    }
+    
+    return false;
   },
 
   /**

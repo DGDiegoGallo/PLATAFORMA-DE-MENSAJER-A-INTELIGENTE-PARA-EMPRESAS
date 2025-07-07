@@ -1,11 +1,21 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { FaDoorOpen, FaUser, FaEdit } from 'react-icons/fa';
+import { FaDoorOpen, FaUser, FaEdit, FaCheck, FaExclamationTriangle, FaCheckCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/AuthContext';
 import API_URL from '../../config/api';
+import './UserMenu.css';
 
 const LOCAL_STORAGE_KEY = 'profileImage';
+
+// Tipos para las modales
+interface ModalState {
+  show: boolean;
+  type: 'success' | 'error' | 'warning';
+  title: string;
+  message: string;
+  onConfirm?: () => void;
+}
 
 const UserMenu: React.FC = () => {
   const { user, logout } = useAuthContext();
@@ -21,6 +31,15 @@ const UserMenu: React.FC = () => {
     apellido: user?.apellido || '',
     email: user?.email || ''
   });
+  
+  // Estado para manejar las modales de notificación
+  const [modalState, setModalState] = useState<ModalState>({
+    show: false,
+    type: 'success',
+    title: '',
+    message: '',
+  });
+
   const navigate = useNavigate();
 
   // Load image from localStorage on mount
@@ -30,6 +49,26 @@ const UserMenu: React.FC = () => {
       setProfileImage(stored);
     }
   }, []);
+
+  // Función para mostrar modales
+  const showModal = (type: 'success' | 'error' | 'warning', title: string, message: string, onConfirm?: () => void) => {
+    setModalState({
+      show: true,
+      type,
+      title,
+      message,
+      onConfirm
+    });
+  };
+
+  // Función para cerrar modal
+  const closeModal = () => {
+    setModalState(prev => ({ ...prev, show: false }));
+    // Ejecutar callback si existe
+    if (modalState.onConfirm) {
+      modalState.onConfirm();
+    }
+  };
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -78,7 +117,7 @@ const UserMenu: React.FC = () => {
     try {
       // PUT a Strapi (solo nombre, apellido, email)
       const userStr = localStorage.getItem('user');
-      let userObj: Record<string, unknown> = user as Record<string, unknown>;
+      let userObj: Record<string, unknown> = user as unknown as Record<string, unknown>;
       if (userStr) userObj = JSON.parse(userStr);
       if (userObj && userObj.id) {
         const payload = {
@@ -96,14 +135,51 @@ const UserMenu: React.FC = () => {
         userObj.apellido = editData.apellido;
         userObj.email = editData.email;
         localStorage.setItem('user', JSON.stringify(userObj));
-        alert('Datos actualizados correctamente');
-        setEditMode(false);
-        window.location.reload();
+        
+        showModal('success', '¡Éxito!', 'Datos actualizados correctamente', () => {
+          setEditMode(false);
+          window.location.reload();
+        });
       }
     } catch {
-      alert('Error al actualizar los datos');
+      showModal('error', 'Error', 'Error al actualizar los datos');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    if (!oldPassword || !newPassword || !repeatPassword) {
+      showModal('warning', 'Campos incompletos', 'Completa todos los campos de contraseña');
+      return;
+    }
+    if (newPassword !== repeatPassword) {
+      showModal('error', 'Error de validación', 'Las contraseñas nuevas no coinciden');
+      return;
+    }
+    try {
+      const userStr = localStorage.getItem('user');
+      let userObj: Record<string, unknown> = user as unknown as Record<string, unknown>;
+      if (userStr) userObj = JSON.parse(userStr);
+      if (userObj && userObj.id) {
+        await fetch(`${API_URL}/api/users/${userObj.id}/password`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            currentPassword: oldPassword,
+            password: newPassword,
+            passwordConfirmation: repeatPassword
+          })
+        });
+        
+        showModal('success', '¡Éxito!', 'Contraseña actualizada correctamente', () => {
+          setOldPassword('');
+          setNewPassword('');
+          setRepeatPassword('');
+        });
+      }
+    } catch {
+      showModal('error', 'Error', 'Error al actualizar la contraseña');
     }
   };
 
@@ -137,139 +213,223 @@ const UserMenu: React.FC = () => {
         <FaDoorOpen size={20} />
       </button>
 
-      <Modal show={show} onHide={() => setShow(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Datos del usuario</Modal.Title>
+      {/* Modal principal del usuario */}
+      <Modal 
+        show={show} 
+        onHide={() => setShow(false)} 
+        centered 
+        size="lg"
+        backdrop="static"
+        className="user-modal"
+      >
+        <Modal.Header closeButton className="border-0 pb-0">
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <FaUser className="text-primary" />
+            Datos del usuario
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="px-4 py-3">
           {user ? (
             <>
               {/* Avatar */}
-              <div className="d-flex flex-column align-items-center mb-3">
-                {profileImage ? (
-                  <img
-                    src={profileImage}
-                    alt="Avatar"
-                    style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover' }}
-                  />
-                ) : (
-                  <div
-                    className="d-flex justify-content-center align-items-center bg-secondary text-white"
-                    style={{ width: 80, height: 80, borderRadius: '50%' }}
-                  >
-                    <FaUser size={36} />
-                  </div>
-                )}
+              <div className="d-flex flex-column align-items-center mb-4">
+                <div className="position-relative">
+                  {profileImage ? (
+                    <img
+                      src={profileImage}
+                      alt="Avatar"
+                      style={{ 
+                        width: 100, 
+                        height: 100, 
+                        borderRadius: '50%', 
+                        objectFit: 'cover',
+                        border: '4px solid var(--bs-primary-bg-subtle)'
+                      }}
+                    />
+                  ) : (
+                    <div
+                      className="d-flex justify-content-center align-items-center bg-secondary text-white"
+                      style={{ 
+                        width: 100, 
+                        height: 100, 
+                        borderRadius: '50%',
+                        border: '4px solid var(--bs-primary-bg-subtle)'
+                      }}
+                    >
+                      <FaUser size={40} />
+                    </div>
+                  )}
+                </div>
                 {/* Upload */}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="form-control mt-2"
-                  onChange={handleImageUpload}
-                />
+                <div className="mt-3 w-100" style={{ maxWidth: '300px' }}>
+                  <Form.Group>
+                    <Form.Label className="fw-semibold text-muted small">
+                      <FaEdit className="me-1" />
+                      Cambiar foto de perfil
+                    </Form.Label>
+                    <Form.Control
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="form-control-sm"
+                    />
+                  </Form.Group>
+                </div>
               </div>
 
               {!editMode ? (
-                <ul className="list-unstyled mb-3">
-                  <li><strong>Nombre:</strong> {`${user.nombre || ''} ${user.apellido || ''}`.trim() || user.fullName || user.username}</li>
-                  <li><strong>Email:</strong> {user.email}</li>
-                  {user.rol && <li><strong>Rol:</strong> {getRoleLabel(user.rol)}</li>}
-                  {user.documentoID && <li><strong>DNI:</strong> {user.documentoID}</li>}
-                </ul>
+                <div className="row g-3 mb-4">
+                  <div className="col-md-6">
+                    <div className="border rounded-3 p-3 bg-light">
+                      <label className="form-label fw-bold text-muted small mb-1">NOMBRE COMPLETO</label>
+                      <div className="fw-semibold">
+                        {`${user.nombre || ''} ${user.apellido || ''}`.trim() || user.fullName || user.username}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="border rounded-3 p-3 bg-light">
+                      <label className="form-label fw-bold text-muted small mb-1">EMAIL</label>
+                      <div className="fw-semibold">{user.email}</div>
+                    </div>
+                  </div>
+                  {user.rol && (
+                    <div className="col-md-6">
+                      <div className="border rounded-3 p-3 bg-light">
+                        <label className="form-label fw-bold text-muted small mb-1">ROL</label>
+                        <div className="fw-semibold">{getRoleLabel(user.rol)}</div>
+                      </div>
+                    </div>
+                  )}
+                  {user.documentoID && (
+                    <div className="col-md-6">
+                      <div className="border rounded-3 p-3 bg-light">
+                        <label className="form-label fw-bold text-muted small mb-1">DNI</label>
+                        <div className="fw-semibold">{user.documentoID}</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               ) : (
-                <Form className="mb-3">
-                  <Form.Group className="mb-2 d-flex align-items-center">
-                    <Form.Label className="me-2 mb-0">Nombre</Form.Label>
-                    <Form.Control name="nombre" value={editData.nombre} onChange={handleEditChange} />
-                    <FaEdit className="ms-2 text-secondary" />
-                  </Form.Group>
-                  <Form.Group className="mb-2">
-                    <Form.Label>Apellido</Form.Label>
-                    <Form.Control name="apellido" value={editData.apellido} onChange={handleEditChange} />
-                  </Form.Group>
-                  <Form.Group className="mb-2 d-flex align-items-center">
-                    <Form.Label className="me-2 mb-0">Email</Form.Label>
-                    <Form.Control name="email" value={editData.email} onChange={handleEditChange} />
-                    <FaEdit className="ms-2 text-secondary" />
-                  </Form.Group>
-                </Form>
+                <div className="row g-3 mb-4">
+                  <div className="col-md-6">
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">
+                        <FaEdit className="me-1 text-primary" />
+                        Nombre
+                      </Form.Label>
+                      <Form.Control 
+                        name="nombre" 
+                        value={editData.nombre} 
+                        onChange={handleEditChange}
+                        className="form-control-lg"
+                      />
+                    </Form.Group>
+                  </div>
+                  <div className="col-md-6">
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">
+                        <FaEdit className="me-1 text-primary" />
+                        Apellido
+                      </Form.Label>
+                      <Form.Control 
+                        name="apellido" 
+                        value={editData.apellido} 
+                        onChange={handleEditChange}
+                        className="form-control-lg"
+                      />
+                    </Form.Group>
+                  </div>
+                  <div className="col-12">
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">
+                        <FaEdit className="me-1 text-primary" />
+                        Email
+                      </Form.Label>
+                      <Form.Control 
+                        name="email" 
+                        value={editData.email} 
+                        onChange={handleEditChange}
+                        className="form-control-lg"
+                      />
+                    </Form.Group>
+                  </div>
+                </div>
               )}
 
-              {/* Cambio de contraseña real (simulado PUT) */}
-              <div className="mb-2">
-                <label className="form-label fw-bold">Cambiar contraseña</label>
-                <div className="d-flex flex-column gap-2">
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Antigua contraseña"
-                    value={oldPassword}
-                    onChange={(e) => setOldPassword(e.target.value)}
-                  />
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Nueva contraseña"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                  />
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Repite la nueva contraseña"
-                    value={repeatPassword}
-                    onChange={(e) => setRepeatPassword(e.target.value)}
-                  />
-                  <Button 
-                    variant="outline-primary" 
-                    className="mt-2 align-self-end" 
-                    onClick={async () => {
-                      if (!oldPassword || !newPassword || !repeatPassword) {
-                        alert('Completa todos los campos de contraseña');
-                        return;
-                      }
-                      if (newPassword !== repeatPassword) {
-                        alert('Las contraseñas nuevas no coinciden');
-                        return;
-                      }
-                      try {
-                        const userStr = localStorage.getItem('user');
-                        let userObj: Record<string, unknown> = user as Record<string, unknown>;
-                        if (userStr) userObj = JSON.parse(userStr);
-                        if (userObj && userObj.id) {
-                          await fetch(`${API_URL}/api/users/${userObj.id}/password`, {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                              currentPassword: oldPassword,
-                              password: newPassword,
-                              passwordConfirmation: repeatPassword
-                            })
-                          });
-                          alert('Contraseña actualizada correctamente');
-                          setOldPassword('');
-                          setNewPassword('');
-                          setRepeatPassword('');
-                        }
-                      } catch {
-                        alert('Error al actualizar la contraseña');
-                      }
-                    }}
-                    disabled={saving}
-                  >
-                    Guardar
-                  </Button>
+              {/* Cambio de contraseña */}
+              <div className="border-top pt-4">
+                <h6 className="fw-bold mb-3 text-primary">
+                  <FaCheckCircle className="me-2" />
+                  Cambiar contraseña
+                </h6>
+                <div className="row g-3">
+                  <div className="col-12">
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Contraseña actual</Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder="Ingresa tu contraseña actual"
+                        value={oldPassword}
+                        onChange={(e) => setOldPassword(e.target.value)}
+                        className="form-control-lg"
+                      />
+                    </Form.Group>
+                  </div>
+                  <div className="col-md-6">
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Nueva contraseña</Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder="Ingresa nueva contraseña"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="form-control-lg"
+                      />
+                    </Form.Group>
+                  </div>
+                  <div className="col-md-6">
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Confirmar contraseña</Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder="Confirma nueva contraseña"
+                        value={repeatPassword}
+                        onChange={(e) => setRepeatPassword(e.target.value)}
+                        className="form-control-lg"
+                      />
+                    </Form.Group>
+                  </div>
+                  <div className="col-12">
+                    <Button 
+                      variant="primary" 
+                      onClick={handlePasswordChange}
+                      disabled={saving}
+                      className="btn-lg"
+                    >
+                      <FaCheck className="me-2" />
+                      {saving ? 'Guardando...' : 'Cambiar contraseña'}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </>
           ) : (
-            <p>No hay usuario en sesión.</p>
+            <div className="text-center py-4">
+              <FaExclamationTriangle className="text-warning mb-2" size={40} />
+              <p className="text-muted">No hay usuario en sesión.</p>
+            </div>
           )}
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="border-0 pt-0">
           {!editMode ? (
             <>
-              <Button variant="outline-primary" onClick={() => setEditMode(true)}>
+              <Button 
+                variant="outline-primary" 
+                onClick={() => setEditMode(true)}
+                className="me-2"
+              >
+                <FaEdit className="me-2" />
                 Editar datos
               </Button>
               <Button variant="secondary" onClick={() => setShow(false)}>
@@ -278,16 +438,64 @@ const UserMenu: React.FC = () => {
             </>
           ) : (
             <>
-              <Button variant="primary" onClick={handleSaveEdit} disabled={saving}>
+              <Button 
+                variant="success" 
+                onClick={handleSaveEdit} 
+                disabled={saving}
+                className="me-2"
+              >
+                <FaCheck className="me-2" />
                 {saving ? 'Guardando...' : 'Guardar cambios'}
               </Button>
-              <Button variant="secondary" onClick={() => setEditMode(false)}>
+              <Button variant="outline-secondary" onClick={() => setEditMode(false)}>
                 Cancelar
               </Button>
             </>
           )}
         </Modal.Footer>
       </Modal>
+
+      {/* Modal de notificaciones */}
+      <Modal 
+        show={modalState.show} 
+        onHide={closeModal}
+        centered
+        size="sm"
+        backdrop="static"
+        className="notification-modal"
+      >
+        <Modal.Body className="text-center p-4">
+          <div className="mb-3">
+            {modalState.type === 'success' && (
+              <div className="text-success">
+                <FaCheckCircle size={48} className="mb-2" />
+              </div>
+            )}
+            {modalState.type === 'error' && (
+              <div className="text-danger">
+                <FaExclamationTriangle size={48} className="mb-2" />
+              </div>
+            )}
+            {modalState.type === 'warning' && (
+              <div className="text-warning">
+                <FaExclamationTriangle size={48} className="mb-2" />
+              </div>
+            )}
+          </div>
+          <h5 className="modal-title fw-bold mb-2">{modalState.title}</h5>
+          <p className="text-muted mb-3">{modalState.message}</p>
+          <Button 
+            variant={modalState.type === 'success' ? 'success' : modalState.type === 'error' ? 'danger' : 'warning'}
+            onClick={closeModal}
+            className="btn-lg px-4"
+          >
+            <FaCheck className="me-2" />
+            Entendido
+          </Button>
+        </Modal.Body>
+      </Modal>
+
+
     </>
   );
 };

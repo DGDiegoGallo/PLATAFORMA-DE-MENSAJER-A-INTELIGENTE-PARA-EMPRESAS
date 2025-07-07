@@ -54,9 +54,9 @@ const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
   const userRole = user?.rol || 'user';
   const hasCompany = safeCompanyName !== '' && userRole !== 'user';
-  const isAdmin = ['admin', 'superadmin', 'administrator'].includes(userRole);
+  const isAdmin = ['admin', 'superadmin', 'administrator'].includes(userRole.toLowerCase());
   // permitir edición solo para roles distintos de empleado o agente
-  const canEditCompany = !['empleado', 'agente'].includes(userRole);
+  const canEditCompany = !['empleado', 'agente'].includes(userRole.toLowerCase());
 
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);

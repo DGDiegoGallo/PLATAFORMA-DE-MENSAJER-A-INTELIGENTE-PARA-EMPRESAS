@@ -14,6 +14,7 @@ interface ChannelMember {
   name: string;
   role: string;
   email?: string;
+  userId?: number; // Opcional para compatibilidad con código existente
 }
 
 // Interfaz para los miembros de la compañía desde la API

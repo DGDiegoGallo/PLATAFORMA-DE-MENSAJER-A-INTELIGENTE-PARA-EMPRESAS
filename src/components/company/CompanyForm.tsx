@@ -56,7 +56,44 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    handleSave();
+  };
+
+  const handleSave = () => {
     onSave(formData);
+  };
+
+  // Función para obtener estilos condicionales
+  const getFieldStyle = (isReadOnly: boolean) => {
+    if (isReadOnly) {
+      return {
+        backgroundColor: '#f8f9fa',
+        border: '1px solid #dee2e6',
+        borderRadius: '4px',
+        color: '#495057',
+        cursor: 'default',
+        opacity: 0.8
+      };
+    }
+    return {
+      borderColor: '#EBC2BB',
+      borderRadius: '4px'
+    };
+  };
+
+  // Función para obtener estilos de etiquetas
+  const getLabelStyle = (isReadOnly: boolean) => {
+    if (isReadOnly) {
+      return {
+        color: '#6c757d',
+        fontSize: '0.9rem',
+        fontWeight: 'bold' as const
+      };
+    }
+    return {
+      color: '#767179',
+      fontSize: '0.9rem'
+    };
   };
 
   return (
@@ -67,38 +104,40 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
           <h3 className="mb-4">Cuenta empresa</h3>
           
           {readOnly && (
-            <div className="alert alert-info mb-4">
-              <small>Estás viendo la información de la empresa. No puedes realizar cambios.</small>
+            <div className="alert alert-secondary mb-4" style={{ backgroundColor: '#f8f9fa', border: '1px solid #dee2e6' }}>
+              <div className="d-flex align-items-center">
+                <svg width="20" height="20" className="me-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 2L2 7v10c0 5.55 3.84 10 9 11 1.66.2 3.34.2 5 0 5.16-1 9-5.45 9-11V7l-10-5z"/>
+                  <path d="M9 12l2 2 4-4"/>
+                </svg>
+                <small><strong>Modo solo lectura:</strong> Los datos de la empresa se muestran para consulta únicamente.</small>
+              </div>
             </div>
           )}
           
           <div className="mb-3">
-            <BootstrapForm.Label style={{ color: '#767179', fontSize: '0.9rem' }}>Nombre compañía</BootstrapForm.Label>
+            <BootstrapForm.Label style={getLabelStyle(readOnly)}>Nombre compañía</BootstrapForm.Label>
             <BootstrapForm.Control
               type="text"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
               placeholder="Nombre compañía"
-              style={{ 
-                borderColor: '#EBC2BB',
-                borderRadius: '4px'
-              }}
+              style={getFieldStyle(readOnly)}
+              readOnly={readOnly}
             />
           </div>
           
           <div className="mb-3">
-            <BootstrapForm.Label style={{ color: '#767179', fontSize: '0.9rem' }}>Documento de identidad empresarial</BootstrapForm.Label>
+            <BootstrapForm.Label style={getLabelStyle(readOnly)}>Documento de identidad empresarial</BootstrapForm.Label>
             <Row>
               <Col xs={3}>
                 <BootstrapForm.Select 
                   name="documentType"
                   value={formData.documentType}
                   onChange={handleSelectChange}
-                  style={{ 
-                    borderColor: '#EBC2BB',
-                    borderRadius: '4px'
-                  }}
+                  style={getFieldStyle(readOnly)}
+                  disabled={readOnly}
                 >
                   <option value="Rif">Rif</option>
                   <option value="NIT">NIT</option>
@@ -114,87 +153,75 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
                   value={formData.documentNumber}
                   onChange={handleInputChange}
                   placeholder="RIF"
-                  style={{ 
-                    borderColor: '#EBC2BB',
-                    borderRadius: '4px'
-                  }}
+                  style={getFieldStyle(readOnly)}
+                  readOnly={readOnly}
                 />
               </Col>
             </Row>
           </div>
           
           <div className="mb-3">
-            <BootstrapForm.Label style={{ color: '#767179', fontSize: '0.9rem' }}>Correo</BootstrapForm.Label>
+            <BootstrapForm.Label style={getLabelStyle(readOnly)}>Correo</BootstrapForm.Label>
             <BootstrapForm.Control
               type="email"
               name="email"
               value={formData.email}
               onChange={handleInputChange}
               placeholder="Correo"
-              style={{ 
-                borderColor: '#EBC2BB',
-                borderRadius: '4px'
-              }}
+              style={getFieldStyle(readOnly)}
+              readOnly={readOnly}
             />
           </div>
           
           <div className="mb-3">
-            <BootstrapForm.Label style={{ color: '#767179', fontSize: '0.9rem' }}>País</BootstrapForm.Label>
+            <BootstrapForm.Label style={getLabelStyle(readOnly)}>País</BootstrapForm.Label>
             <BootstrapForm.Control
               type="text"
               name="country"
               value={formData.country}
               onChange={handleInputChange}
               placeholder="País"
-              style={{ 
-                borderColor: '#EBC2BB',
-                borderRadius: '4px'
-              }}
+              style={getFieldStyle(readOnly)}
+              readOnly={readOnly}
             />
           </div>
           
           <div className="mb-3">
-            <BootstrapForm.Label style={{ color: '#767179', fontSize: '0.9rem' }}>Ciudad</BootstrapForm.Label>
+            <BootstrapForm.Label style={getLabelStyle(readOnly)}>Ciudad</BootstrapForm.Label>
             <BootstrapForm.Control
               type="text"
               name="city"
               value={formData.city}
               onChange={handleInputChange}
               placeholder="Ciudad"
-              style={{ 
-                borderColor: '#EBC2BB',
-                borderRadius: '4px'
-              }}
+              style={getFieldStyle(readOnly)}
+              readOnly={readOnly}
             />
           </div>
           
           <div className="mb-3">
-            <BootstrapForm.Label style={{ color: '#767179', fontSize: '0.9rem' }}>Sector</BootstrapForm.Label>
+            <BootstrapForm.Label style={getLabelStyle(readOnly)}>Sector</BootstrapForm.Label>
             <BootstrapForm.Control
               type="text"
               name="sector"
               value={formData.sector}
               onChange={handleInputChange}
               placeholder="Sector"
-              style={{ 
-                borderColor: '#EBC2BB',
-                borderRadius: '4px'
-              }}
+              style={getFieldStyle(readOnly)}
+              readOnly={readOnly}
             />
           </div>
           
           <div className="mb-3">
-            <BootstrapForm.Label style={{ color: '#767179', fontSize: '0.9rem' }}>Servicio/producto</BootstrapForm.Label>
+            <BootstrapForm.Label style={getLabelStyle(readOnly)}>Servicio/producto</BootstrapForm.Label>
             <BootstrapForm.Control
               type="text"
               name="service"
               value={formData.service}
               onChange={handleInputChange}
               placeholder="Servicio/producto"
-              style={{ 
-                borderColor: '#EBC2BB',
-                borderRadius: '4px'
-              }}
+              style={getFieldStyle(readOnly)}
+              readOnly={readOnly}
             />
           </div>
         </div>
@@ -231,7 +258,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
           <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
             Cancelar
           </Button>
-          <Button variant="warning" style={{ background: '#F44123', border: 'none', fontWeight: 600 }} onClick={() => { setShowSaveModal(false); handleSubmit({} as React.FormEvent); }}>
+          <Button variant="warning" style={{ background: '#F44123', border: 'none', fontWeight: 600 }} onClick={() => { setShowSaveModal(false); handleSave(); }}>
             Confirmar y guardar
           </Button>
         </Modal.Footer>

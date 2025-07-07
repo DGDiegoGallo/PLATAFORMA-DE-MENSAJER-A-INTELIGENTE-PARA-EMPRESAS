@@ -20,7 +20,7 @@ import ChatFullModal from '../../components/chat/ChatFullModal';
 import BotManager from '../../components/bot/BotManager';
 import { messageService } from '../../features/company/services/message.service';
 import useChannels from '../../features/company/hooks/useChannels';
-import ScheduledMessagesManager, { ScheduledMessage } from '../../components/company/ScheduledMessagesManager';
+import ScheduledMessagesManager from '../../components/company/ScheduledMessagesManager';
 
 // Interfaces básicas (se expandirán según sea necesario)
 export interface User {
@@ -85,94 +85,6 @@ const ChatPage: React.FC<ChatPageProps> = ({ isEmbedded = false }) => {
   const isCompanyRole = localUser.rol?.toLowerCase() === 'company';
   // Verificar si es rol agente
   const isAgentRole = localUser.rol?.toLowerCase() === 'agente';
-
-  // Estado para los mensajes programados
-  const [scheduledMessages, setScheduledMessages] = useState<ScheduledMessage[]>([]);
-  
-  // Cargar mensajes programados del localStorage
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem('scheduledMessages');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        const messages = parsed.map((msg: Record<string, unknown>) => ({
-          ...msg,
-          scheduledTime: new Date(msg.scheduledTime as string)
-        }));
-        setScheduledMessages(messages);
-      }
-    } catch (error) {
-      console.error('Error loading scheduled messages:', error);
-    }
-  }, []);
-
-  // Verificar mensajes programados cada minuto
-  useEffect(() => {
-    // Función para verificar y enviar mensajes programados
-    const checkScheduledMessages = async () => {
-      const now = new Date();
-      const messagesToSend = scheduledMessages.filter(msg => {
-        const scheduledTime = new Date(msg.scheduledTime);
-        return scheduledTime <= now;
-      });
-
-      if (messagesToSend.length > 0) {
-        console.log('Enviando mensajes programados:', messagesToSend);
-        
-        for (const msg of messagesToSend) {
-          try {
-            // Obtener información del usuario
-            const userLS = JSON.parse(localStorage.getItem('user') || '{}');
-            const senderInfo = { nombre: userLS.nombre ?? 'Anon', apellido: userLS.apellido ?? '' };
-            
-            // Enviar mensaje programado a través del servicio
-            await messageService.sendMessage(msg.conversationId, msg.content, senderInfo);
-            
-            // Si la conversación es la seleccionada actualmente, actualizar la interfaz
-            if (selectedConversation?.id === msg.conversationId) {
-              const newMsg: Message = {
-                id: `msg-${Date.now()}`,
-                sender: currentUserMock,
-                content: msg.content,
-                timestamp: new Date().toISOString(),
-                isOwnMessage: true,
-                scheduled: true
-              };
-              
-              setMessages(prev => {
-                const updated = [...prev, newMsg];
-                updated.sort((a: Message, b: Message) => {
-                  return toDateAny(a.timestamp).getTime() - toDateAny(b.timestamp).getTime();
-                });
-                return updated;
-              });
-            }
-          } catch (error) {
-            console.error('Error sending scheduled message:', error);
-          }
-        }
-        
-        // Eliminar los mensajes enviados de la lista
-        setScheduledMessages(prev => 
-          prev.filter(msg => {
-            const scheduledTime = new Date(msg.scheduledTime);
-            return scheduledTime > now;
-          })
-        );
-      }
-    };
-
-    // Ejecutar inmediatamente y luego cada minuto
-    checkScheduledMessages();
-    const interval = setInterval(checkScheduledMessages, 60000);
-    
-    return () => clearInterval(interval);
-  }, [scheduledMessages, selectedConversation]);
-
-  // Guardar mensajes programados en localStorage cuando cambien
-  useEffect(() => {
-    localStorage.setItem('scheduledMessages', JSON.stringify(scheduledMessages));
-  }, [scheduledMessages]);
 
   // Conversión robusta de cualquier string de fecha (ISO o "DD/MM/YYYY, HH:mm") a Date
   const toDateAny = (ts: string): Date => {
@@ -259,8 +171,14 @@ const ChatPage: React.FC<ChatPageProps> = ({ isEmbedded = false }) => {
       }
       
       const newNotis: NotificationLS[] = [];
-      const msgs: Message[] = arr.map((entry: { sender_info: { nombre: string; apellido: string; hora: string }; message: string }, index: number) => {
+      const msgs: Message[] = arr.map((entry: { sender_info: { nombre: string; apellido: string; hora: string }; message: string; programmedMessage?: boolean; scheduledFor?: string; botInfo?: any }, index: number) => {
         const isOwn = (entry.sender_info?.nombre === localUser.nombre) && (entry.sender_info?.apellido === localUser.apellido);
+        
+        // NO renderizar mensajes programados en el chat normal
+        // Filtrar mensajes con programmedMessage: true o que tengan botInfo (mensajes programados para el bot)
+        if (entry.programmedMessage || entry.botInfo) {
+          return null;
+        }
         
         // Comprobar si este mensaje está programado para el futuro
         const messageTime = toDateAny(entry.sender_info.hora);
@@ -311,9 +229,12 @@ const ChatPage: React.FC<ChatPageProps> = ({ isEmbedded = false }) => {
       // Usamos type assertion para acceder a `bot_interaction` que puede no estar en el tipo
       const responseWithBot = res as unknown as { attributes?: { bot_interaction?: Record<string, { Prompt?: string }> }, bot_interaction?: Record<string, { Prompt?: string }> };
       const botInteraction = responseWithBot?.attributes?.bot_interaction || responseWithBot?.bot_interaction || {};
+      console.log('Bot interaction data:', botInteraction);
+      
       const botsArr: BotInfo[] = Object.entries(botInteraction).map(([name, val]) => {
         return { name, prompt: val?.Prompt || '' };
       });
+      console.log('Bots cargados:', botsArr);
       setAvailableBots(botsArr);
       setSelectedConversation(conversation);
     }catch(e){
@@ -443,38 +364,20 @@ const ChatPage: React.FC<ChatPageProps> = ({ isEmbedded = false }) => {
     };
 
     try {
-      // Solo enviar mensaje programado a Strapi si no es un evento
-      if (selectedConversation.type !== 'event') {
-        await messageService.sendScheduledMessage(
-          String(selectedConversation.id), 
-          message, 
-          senderInfo,
-          scheduledTime
-        );
-      }
+      // Enviar mensaje programado a Strapi
+      await messageService.sendScheduledMessage(
+        String(selectedConversation.id), 
+        message, 
+        senderInfo,
+        scheduledTime
+      );
 
-      // Añadir mensaje programado a la interfaz si es el usuario company
-      if (isCompanyRole) {
-        const newMsg: Message = {
-          id: `scheduled-${Date.now()}`,
-          sender: currentUserMock,
-          content: message,
-          timestamp: scheduledTimeAR,
-          isOwnMessage: true,
-          scheduled: true
-        };
-        
-        setMessages(prev => {
-          const updated = [...prev, newMsg];
-          updated.sort((a: Message, b: Message) => {
-            return toDateAny(a.timestamp).getTime() - toDateAny(b.timestamp).getTime();
-          });
-          return updated;
-        });
+      console.log(`Mensaje programado guardado para ${scheduledTime.toLocaleString()}`);
+      
+      // Recargar mensajes para actualizar la vista
+      if (selectedConversation) {
+        await handleSelectConversation(selectedConversation);
       }
-
-      // Limpiar el campo de entrada
-      setNewMessage('');
     } catch (err) {
       console.error('Error programando mensaje', err);
     }
@@ -567,103 +470,33 @@ const conversations: Conversation[] = useMemo(() => channels.map(ch => ({
   const handleScheduleBotMessage = async (message: string, scheduledTime: Date, botInfo: BotInfo) => {
     if (!message.trim() || !selectedConversation) return;
 
-    // Formatear la fecha para Argentina (UTC-3)
-    const scheduledTimeAR = scheduledTime.toLocaleString('es-AR', {
-      timeZone: 'America/Argentina/Buenos_Aires',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-
     // Obtener info del usuario almacenada
     const userLS = JSON.parse(localStorage.getItem('user') || '{}');
-    const senderInfo = { 
+    const userInfo = { 
       nombre: userLS.nombre ?? 'Anon', 
-      apellido: userLS.apellido ?? '',
-      hora: scheduledTimeAR // Usar la hora programada
+      apellido: userLS.apellido ?? ''
     };
 
     try {
-      // 1. Programar el mensaje del usuario - SOLO si NO es un evento (type !== 'event')
-      // Si es un evento, no agregamos el mensaje del usuario, solo el del bot
-      if (selectedConversation.type !== 'event') {
-        await messageService.sendScheduledMessage(
+      // Usar el nuevo servicio para enviar mensaje programado
+      await messageService.sendScheduledBotMessage(
           String(selectedConversation.id), 
           message, 
-          senderInfo,
-          scheduledTime
-        );
-      }
+        scheduledTime,
+        botInfo.name,
+        botInfo.prompt,
+        userInfo
+      );
 
-      // 2. Preparar la respuesta programada del bot (para cuando llegue la hora)
-      // La respuesta del bot se genera cuando llegue el momento programado
-      
-      // Almacenar en localStorage los datos necesarios para generar la respuesta del bot cuando llegue la hora
-      const pendingBotResponse = {
-        userMessage: message,
-        botName: botInfo.name,
-        botPrompt: botInfo.prompt,
-        conversationId: selectedConversation.id,
-        channelType: selectedConversation.type, // Añadir tipo de canal para saber si es un evento
-        scheduledTime: scheduledTime.toISOString(),
-        senderInfo: {
-          nombre: botInfo.name,
-          apellido: ''
-        }
-      };
-      
-      // Guardar en localStorage
-      const existingResponses = JSON.parse(localStorage.getItem('pendingBotResponses') || '[]');
-      existingResponses.push(pendingBotResponse);
-      localStorage.setItem('pendingBotResponses', JSON.stringify(existingResponses));
-
-      // 3. Añadir mensaje programado a la interfaz si es el usuario company
-      if (isCompanyRole) {
-        // Solo para conversaciones que no sean eventos, mostrar el mensaje del usuario
-        const messages: Message[] = [];
-        
-        if (selectedConversation.type !== 'event') {
-          // Mensaje del usuario (solo si no es un evento)
-          const userMsg: Message = {
-            id: `scheduled-user-${Date.now()}`,
-            sender: currentUserMock,
-            content: message,
-            timestamp: scheduledTimeAR,
-            isOwnMessage: true,
-            scheduled: true
-          };
-          messages.push(userMsg);
-        }
-        
-        // Mensaje placeholder para la respuesta del bot (siempre)
-        const botMsg: Message = {
-          id: `scheduled-bot-${Date.now()}`,
-          sender: { 
-            id: 'bot', 
-            name: botInfo.name, 
-            role: 'bot' 
-          },
-          content: `[Respuesta programada del bot ${botInfo.name}]`,
-          timestamp: scheduledTimeAR,
-          isOwnMessage: false,
-          scheduled: true
-        };
-        messages.push(botMsg);
-        
-        setMessages(prev => {
-          const updated = [...prev, ...messages];
-          updated.sort((a: Message, b: Message) => {
-            return toDateAny(a.timestamp).getTime() - toDateAny(b.timestamp).getTime();
-          });
-          return updated;
-        });
-      }
+      console.log(`Mensaje programado guardado para ${botInfo.name} a las ${scheduledTime.toLocaleString()}`);
 
       // Limpiar el campo de entrada
       setNewMessage('');
+      
+      // Recargar mensajes para mostrar los cambios
+      if (selectedConversation) {
+        await handleSelectConversation(selectedConversation);
+      }
     } catch (err) {
       console.error('Error programando mensaje con bot', err);
     }
@@ -763,51 +596,36 @@ const conversations: Conversation[] = useMemo(() => channels.map(ch => ({
     return () => clearInterval(interval);
   }, [selectedConversation]);
 
-  // Polling para recargar mensajes cada 5 segundos si hay una conversación seleccionada
+  // Verificador periódico para procesar mensajes programados
   useEffect(() => {
-    if (!selectedConversation) return;
-    let isMounted = true;
-    let firstLoad = true;
-    const fetchMessages = async () => {
+    const checkAndProcessScheduledMessages = async () => {
       try {
-        if (firstLoad) setLoadingMessages(true);
-        const res = await messageService.getMessageByDocumentId(String(selectedConversation.id));
-        const raw = res?.attributes?.content ?? res?.content ?? [];
-        let arr = [];
-        if (typeof raw === 'string') {
-          try { arr = JSON.parse(raw); } catch { arr = []; }
-        } else if (Array.isArray(raw)) {
-          arr = raw;
-        }
-        const msgs = arr.map((entry: { sender_info: { nombre: string; apellido: string; hora: string }; message: string }, index: number) => {
-          const isOwn = (entry.sender_info?.nombre === localUser.nombre) && (entry.sender_info?.apellido === localUser.apellido);
-          const messageTime = toDateAny(entry.sender_info.hora);
-          const now = new Date();
-          const isScheduled = messageTime > now;
-          if (!isScheduled || isCompanyRole) {
-            return {
-              id: `srv-${index}`,
-              sender: { id: `${entry.sender_info.nombre}-${entry.sender_info.apellido}`, name: `${entry.sender_info.nombre} ${entry.sender_info.apellido}` },
-              content: entry.message,
-              timestamp: entry.sender_info.hora,
-              isOwnMessage: isOwn,
-              scheduled: isScheduled
-            };
+        // Obtener mensajes programados listos para ejecutar
+        const readyMessages = await messageService.getScheduledMessagesReady();
+        
+        if (readyMessages.length > 0) {
+          console.log(`Procesando ${readyMessages.length} mensajes programados`);
+          
+          // Procesar cada mensaje programado
+          for (const { documentId, messageEntry, channelType } of readyMessages) {
+            await messageService.processScheduledMessage(documentId, messageEntry, channelType);
           }
-          return null;
-        }).filter(Boolean);
-        msgs.sort((a: Message, b: Message) => toDateAny(a.timestamp).getTime() - toDateAny(b.timestamp).getTime());
-        if (isMounted) setMessages(msgs);
-      } catch (e) {
-        if (isMounted) setMessages([]);
-      } finally {
-        if (isMounted) setLoadingMessages(false);
-        firstLoad = false;
+          
+          // Si la conversación actual fue afectada, recargar mensajes
+          if (selectedConversation && readyMessages.some(rm => rm.documentId === selectedConversation.id)) {
+            await handleSelectConversation(selectedConversation);
+          }
+        }
+      } catch (error) {
+        console.error('Error verificando mensajes programados:', error);
       }
     };
-    fetchMessages();
-    const interval = setInterval(fetchMessages, 5000);
-    return () => { isMounted = false; clearInterval(interval); };
+
+    // Ejecutar inmediatamente y luego cada minuto
+    checkAndProcessScheduledMessages();
+    const interval = setInterval(checkAndProcessScheduledMessages, 60000);
+    
+    return () => clearInterval(interval);
   }, [selectedConversation]);
 
   // Si estamos embebidos, mostramos el modal
@@ -894,14 +712,13 @@ const conversations: Conversation[] = useMemo(() => channels.map(ch => ({
                 </div>
               </div>
 
-              {/* Panel de mensajes programados (solo visible para rol company o agente y tipo evento) */}
+              {/* Panel de mensajes programados (solo visible para rol company o agente en eventos) */}
               {(isCompanyRole || isAgentRole) && selectedConversation.type === 'event' && (
                 <ScheduledMessagesManager
                   conversationId={selectedConversation.id}
                   conversationName={selectedConversation.name}
                   onScheduleMessage={handleScheduleMessage}
                   onScheduleBotMessage={handleScheduleBotMessage}
-                  currentMessage={selectedConversation.type === 'event' ? "Anuncio programado para evento" : newMessage}
                   availableBots={availableBots}
                 />
               )}
@@ -925,7 +742,7 @@ const conversations: Conversation[] = useMemo(() => channels.map(ch => ({
                 )}
               </div>
               
-              {/* Barra de entrada de mensajes - Se muestra si NO es rol empleado o si es un grupo o canal */}
+              {/* Barra de entrada de mensajes - NO se muestra en eventos */}
               {(!isEmpleadoRole || 
                 (activeTab === 'grupos' && selectedConversation?.type === 'group') || 
                 (activeTab === 'canales' && selectedConversation?.type === 'channel')) && 
@@ -936,7 +753,17 @@ const conversations: Conversation[] = useMemo(() => channels.map(ch => ({
                   <Button
                     variant={botMode ? "success" : "link"}
                     className="p-2"
-                    onClick={() => setShowBotSelector(true)}
+                    onClick={() => {
+                      if (botMode) {
+                        // Si ya está en modo bot, desactivarlo
+                        setBotMode(false);
+                        setSelectedBotPrompt(null);
+                        setSelectedBotName(null);
+                      } else {
+                        // Si no está en modo bot, abrir selector
+                        setShowBotSelector(true);
+                      }
+                    }}
                   >
                     <FaRobot size={20}/>
                   </Button>

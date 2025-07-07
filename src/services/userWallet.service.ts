@@ -46,9 +46,26 @@ class UserWalletService {
 
   private getAuthHeaders() {
     const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    
+    // Si hay token, usarlo
+    if (token && token !== '') {
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      };
+    }
+    
+    // Si no hay token pero hay usuario (modo demo), usar headers básicos
+    if (user) {
+      return {
+        'Content-Type': 'application/json'
+      };
+    }
+    
+    // Por defecto, headers básicos
     return {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      'Content-Type': 'application/json'
     };
   }
 
@@ -546,6 +563,126 @@ class UserWalletService {
         txHash: '',
         message: error instanceof Error ? error.message : 'Error en la transferencia'
       };
+    }
+  }
+
+  // Buscar usuario por email
+  async findUserByEmail(email: string): Promise<RecipientUser | null> {
+    try {
+      console.log('🔍 Buscando destinatario por email:', email);
+      
+      const response = await axios.get(
+        `${this.baseURL}/users?filters[email][$eq]=${encodeURIComponent(email)}&populate=*`,
+        { headers: this.getAuthHeaders() }
+      );
+
+      if (response.data && response.data.length > 0) {
+        const user = response.data[0];
+        
+        // Verificar si el usuario tiene wallet
+        const walletResponse = await axios.get(
+          `${this.baseURL}/user-wallets?filters[users_permissions_user][id][$eq]=${user.id}&populate=*`,
+          { headers: this.getAuthHeaders() }
+        );
+
+        if (walletResponse.data.data && walletResponse.data.data.length > 0) {
+          const wallet = walletResponse.data.data[0];
+          
+          const recipientUser = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            walletAddress: wallet.wallet_address,
+            walletId: wallet.wallet_address
+          };
+          
+          console.log('✅ Usuario encontrado por email:');
+          console.table(recipientUser);
+          
+          return recipientUser;
+        } else {
+          console.log('❌ Usuario encontrado pero no tiene wallet');
+          return null;
+        }
+      }
+      
+      console.log('❌ No se encontró usuario con ese email');
+      return null;
+    } catch (error) {
+      console.error('Error searching by email:', error);
+      throw error;
+    }
+  }
+
+  // Obtener miembros de la empresa del usuario actual
+  async getCompanyMembers(currentUserId: number): Promise<RecipientUser[]> {
+    try {
+      console.log('🔍 Buscando miembros de la empresa para usuario:', currentUserId);
+      
+      // Buscar la empresa del usuario actual
+      const response = await axios.get(
+        `${this.baseURL}/companies?populate=users_permissions_users&populate=users_permissions_users.user_wallet`,
+        { headers: this.getAuthHeaders() }
+      );
+
+      if (!response.data.data || response.data.data.length === 0) {
+        console.log('❌ No se encontraron empresas');
+        return [];
+      }
+
+      // Encontrar la empresa que contiene al usuario actual
+      let currentUserCompany = null;
+      for (const company of response.data.data) {
+        const hasCurrentUser = company.users_permissions_users.some((user: any) => user.id === currentUserId);
+        if (hasCurrentUser) {
+          currentUserCompany = company;
+          break;
+        }
+      }
+
+      if (!currentUserCompany) {
+        console.log('❌ Usuario actual no pertenece a ninguna empresa');
+        return [];
+      }
+
+      console.log('✅ Empresa encontrada:', currentUserCompany.name);
+
+      // Obtener todos los usuarios de la empresa (excepto el actual) con sus wallets
+      const members: RecipientUser[] = [];
+      
+      for (const user of currentUserCompany.users_permissions_users) {
+        if (user.id !== currentUserId) {
+          try {
+            // Buscar wallet del usuario
+            const walletResponse = await axios.get(
+              `${this.baseURL}/user-wallets?filters[users_permissions_user][id][$eq]=${user.id}&populate=*`,
+              { headers: this.getAuthHeaders() }
+            );
+
+            if (walletResponse.data.data && walletResponse.data.data.length > 0) {
+              const wallet = walletResponse.data.data[0];
+              
+              members.push({
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                walletAddress: wallet.wallet_address,
+                walletId: wallet.wallet_address
+              });
+            }
+          } catch (error) {
+            console.warn(`No se pudo obtener wallet para usuario ${user.username}:`, error);
+          }
+        }
+      }
+
+      console.log('✅ Miembros de la empresa encontrados:');
+      console.table(members);
+
+      return members;
+    } catch (error) {
+      console.error('Error getting company members:', error);
+      throw error;
     }
   }
 }

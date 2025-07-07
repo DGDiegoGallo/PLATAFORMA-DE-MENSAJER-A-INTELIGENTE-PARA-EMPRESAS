@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { FaWallet, FaShoppingCart, FaArrowRight, FaHistory, FaShieldAlt, FaCopy, FaEye, FaEyeSlash, FaLock, FaCreditCard, FaPlus } from 'react-icons/fa';
+import { 
+  FaWallet, 
+  FaCopy, 
+  FaEye, 
+  FaEyeSlash, 
+  FaPlus, 
+  FaLock,
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaSpinner,
+  FaShoppingCart,
+  FaArrowRight,
+  FaHistory,
+  FaCreditCard
+} from 'react-icons/fa';
+import { useAuthContext } from '../../contexts/AuthContext';
+import { userWalletService } from '../../services/userWallet.service';
+import { UserWallet } from '../../services/userWallet.service';
 import { toast } from 'react-toastify';
-import { useAuth } from '../../features/auth/hooks/useAuth';
 import { BuyCryptoModal } from '../../components/crypto/BuyCryptoModal';
 import { TransferForm } from '../../components/crypto/TransferForm';
-import { userWalletService, UserWallet } from '../../services/userWallet.service';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
 import '../../styles/main.css';
@@ -20,12 +35,12 @@ interface NetworkOption {
 }
 
 const CryptoWalletPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useAuthContext();
   
   // Estados principales
   const [wallet, setWallet] = useState<UserWallet | null>(null);
   const [showBuyModal, setShowBuyModal] = useState(false);
-  const [buyModalPrefilledAmount, setBuyModalPrefilledAmount] = useState<number | undefined>(undefined);
+  const [buyModalPrefilledAmount, setBuyModalPrefilledAmount] = useState<number | undefined>();
   const [activeTab, setActiveTab] = useState<'overview' | 'transfer' | 'history'>('overview');
   const [pin, setPin] = useState('');
   const [showPin, setShowPin] = useState(false);
@@ -33,6 +48,7 @@ const CryptoWalletPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [pinAttempts, setPinAttempts] = useState(0);
+
 
   // Redes disponibles para USDT
   const networks: NetworkOption[] = [
@@ -65,33 +81,55 @@ const CryptoWalletPage: React.FC = () => {
     }
   ];
 
-  // Cargar wallet al iniciar
+  // Cargar wallet al iniciar - Modo demo: solo verificar si hay usuario válido
   useEffect(() => {
-    loadWallet();
-  }, [user]);
+    if (user?.id) {
+      loadWallet();
+    } else {
+      setIsLoading(false);
+    }
+  }, [user?.id]);
 
   const loadWallet = async () => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      console.warn('❌ No se puede cargar wallet: no hay usuario');
+      setIsLoading(false);
+      return;
+    }
 
     try {
       setIsLoading(true);
-      console.log('Cargando wallet para usuario:', user.id);
+      console.log('🔄 Cargando wallet para usuario:', user.id);
       
       const userWallet = await userWalletService.getUserWallet(user.id);
       
       if (userWallet) {
-        console.log('Wallet encontrada:', userWallet);
+        console.log('✅ Wallet encontrada:', userWallet);
         setWallet(userWallet);
       } else {
-        console.log('No se encontró wallet, creando una nueva...');
+        console.log('ℹ️ No se encontró wallet, creando una nueva...');
         // Si no existe wallet, crear una nueva
         const walletResult = await userWalletService.createUserWallet(user.id);
         setWallet(walletResult.wallet);
         toast.info('Se ha creado tu wallet automáticamente');
       }
-    } catch (error) {
-      console.error('Error al cargar wallet:', error);
-      toast.error('Error al cargar la wallet');
+    } catch (error: unknown) {
+      console.error('❌ Error al cargar wallet:', error);
+      
+      // Manejo específico del error 401
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { status: number } };
+        if (axiosError.response?.status === 401) {
+          console.error('❌ Token no válido o expirado');
+          toast.error('Error de autenticación. Por favor, recarga la página.');
+          setWallet(null);
+          setIsUnlocked(false);
+        } else {
+          toast.error('Error al cargar la wallet. Por favor, intenta nuevamente.');
+        }
+      } else {
+        toast.error('Error al cargar la wallet. Por favor, intenta nuevamente.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -129,7 +167,7 @@ const CryptoWalletPage: React.FC = () => {
   };
 
   const handleBuySuccess = async () => {
-    console.log('Compra exitosa, recargando wallet...');
+    console.log('✅ Compra exitosa, recargando wallet...');
     // Recargar wallet para obtener los datos actualizados
     await loadWallet();
     setShowBuyModal(false);
@@ -141,17 +179,17 @@ const CryptoWalletPage: React.FC = () => {
     setShowBuyModal(true);
   };
 
-  const handleTransferSuccess = async (amount: number) => {
-    console.log('Transferencia exitosa, mostrando confirmación...');
+  const handleTransferSuccess = async (amount: number, toAddress: string, network: string, txHash: string) => {
+    console.log('✅ Transferencia exitosa:', { amount, toAddress, network, txHash });
     // Mostrar mensaje de éxito inmediatamente
-    toast.success(`¡Transferencia exitosa! ${amount} USDT enviados`);
+    toast.success(`¡Transferencia exitosa! ${amount} USDT enviados a ${toAddress.slice(0, 8)}...${toAddress.slice(-6)}`);
     
     // NO recargar automáticamente - dejar que el usuario vea el paso 4
     // La wallet se recargará cuando el usuario haga una nueva transferencia
   };
 
   const handleNewTransfer = async () => {
-    console.log('Iniciando nueva transferencia, recargando wallet...');
+    console.log('🔄 Iniciando nueva transferencia, recargando wallet...');
     await loadWallet();
   };
 
@@ -180,6 +218,33 @@ const CryptoWalletPage: React.FC = () => {
       minute: '2-digit'
     });
   };
+
+  // Verificar si hay usuario válido para modo demo
+  if (!user?.id) {
+    return (
+      <div className="container-fluid p-4">
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            <div className="card text-center">
+              <div className="card-body">
+                <FaExclamationTriangle className="text-warning mb-3" size={48} />
+                <h5 className="card-title">Acceso Restringido</h5>
+                <p className="card-text">
+                  Necesitas iniciar sesión para acceder a tu wallet.
+                </p>
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => window.location.href = '/login'}
+                >
+                  Iniciar Sesión
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -257,18 +322,59 @@ const CryptoWalletPage: React.FC = () => {
                       backgroundColor: 'var(--color-primary)',
                       borderColor: 'var(--color-primary)'
                     }}
-                    disabled={pin.length !== 4 || pinAttempts >= 3}
+                    disabled={pin.length !== 4}
                   >
-                    <FaShieldAlt className="me-2" />
-                    Acceder a mi Wallet
+                    {pin.length !== 4 ? (
+                      <>
+                        <FaLock className="me-2" />
+                        Ingresa PIN completo
+                      </>
+                    ) : (
+                      <>
+                        <FaCheckCircle className="me-2" />
+                        Acceder a Wallet
+                      </>
+                    )}
                   </button>
-                  
-                  {pinAttempts > 0 && (
-                    <div className="alert alert-warning mt-3 mb-0">
-                      <small>Intentos restantes: {3 - pinAttempts}</small>
-                    </div>
-                  )}
                 </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay wallet y no está cargando, mostrar error
+  if (!wallet && !isLoading) {
+    return (
+      <div className="container-fluid p-4">
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            <div className="card text-center">
+              <div className="card-body">
+                <FaExclamationTriangle className="text-warning mb-3" size={48} />
+                <h5 className="card-title">Error al cargar Wallet</h5>
+                <p className="card-text">
+                  No se pudo cargar tu wallet. Por favor, intenta nuevamente.
+                </p>
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => loadWallet()}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <FaSpinner className="me-2" />
+                      Cargando...
+                    </>
+                  ) : (
+                    <>
+                      <FaWallet className="me-2" />
+                      Intentar nuevamente
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>

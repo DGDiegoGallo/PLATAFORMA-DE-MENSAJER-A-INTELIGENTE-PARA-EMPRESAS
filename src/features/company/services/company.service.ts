@@ -70,6 +70,22 @@ export const companyService = {
       return await new Promise(resolve => setTimeout(() => resolve({ id: Date.now(), documentId, ...payload }), 300));
     }
 
+    // IMPORTANTE: Obtener las relaciones con mensajes existentes antes de actualizar
+    console.log(`Obteniendo mensajes relacionados con la empresa ${documentId} antes de actualizar`);
+    let relatedMessages: number[] = [];
+    try {
+      const messagesRes = await fetch(`${API_URL}/api/messages?filters[company][documentId][$eq]=${documentId}&populate=company`);
+      if (messagesRes.ok) {
+        const messagesJson = await messagesRes.json();
+        relatedMessages = (messagesJson.data || []).map((msg: any) => msg.id);
+        console.log(`Preservando ${relatedMessages.length} mensajes relacionados:`, relatedMessages);
+      } else {
+        console.warn('No se pudieron obtener los mensajes relacionados en updateCompanyByDocumentId');
+      }
+    } catch (error) {
+      console.warn('Error obteniendo mensajes relacionados en updateCompanyByDocumentId:', error);
+    }
+
     type StrapiBody = { data: Record<string, unknown> };
     // Limpieza profunda para eliminar documentId de cualquier parte del payload
     const deepClean = (obj: unknown): Record<string, unknown> | unknown[] | string | number | boolean | null | undefined => {
@@ -92,6 +108,8 @@ export const companyService = {
       bots: (typeof payload === 'object' && payload && 'bots' in payload) ? (payload as Record<string, unknown>).bots : undefined,
       metrics: (typeof payload === 'object' && payload && 'metrics' in payload) ? (payload as Record<string, unknown>).metrics : undefined,
       users_permissions_users: (typeof payload === 'object' && payload && 'users_permissions_users' in payload) ? (payload as Record<string, unknown>).users_permissions_users : undefined,
+      // CRÍTICO: Preservar las relaciones con mensajes
+      messages: relatedMessages,
     });
     const body: StrapiBody = { data: cleanedPayload as Record<string, unknown> };
 
@@ -203,9 +221,25 @@ export const companyService = {
     members: any[]
   ): Promise<CompanyResponse> {
     console.log(`Updating members for company ${documentId}:`, members);
-    // Obtener todos los datos actuales de la compañía
+    // Obtener todos los datos actuales de la compañía CON POPULATE COMPLETO
     const currentCompany = await this.getCompanyByDocumentId(documentId);
     if (!currentCompany) throw new Error('No se pudo obtener la compañía actual');
+    
+    // IMPORTANTE: Obtener también las relaciones con mensajes existentes
+    console.log(`Obteniendo mensajes relacionados con la empresa ${documentId}`);
+    let relatedMessages: number[] = [];
+    try {
+      const messagesRes = await fetch(`${API_URL}/api/messages?filters[company][documentId][$eq]=${documentId}&populate=company`);
+      if (messagesRes.ok) {
+        const messagesJson = await messagesRes.json();
+        relatedMessages = (messagesJson.data || []).map((msg: any) => msg.id);
+        console.log(`Encontrados ${relatedMessages.length} mensajes relacionados:`, relatedMessages);
+      } else {
+        console.warn('No se pudieron obtener los mensajes relacionados, continuando sin ellos');
+      }
+    } catch (error) {
+      console.warn('Error obteniendo mensajes relacionados:', error);
+    }
     
     // Asegurarse de que todos los miembros tengan un ID único
     const membersWithUniqueIds = members.map(member => {
@@ -215,7 +249,7 @@ export const companyService = {
       return member;
     });
     
-    // Construir el payload completo, sin documentId
+    // Construir el payload completo, INCLUYENDO las relaciones con mensajes
     const fullPayload: Record<string, any> = {
       name: currentCompany.name,
       description: currentCompany.description,
@@ -223,7 +257,10 @@ export const companyService = {
       bots: (typeof currentCompany === 'object' && currentCompany && 'bots' in currentCompany) ? (currentCompany as Record<string, unknown>).bots : undefined,
       metrics: (typeof currentCompany === 'object' && currentCompany && 'metrics' in currentCompany) ? (currentCompany as Record<string, unknown>).metrics : undefined,
       users_permissions_users: (typeof currentCompany === 'object' && currentCompany && 'users_permissions_users' in currentCompany) ? (currentCompany as Record<string, unknown>).users_permissions_users : undefined,
+      // CRÍTICO: Preservar las relaciones con mensajes
+      messages: relatedMessages,
     };
+    
     // Limpieza profunda de documentId
     const deepClean = (obj: unknown): Record<string, unknown> | unknown[] | string | number | boolean | null | undefined => {
       if (Array.isArray(obj)) return obj.map(deepClean);
@@ -238,19 +275,23 @@ export const companyService = {
       }
       return obj as string | number | boolean | null | undefined;
     };
+    
     const cleanedPayload = deepClean(fullPayload);
     const body = { data: cleanedPayload as Record<string, unknown> };
-    console.log("Request body:", JSON.stringify(body, null, 2));
+    console.log("Request body con mensajes preservados:", JSON.stringify(body, null, 2));
+    
     const putRes = await fetch(`${API_URL}/api/companies/${documentId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
+    
     if (!putRes.ok) {
       const errText = await putRes.text();
       console.error(`Error response: ${errText}`);
       throw new Error(errText);
     }
+    
     const putJson = await putRes.json();
     console.log("Update response:", putJson);
     const updated = putJson.data ?? putJson;
